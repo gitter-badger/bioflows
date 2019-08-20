@@ -1,9 +1,25 @@
 package virtualization
 
-import "bytes"
+import (
+	"bioflows/models"
+	"bytes"
+)
 
 type SingularityVirtualizationManager struct {
 
+}
+
+func (s *SingularityVirtualizationManager) RunToolInstance(instance models.ToolInstance,imageName string) (*bytes.Buffer,*bytes.Buffer,error){
+
+	return nil , nil , nil
+}
+
+func (s *SingularityVirtualizationManager) ListImages() []BioFlowImage{
+	return nil
+}
+
+func (s *SingularityVirtualizationManager) PrepareImage(imageURL string , workflow models.BioWorkflow) error{
+	return nil
 }
 
 func (s *SingularityVirtualizationManager) ListContainers() []BioflowContainer{

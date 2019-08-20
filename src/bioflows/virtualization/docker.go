@@ -1,17 +1,22 @@
 package virtualization
 
 import (
+	"bioflows/models"
 	"bytes"
 	"context"
+	"fmt"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"io"
+	"strings"
 )
 
 type DockerVirtualizationManager struct {
 	client *client.Client
 	version string
+
+
 }
 
 func (d *DockerVirtualizationManager) init(){
@@ -22,6 +27,93 @@ func (d *DockerVirtualizationManager) init(){
 	d.client = cli
 }
 
+func (d *DockerVirtualizationManager) ListImages() []BioFlowImage {
+	d.init()
+	ctx := context.Background()
+
+	images, err := d.client.ImageList(ctx, types.ImageListOptions{})
+	if err != nil {
+		panic(err)
+	}
+	bioImages := make([]BioFlowImage,0)
+	for _, image := range images {
+		bioImages = append(bioImages,BioFlowImage{
+			ID : image.ID,
+			Labels:image.Labels,
+			ParentID:image.ParentID,
+			Size:image.Size,
+		})
+	}
+	return bioImages
+}
+
+func (d *DockerVirtualizationManager) PrepareImage(imageURL string , workflow models.BioWorkflow) error{
+
+	images := d.ListImages()
+	exists := false
+	if images != nil && len(images) > 0 {
+		for _ , bioimage := range images{
+			if(bioimage.ID == workflow.GetIdentifier() || bioimage.Name == workflow.GetIdentifier()) {
+				exists = true
+				break
+			}
+		}
+	}
+	if exists{
+		return fmt.Errorf("Image already exists")
+
+	}
+	_ , err := d.PullImage(imageURL)
+	if err != nil {
+		panic(err)
+
+	}
+	var commands strings.Builder
+	totalLen := len(workflow.PrepareInstallations())
+	for index , installations := range workflow.PrepareInstallations(){
+		subcommand := strings.Join(installations," ")
+		if index >= totalLen - 1{
+			commands.WriteString(subcommand)
+		}else{
+			commands.WriteString(subcommand+";")
+		}
+	}
+
+
+	ctx := context.Background()
+	createResp, err := d.client.ContainerCreate(ctx, &container.Config{
+		Image: "alpine",
+		Cmd:   []string{"bioflowinstall", commands.String()},
+	}, nil, nil, "")
+	if err != nil {
+		panic(err)
+	}
+
+	if err := d.client.ContainerStart(ctx, createResp.ID, types.ContainerStartOptions{}); err != nil {
+		panic(err)
+	}
+
+	statusCh, errCh := d.client.ContainerWait(ctx, createResp.ID, container.WaitConditionNotRunning)
+	select {
+	case err := <-errCh:
+		if err != nil {
+			panic(err)
+		}
+	case <-statusCh:
+	}
+
+	_, err = d.client.ContainerCommit(ctx, createResp.ID, types.ContainerCommitOptions{Reference: workflow.GetIdentifier()})
+	if err != nil {
+		panic(err)
+	}
+
+	return err
+}
+
+func (d *DockerVirtualizationManager) RunToolInstance(instance models.ToolInstance,imageName string) (*bytes.Buffer,*bytes.Buffer,error){
+	return d.StartContainer(instance.GetContainerName(),imageName,instance.PrepareCommand())
+}
+
 func (d *DockerVirtualizationManager) ListContainers() []BioflowContainer{
 	d.init()
 	containers, err := d.client.ContainerList(context.Background(), types.ContainerListOptions{})
@@ -29,6 +121,7 @@ func (d *DockerVirtualizationManager) ListContainers() []BioflowContainer{
 		panic(err)
 	}
 	bioflows_containers := make([]BioflowContainer,0)
+
 	for _ , container := range containers{
 
 		if container.ID == "" || container.Image == "" || len(container.ID) <= 0 || len(container.Image) <= 0{
@@ -45,7 +138,7 @@ func (d *DockerVirtualizationManager) ListContainers() []BioflowContainer{
 	return bioflows_containers
 }
 
-func (d *DockerVirtualizationManager) PullImage(imageURL string) (*bytes.Buffer , error){
+func (d *DockerVirtualizationManager) PullImage(imageURL string) (*bytes.Buffer,error){
 
 	d.init()
 
