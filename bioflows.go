@@ -1,19 +1,35 @@
 package main
 
 import (
+	"bioflows/virtualization"
 	"fmt"
-	"bioflows/tools"
 )
 
 func main(){
-	tool := tools.NewTool()
-	tool.Name = "TopHat"
-	tool.Description = "Tophat Description"
-	tool.Version = "0.0.1"
-	tool.Website = "http://www.bioflows.com"
-	tool.Command = "tophat --GTF {{gtf}}"
-	fmt.Println(tool.ToJson())
 
+
+	docker_manager := virtualization.GetDefaultVirtualizationManager()
+	/*pullbuffer, err := docker_manager.PullImage("docker.io/library/alpine")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(pullbuffer.String())
+	stdout,stderr , err := docker_manager.StartContainer("","alpine",[]string{"echo","Hello Mohamed Fawzy"})
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(stdout.String())
+	fmt.Println(stderr.String())*/
+	containers := docker_manager.ListContainers()
+	if len(containers) > 0 {
+		for _ , container := range containers{
+			docker_manager.StopContainer(container.ID)
+		}
+	}
+
+	fmt.Println("Done Stopping all Containers")
 
 }
 

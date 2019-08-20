@@ -39,6 +39,7 @@ type Tool struct {
 	Command string `json:"command"`
 	Installations []string `json:"installations,omitempty"`
 	Deprecated bool `json:"deprecated,omitempty"`
+	Condition string `json:"condition"`
 }
 
 func (t *Tool) ToJson() string {

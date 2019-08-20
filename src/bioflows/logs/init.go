@@ -28,6 +28,8 @@ func init() {
 			return
 		}
 		logger.SetOutput(output_file)
+	}else{
+		logger.SetOutput(os.Stdout)
 	}
 }
 

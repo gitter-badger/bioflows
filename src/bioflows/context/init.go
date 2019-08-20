@@ -1,8 +1,8 @@
 package context
 
 import (
-	"fmt"
 	"bioflows/config"
+	"fmt"
 )
 
 type BioContext struct {
