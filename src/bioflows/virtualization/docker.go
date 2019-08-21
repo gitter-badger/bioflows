@@ -68,22 +68,11 @@ func (d *DockerVirtualizationManager) PrepareImage(imageURL string , workflow mo
 		panic(err)
 
 	}
-	var commands strings.Builder
-	totalLen := len(workflow.PrepareInstallations())
-	for index , installations := range workflow.PrepareInstallations(){
-		subcommand := strings.Join(installations," ")
-		if index >= totalLen - 1{
-			commands.WriteString(subcommand)
-		}else{
-			commands.WriteString(subcommand+";")
-		}
-	}
-
 
 	ctx := context.Background()
 	createResp, err := d.client.ContainerCreate(ctx, &container.Config{
 		Image: "alpine",
-		Cmd:   []string{"bioflowinstall", commands.String()},
+		Cmd:   []string{"bioflowinstall", workflow.ID},
 	}, nil, nil, "")
 	if err != nil {
 		panic(err)
