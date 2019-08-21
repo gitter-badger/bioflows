@@ -6,6 +6,15 @@ type ZookeeperKVStoreManager struct{
 
 }
 
+func(kv *ZookeeperKVStoreManager) Setup(credentials Credentials) error{
+	return nil
+}
+func (kv *ZookeeperKVStoreManager) GetClient() interface{}{
+	return nil
+}
+func (kv *ZookeeperKVStoreManager) List(prefix string, q *api.QueryOptions) (api.KVPairs, *api.QueryMeta, error){
+	return nil , nil ,  nil
+}
 
 func (kv *ZookeeperKVStoreManager) Put(p *api.KVPair, q *api.WriteOptions) (*api.WriteMeta, error){
 	return nil , nil

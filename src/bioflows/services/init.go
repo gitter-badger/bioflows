@@ -2,6 +2,8 @@ package services
 
 import (
 	"bioflows/config"
+	"bioflows/kv"
+	"github.com/hashicorp/consul/api"
 	"strings"
 	"fmt"
 )
@@ -13,9 +15,21 @@ const (
 	ORCHESTRATION_TYPE_ZOOKEEPER = "zookeeper"
 )
 
+
+const (
+	SERVICE_NAME = "services/agents/%s"
+	SERVICE_HTTP_MODULE_NAME = "services/agents/%s/http"
+	SERVICE_TASKS_COUNT_NAME = "services/agents/%s/tasks"
+)
+
+
+
 type Orchestrator interface {
-
-
+	Setup(credentials kv.Credentials) error
+	FindService(serviceName , tag string , passingOnly bool) ([]*api.ServiceEntry, *api.QueryMeta, error)
+	Deregister(id string) error
+	Register(name string , address string, port int) error
+	Services() (map[string]*api.AgentService,error)
 }
 func GetDefaultOrchestrator() (Orchestrator , error){
 
