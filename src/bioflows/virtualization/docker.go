@@ -9,7 +9,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"io"
-	"strings"
+
 )
 
 type DockerVirtualizationManager struct {
