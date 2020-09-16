@@ -24,7 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/models/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/tool_instance.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/tool_instance.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +78,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Go" />
+    <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -205,10 +205,11 @@
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
     <state width="1802" height="275" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state x="356" y="119" width="1022" height="737" key="SettingsEditor" timestamp="1600255818594">
-      <screen x="72" y="27" width="1848" height="1053" />
+    <state x="2215" y="94" width="1022" height="737" key="SettingsEditor" timestamp="1600267070137">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2141" y="75" key="SettingsEditor/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360921689" />
+    <state x="2215" y="94" width="1022" height="737" key="SettingsEditor/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1600267070137" />
     <state x="356" y="119" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1600255818594" />
     <state x="620" y="419" width="484" height="143" key="com.goide.codeInsight.imports.GoImportConfigurable$AddImportExclusionDialog" timestamp="1600255724756">
       <screen x="72" y="27" width="1848" height="1053" />

@@ -17,7 +17,7 @@ type ToolInstance struct {
 }
 
 func (instance ToolInstance) PrepareCommand() []string{
-	splitted_command := strings.Split(instance.Command," ")
+	splitted_command := strings.Split(string(instance.Command)," ")
 	if splitted_command[0] == "sudo"{
 		splitted_command = splitted_command[1:]
 	}
