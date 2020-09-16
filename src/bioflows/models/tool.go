@@ -40,7 +40,7 @@ type Tool struct {
 	Inputs []Parameter      `json:"inputs,omitempty" yaml:"inputs,omitempty"`
 	Config []Parameter      `json:"config,omitempty" yaml:"config,omitempty"`
 	Outputs []Parameter     `json:"outputs,omitempty" yaml:"outputs,omitempty"`
-	Command string          `json:"command" yaml:"command"`
+	Command Scriptable      `json:"command" yaml:"command"`
 	Installations []string  `json:"installations,omitempty" yaml:"installations,omitempty"`
 	Deprecated bool         `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
 	Conditions []Scriptable `json:"conditions,omitempty" yaml:"conditions,omitempty"`
