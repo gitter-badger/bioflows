@@ -1,33 +1,25 @@
 package models
 
-import "strings"
-
 type Scriptable string
 
 func (s Scriptable) GetCode() string {
 	return string(s)
 }
 
-type Scripts struct {
+type Script struct {
 	Type string `json:"type,omitempty" yaml:"type,omitempty"`
-	Code string `json:"code" yaml:"code"`
-	Order string `json:"order,omitempty" yaml:"order,omitempty"`
+	Code Scriptable `json:"code,omitempty" yaml:"code,omitempty"`
+	CodeFile string `json:"file,omitempty" yaml:"file,omitempty"`
+	Order int `json:"order,omitempty" yaml:"order,omitempty"`
+	After bool `json:"after,omitempty" yaml:"after,omitempty"`
+	Before bool `json:"before,omitempty" yaml:"before,omitempty"`
+
 }
 
-func (s Scripts) IsBefore() bool {
-	if len(s.Order) == 0 {
-		return true
-	}else if strings.ToLower(s.Order) == "before"{
-		return true
-	}
-	return false
+func (s Script) IsBefore() bool {
+	return s.Before
 }
 
-func (s Scripts) IsAfter() bool {
-	if len(s.Order) == 0 {
-		return false
-	}else if len(s.Order) > 0 && strings.ToLower(s.Order) == "after"{
-		return true
-	}
-	return false
+func (s Script) IsAfter() bool {
+	return s.After
 }

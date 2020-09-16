@@ -11,10 +11,14 @@ func main(){
 name: "My tool"
 Description: "my description"
 command: "hello 'from my tool'"
+boolbool: On
+ignore: ~
 # this is the scripts logic
 scripts:
     - type: "js"
-      order: "after"
+      order: 1
+      before: on
+      after : on
       code: >
           This is a multiline comment
           this is also another line for the code
@@ -28,4 +32,8 @@ scripts:
 		return
 	}
 	fmt.Println(tool.ToJson())
+	fmt.Println(fmt.Sprintf(`
+	Before : %v,
+	After : %v
+`,tool.Scripts[0].IsBefore(),tool.Scripts[0].IsAfter()))
 }

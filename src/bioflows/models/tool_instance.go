@@ -44,8 +44,6 @@ func (instance ToolInstance) PrepareInstallations() [][]string{
 }
 
 
-
-
 func (instance ToolInstance) GetContainerName() string {
 	return strings.Join([]string{instance.WorkflowID,instance.ID,instance.Name},"_")
 }
