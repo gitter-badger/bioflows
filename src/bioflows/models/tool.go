@@ -6,23 +6,23 @@ import (
 )
 
 type Parameter struct {
-	DisplayName string `json:"displayName,omitempty"`
-	Name string `json:"name"`
-	Type string `json:"type,omitempty"`
-	Description string `json:"description,omitempty"`
-	Value interface{} `json:"value,omitempty"`
+	DisplayName string `json:"displayName,omitempty" yaml:"displayname,omitempty"`
+	Name string `json:"name" yaml:"name"`
+	Type string `json:"type,omitempty" yaml:"type,omitempty"`
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
+	Value interface{} `json:"value,omitempty" yaml:"value,omitempty"`
 }
 
 type Reference struct {
-	Name string `json:"name"`
-	Description string `json:"description,omitempty"`
-	Website string `json:"website,omitempty"`
+	Name string `json:"name" yaml:"name"`
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
+	Website string `json:"website,omitempty" yaml:"website,omitempty"`
 }
 
 type Maintainer struct {
-	Username string `json:"name,omitempty"`
-	FullName string `json:"fullname,omitempty"`
-	Email string `json:"email,omitempty"`
+	Username string `json:"username,omitempty" yaml:"username,omitempty"`
+	FullName string `json:"fullname,omitempty" yaml:"fullname,omitempty"`
+	Email string `json:"email,omitempty" yaml:"email,omitempty"`
 
 }
 
