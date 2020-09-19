@@ -17,7 +17,7 @@ type BioWorkflow struct {
 	Tools []ToolInstance `json:"tools"`
 	Links []BioLink `json:"links"`
 	Status int `json:"status"`
-	ImageName string `json:"imageName,omitempty"`
+	ImageId string `json:"imageId,omitempty"`
 }
 
 func (workflow BioWorkflow) GetIdentifier() string{
