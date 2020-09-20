@@ -32,10 +32,15 @@ inputs:
 
 scripts:
   - type: js
+    before: true
+    order: 2
+    code: >
+      self.input_dir = "/home/snouto/projects";
+  - type: js
     order: 1
     before: true
     code: >
-      self.input_dir = "/home/snouto/projects";
+      self.input_dir = "/home/snouto/Downloads";
 
 # this tool has no outputs
 command: ls -ll {{input_dir}}

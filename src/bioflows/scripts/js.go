@@ -7,42 +7,30 @@ import (
 
 type ScriptManager interface {
 	Prepare(toolInstance *models.ToolInstance)
-	RunBefore(toolInstance *models.ToolInstance,config map[string]interface{}) error
-	RunAfter(toolInstance *models.ToolInstance,config map[string]interface{}) error
+	RunBefore(script models.Script,config map[string]interface{}) error
+	RunAfter(script models.Script,config map[string]interface{}) error
 }
 
 type JSScriptManager struct {
 
+	toolInstance *models.ToolInstance
+
 }
 func (manager *JSScriptManager) Prepare(toolInstance *models.ToolInstance) {
-
+	manager.toolInstance = toolInstance
 
 }
-func (manager *JSScriptManager) RunBefore(toolInstance *models.ToolInstance,config map[string]interface{}) error {
+func (manager *JSScriptManager) RunBefore(script models.Script,config map[string]interface{}) error {
 	vm := goja.New()
-	manager.Prepare(toolInstance)
-	config["command"] = toolInstance.Command.ToString()
+	config["command"] = manager.toolInstance.Command.ToString()
 	vm.Set("self",config)
-
-	beforeScripts := make([]models.Script,0)
-	for idx , script := range toolInstance.Scripts {
-		if script.Before {
-			if script.Order <= 0 {
-				script.Order = idx + 1
-			}
-			beforeScripts = append(beforeScripts,script)
-		}
-	}
-	//sort the scripts according to the assigned orders
-	for _ , beforeScript := range beforeScripts{
-		_ , err := vm.RunString(beforeScript.Code.ToString())
-		if err != nil {
-			return  err
-		}
+	_ , err := vm.RunString(script.Code.ToString())
+	if err != nil {
+		return  err
 	}
 	return nil
 }
 
-func (manager *JSScriptManager) RunAfter(toolInstance *models.ToolInstance,config map[string]interface{}) error {
+func (manager *JSScriptManager) RunAfter(script models.Script,config map[string]interface{}) error {
 	return nil
 }

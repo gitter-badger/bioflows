@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -20,7 +21,6 @@ type ToolExecutor struct {
 	toolLogger *log.Logger
 	flowConfig models.FlowConfig
 	exprManager *expr.ExprManager
-	scriptManager *scripts.JSScriptManager
 }
 func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	flowConfig := make(models.FlowConfig)
@@ -58,13 +58,69 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 }
 func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {
 	configuration := e.prepareParameters()
-	err := e.scriptManager.RunBefore(e.ToolInstance,configuration)
-	return configuration , err
+	beforeScripts := make([]models.Script,0)
+	for idx , script := range e.ToolInstance.Scripts {
+		if script.IsBefore() {
+			if script.Order <= 0 {
+				script.Order = idx + 1
+			}
+			beforeScripts = append(beforeScripts,script)
+		}
+	}
+	//sort the scripts according to the assigned orders
+	sort.Slice(beforeScripts, func(i, j int) bool {
+
+		return beforeScripts[i].Order < beforeScripts[j].Order
+
+	})
+	for _ , beforeScript := range beforeScripts {
+		var scriptManager scripts.ScriptManager
+		switch strings.ToLower(beforeScript.Type) {
+		case "js":
+			fallthrough
+		default:
+			scriptManager = &scripts.JSScriptManager{}
+			scriptManager.Prepare(e.ToolInstance)
+		}
+		err := scriptManager.RunBefore(beforeScript,configuration)
+		if err != nil {
+			return configuration , err
+		}
+	}
+	return configuration , nil
 }
 func (e *ToolExecutor) executeAfterScripts() (map[string]interface{},error)  {
 	configuration := e.prepareParameters()
-	err := e.scriptManager.RunAfter(e.ToolInstance,configuration)
-	return configuration , err
+	afterScripts := make([]models.Script,0)
+	for idx , script := range e.ToolInstance.Scripts {
+		if script.IsAfter() {
+			if script.Order <= 0 {
+				script.Order = idx + 1
+			}
+			afterScripts = append(afterScripts,script)
+		}
+	}
+	//sort the scripts according to the assigned orders
+	sort.Slice(afterScripts, func(i, j int) bool {
+
+		return afterScripts[i].Order < afterScripts[j].Order
+
+	})
+	for _ , afterScript := range afterScripts {
+		var scriptManager scripts.ScriptManager
+		switch strings.ToLower(afterScript.Type) {
+		case "js":
+			fallthrough
+		default:
+			scriptManager = &scripts.JSScriptManager{}
+			scriptManager.Prepare(e.ToolInstance)
+		}
+		err := scriptManager.RunAfter(afterScript,configuration)
+		if err != nil {
+			return configuration , err
+		}
+	}
+	return configuration , nil
 }
 func (e *ToolExecutor) GetToolOutputDir() (string,error) {
 	workflowOutputDir , ok := e.flowConfig[config.WF_INSTANCE_OUTDIR]
@@ -92,7 +148,6 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	e.ContainerManager = nil
 	e.flowConfig = flowConfig
 	e.exprManager = &expr.ExprManager{}
-	e.scriptManager = &scripts.JSScriptManager{}
 	// initialize the tool logger
 	logFileName , err := e.CreateOutputFile("logs","logs")
 	if err != nil {
