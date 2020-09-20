@@ -5,6 +5,7 @@ import (
 	"bioflows/expr"
 	"bioflows/models"
 	"bioflows/process"
+	"bioflows/scripts"
 	"bioflows/virtualization"
 	"fmt"
 	"io/ioutil"
@@ -19,13 +20,14 @@ type ToolExecutor struct {
 	toolLogger *log.Logger
 	flowConfig models.FlowConfig
 	exprManager *expr.ExprManager
+	scriptManager *scripts.JSScriptManager
 }
-func (e *ToolExecutor) prepareParameters() map[string]string {
-	flowConfig := make(map[string]string)
+func (e *ToolExecutor) prepareParameters() models.FlowConfig {
+	flowConfig := make(models.FlowConfig)
 	//Copy all flow configs at the workflow level into the current tool flowconfig
 	if len(e.flowConfig) > 0 {
 		for k,v := range e.flowConfig{
-			flowConfig[k] = fmt.Sprintf("%v",v)
+			flowConfig[k] = v
 		}
 	}
 	if len(e.ToolInstance.Inputs) <= 0 {
@@ -54,11 +56,15 @@ func (e *ToolExecutor) prepareParameters() map[string]string {
 	}
 	return flowConfig
 }
-func (e *ToolExecutor) executeBeforeScripts() error {
-	return nil
+func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {
+	configuration := e.prepareParameters()
+	err := e.scriptManager.RunBefore(e.ToolInstance,configuration)
+	return configuration , err
 }
-func (e *ToolExecutor) executeAfterScripts() error {
-	return nil
+func (e *ToolExecutor) executeAfterScripts() (map[string]interface{},error)  {
+	configuration := e.prepareParameters()
+	err := e.scriptManager.RunAfter(e.ToolInstance,configuration)
+	return configuration , err
 }
 func (e *ToolExecutor) GetToolOutputDir() (string,error) {
 	workflowOutputDir , ok := e.flowConfig[config.WF_INSTANCE_OUTDIR]
@@ -86,6 +92,7 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	e.ContainerManager = nil
 	e.flowConfig = flowConfig
 	e.exprManager = &expr.ExprManager{}
+	e.scriptManager = &scripts.JSScriptManager{}
 	// initialize the tool logger
 	logFileName , err := e.CreateOutputFile("logs","logs")
 	if err != nil {
@@ -107,10 +114,17 @@ func (e *ToolExecutor) Log(logs ...interface{}) {
 func (e *ToolExecutor) execute() error {
 
 	//prepare parameters
-	toolConfig := e.prepareParameters()
-	toolCommand := e.exprManager.Render(e.ToolInstance.Command.ToString(),toolConfig)
+	toolConfig, err := e.executeBeforeScripts()
+	if err != nil {
+		return err
+	}
+	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
+	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	executor := &process.CommandExecutor{Command: toolCommand}
 	toolErr  := executor.Run()
+	if e.ToolInstance.Shadow{
+		return toolErr
+	}
 	//Create output file for the output of this tool
 	toolOutputFile , err := e.CreateOutputFile("stdout","out")
 	if err != nil {

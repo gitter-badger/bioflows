@@ -11,7 +11,7 @@ version: 1.0.0
 icon: here you can place hexadecimal value of an icon in png format
 # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
 # as a decision tool
-shadow: true
+shadow: false
 maintainer:
     -fullname: mohamed ibrahim
     email: mfawzy.sami@gmail.com
@@ -28,6 +28,14 @@ inputs:
     name: input_dir
     description: long or short description about the parameter goes here
     value: /home/snouto
+
+
+scripts:
+  - type: js
+    order: 1
+    before: true
+    code: >
+      self.input_dir = "/home/snouto/projects";
 
 # this tool has no outputs
 command: ls -ll {{input_dir}}
