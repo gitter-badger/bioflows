@@ -30,6 +30,6 @@ inputs:
     value: /home/snouto
 
 # this tool has no outputs
-command: ls -ll /home/snouto
+command: ls -ll {{input_dir}}
 
 # this tool has no installations

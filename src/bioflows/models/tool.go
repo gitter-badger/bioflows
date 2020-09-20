@@ -2,7 +2,7 @@ package models
 
 import (
 	"encoding/json"
-
+	"fmt"
 )
 
 type Parameter struct {
@@ -11,6 +11,9 @@ type Parameter struct {
 	Type string `json:"type,omitempty" yaml:"type,omitempty"`
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	Value interface{} `json:"value,omitempty" yaml:"value,omitempty"`
+}
+func (p *Parameter) GetParamValue() string{
+	return fmt.Sprintf("%v",p.Value)
 }
 
 type Reference struct {

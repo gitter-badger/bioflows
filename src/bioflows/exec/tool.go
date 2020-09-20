@@ -2,6 +2,7 @@ package exec
 
 import (
 	"bioflows/config"
+	"bioflows/expr"
 	"bioflows/models"
 	"bioflows/process"
 	"bioflows/virtualization"
@@ -17,6 +18,47 @@ type ToolExecutor struct {
 	ContainerManager *virtualization.VirtualizationManager
 	toolLogger *log.Logger
 	flowConfig models.FlowConfig
+	exprManager *expr.ExprManager
+}
+func (e *ToolExecutor) prepareParameters() map[string]string {
+	flowConfig := make(map[string]string)
+	//Copy all flow configs at the workflow level into the current tool flowconfig
+	if len(e.flowConfig) > 0 {
+		for k,v := range e.flowConfig{
+			flowConfig[k] = fmt.Sprintf("%v",v)
+		}
+	}
+	if len(e.ToolInstance.Inputs) <= 0 {
+		return flowConfig
+	}
+	inputs := make(map[string]string)
+	for _ , param := range e.ToolInstance.Inputs{
+		paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
+		inputs[param.Name] = paramValue
+	}
+	//Append the processed input parameters into the current flowConfig
+	for k , v := range inputs {
+		flowConfig[k] = v
+	}
+	if len(e.ToolInstance.Outputs) <= 0{
+		return flowConfig
+	}
+	//Prepare outputs
+	outputs := make(map[string]string)
+	for _ , param := range e.ToolInstance.Outputs {
+		paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
+		outputs[param.Name] = paramValue
+	}
+	for k,v  := range outputs{
+		flowConfig[k] = v
+	}
+	return flowConfig
+}
+func (e *ToolExecutor) executeBeforeScripts() error {
+	return nil
+}
+func (e *ToolExecutor) executeAfterScripts() error {
+	return nil
 }
 func (e *ToolExecutor) GetToolOutputDir() (string,error) {
 	workflowOutputDir , ok := e.flowConfig[config.WF_INSTANCE_OUTDIR]
@@ -43,6 +85,7 @@ func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	e.ContainerManager = nil
 	e.flowConfig = flowConfig
+	e.exprManager = &expr.ExprManager{}
 	// initialize the tool logger
 	logFileName , err := e.CreateOutputFile("logs","logs")
 	if err != nil {
@@ -61,14 +104,12 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 func (e *ToolExecutor) Log(logs ...interface{}) {
 	e.toolLogger.Print(logs)
 }
+func (e *ToolExecutor) execute() error {
 
-func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowConfig) error {
-	e.ToolInstance = t
-	err := e.init(workflowConfig)
-	if err != nil {
-		return err
-	}
-	executor := &process.CommandExecutor{Command: e.ToolInstance.Command.ToString()}
+	//prepare parameters
+	toolConfig := e.prepareParameters()
+	toolCommand := e.exprManager.Render(e.ToolInstance.Command.ToString(),toolConfig)
+	executor := &process.CommandExecutor{Command: toolCommand}
 	toolErr  := executor.Run()
 	//Create output file for the output of this tool
 	toolOutputFile , err := e.CreateOutputFile("stdout","out")
@@ -90,5 +131,14 @@ func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowCon
 	}
 	e.Log(fmt.Sprintf("Tool: %s has finished.",e.ToolInstance.Name))
 	return toolErr
+
+}
+func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowConfig) error {
+	e.ToolInstance = t
+	err := e.init(workflowConfig)
+	if err != nil {
+		return err
+	}
+	return e.execute()
 }
 
