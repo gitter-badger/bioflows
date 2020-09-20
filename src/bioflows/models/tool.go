@@ -28,6 +28,7 @@ type Maintainer struct {
 
 type Tool struct {
 	ID string `json:"id,omitempty" yaml:"id,omitempty"`
+	BioflowId string `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
 	Name string `json:"name" yaml:"name"`
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	Discussions []string `json:"discussions,omitempty" yaml:"discussions,omitempty"`

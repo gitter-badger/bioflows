@@ -27,7 +27,7 @@ func main(){
 //          hahahahaha
 //`
 	tool := &models.Tool{}
-	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/tool.bt")
+	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/tool.yaml")
 	if err != nil {
 		fmt.Printf("There was an error opening the tool file, %v\n",err)
 		os.Exit(1)

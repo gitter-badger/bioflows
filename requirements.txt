@@ -3,4 +3,4 @@ github.com/hashicorp/consul/api
 gopkg.in/ini.v1
 github.com/hoisie/mustache
 github.com/docker/docker/client
-docker.io/go-docker
+github.com/dop251/goja

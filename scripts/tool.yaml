@@ -1,5 +1,6 @@
 # this is an example of a bioflow tool definition
 id: 123
+bioflowId: xdir3525
 name: list directories
 description: this is a tool that will list all linux directories for a given input directory parameter
 discussions:

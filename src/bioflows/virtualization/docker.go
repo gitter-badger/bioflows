@@ -73,7 +73,7 @@ func (d *DockerVirtualizationManager) PrepareImage(imageURL string , workflow mo
 	createResp, err := d.client.ContainerCreate(ctx, &container.Config{
 		Image: "alpine",
 		Cmd:   []string{"bioflowinstall", workflow.ID},
-	}, nil, nil, "")
+	}, nil, nil, nil,"")
 	if err != nil {
 		panic(err)
 	}
@@ -151,7 +151,7 @@ func (d *DockerVirtualizationManager) StartContainer(containerName string , imag
 		Image: imageName,
 		Cmd:   commands,
 		Tty:   true,
-	}, nil, nil, containerName)
+	}, nil, nil,nil, containerName)
 	if err != nil {
 		panic(err)
 	}
