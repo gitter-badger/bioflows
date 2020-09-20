@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bioflows/config"
+	"bioflows/exec"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"bioflows/models"
@@ -9,23 +11,7 @@ import (
 )
 
 func main(){
-//	mytool := `
-//name: "My tool"
-//Description: "my description"
-//command: "hello 'from my tool'"
-//boolbool: On
-//ignore: ~
-//# this is the scripts logic
-//scripts:
-//    - type: "js"
-//      order: 1
-//      before: on
-//      after : on
-//      code: >
-//          This is a multiline comment
-//          this is also another line for the code
-//          hahahahaha
-//`
+
 	tool := &models.Tool{}
 	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/tool.yaml")
 	if err != nil {
@@ -44,7 +30,15 @@ func main(){
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Println(tool.ToJson())
+	fmt.Println("Executing the current tool.")
+	executor := exec.ToolExecutor{}
+	workflowConfig := models.FlowConfig{}
+	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
+	err = executor.Run(&models.ToolInstance{WorkflowID: "myworkflowId",Name: "MyWorkflow",WorkflowName: "MyworkflowName",Tool:tool},workflowConfig)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 
 //
 //	fmt.Println(fmt.Sprintf(`

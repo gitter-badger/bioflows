@@ -2,7 +2,7 @@ package models
 
 type Scriptable string
 
-func (s Scriptable) GetCode() string {
+func (s Scriptable) ToString() string {
 	return string(s)
 }
 

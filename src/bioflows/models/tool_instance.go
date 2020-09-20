@@ -6,8 +6,7 @@ import (
 )
 
 type ToolInstance struct {
-	Tool
-	ID string `json:"id"`
+	*Tool
 	Name string `json:"name"`
 	WorkflowID string `json:"workflowId"`
 	WorkflowName string `json:"workflowName"`
