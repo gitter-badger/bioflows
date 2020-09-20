@@ -29,7 +29,7 @@ func (e *ToolExecutor) GetToolOutputDir() (string,error) {
 }
 func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 
-	outputFile := strings.Join([]string{e.ToolInstance.WorkflowID,e.ToolInstance.BioflowId,name},"_")
+	outputFile := strings.Join([]string{e.ToolInstance.Name,e.ToolInstance.BioflowId,name},"_")
 	outputFile = strings.Join([]string{outputFile,ext},".")
 	toolOutputDir , err := e.GetToolOutputDir()
 	if err != nil {
@@ -88,7 +88,7 @@ func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowCon
 	if err != nil {
 		return err
 	}
-
+	e.Log(fmt.Sprintf("Tool: %s has finished.",e.ToolInstance.Name))
 	return toolErr
 }
 
