@@ -13,7 +13,7 @@ import (
 func main(){
 
 	tool := &models.Tool{}
-	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/tool.yaml")
+	tool_in, err := os.Open("/home/snouto/workflows/ls.bt")
 	if err != nil {
 		fmt.Printf("There was an error opening the tool file, %v\n",err)
 		os.Exit(1)
@@ -34,7 +34,7 @@ func main(){
 	executor := exec.ToolExecutor{}
 	workflowConfig := models.FlowConfig{}
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
-	err = executor.Run(&models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool},workflowConfig)
+	_, err = executor.Run(&models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool},workflowConfig)
 	if err != nil {
 		fmt.Println(err)
 	}

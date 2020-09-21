@@ -37,7 +37,7 @@ func RunTool(toolPath string,workflowId string , workflowName string,outputDir s
 	if len(tool_name) <= 0 {
 		tool_name = workflowName
 	}
-	err = executor.Run(&models.ToolInstance{WorkflowID: workflowId,Name: workflowName ,WorkflowName: workflowName,Tool:tool},workflowConfig)
+	_ ,err = executor.Run(&models.ToolInstance{WorkflowID: workflowId,Name: workflowName ,WorkflowName: workflowName,Tool:tool},workflowConfig)
 	if err != nil {
 		fmt.Println(err)
 	}

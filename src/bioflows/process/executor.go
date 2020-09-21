@@ -1,11 +1,9 @@
 package process
 
-
 import (
 	"bytes"
-	"fmt"
-	"strings"
 	"os/exec"
+	"strings"
 )
 
 type CommandExecutor struct{
@@ -26,7 +24,6 @@ func (e *CommandExecutor) Run() error {
 	e.errorBuff = &bytes.Buffer{}
 	splittedCommand := strings.Split(e.Command," ")
 	cmd := exec.Command(e.InitialCommand, strings.Join(e.PreCommandArgs," "),strings.Join(splittedCommand," "))
-	fmt.Println(cmd.String())
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff
 	return cmd.Run()

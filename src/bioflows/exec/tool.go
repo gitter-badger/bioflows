@@ -24,6 +24,7 @@ type ToolExecutor struct {
 }
 func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	flowConfig := make(models.FlowConfig)
+	flowConfig["tool_dir"] , _ = e.GetToolOutputDir()
 	//Copy all flow configs at the workflow level into the current tool flowconfig
 	if len(e.flowConfig) > 0 {
 		for k,v := range e.flowConfig{
@@ -89,8 +90,8 @@ func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {
 	}
 	return configuration , nil
 }
-func (e *ToolExecutor) executeAfterScripts() (map[string]interface{},error)  {
-	configuration := e.prepareParameters()
+func (e *ToolExecutor) executeAfterScripts(configuration map[string]interface{}) (map[string]interface{},error)  {
+
 	afterScripts := make([]models.Script,0)
 	for idx , script := range e.ToolInstance.Scripts {
 		if script.IsAfter() {
@@ -166,48 +167,49 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 func (e *ToolExecutor) Log(logs ...interface{}) {
 	e.toolLogger.Print(logs)
 }
-func (e *ToolExecutor) execute() error {
+func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 
 	//prepare parameters
 	toolConfig, err := e.executeBeforeScripts()
 	if err != nil {
-		return err
+		return toolConfig,err
 	}
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	executor := &process.CommandExecutor{Command: toolCommand}
 	executor.Init()
 	toolErr  := executor.Run()
+	toolConfig , err = e.executeAfterScripts(toolConfig)
 	if e.ToolInstance.Shadow{
-		return toolErr
+		return toolConfig,toolErr
 	}
 	//Create output file for the output of this tool
 	toolOutputFile , err := e.CreateOutputFile("stdout","out")
 	if err != nil {
-		return err
+		return toolConfig,err
 	}
 	err = ioutil.WriteFile(toolOutputFile,executor.GetOutput().Bytes(),config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
-		return err
+		return toolConfig,err
 	}
 	//Create err file for this tool
 	toolErrFile , err := e.CreateOutputFile("stderr","err")
 	if err != nil {
-		return err
+		return toolConfig,err
 	}
 	err = ioutil.WriteFile(toolErrFile,executor.GetError().Bytes(),config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
-		return err
+		return toolConfig,err
 	}
 	e.Log(fmt.Sprintf("Tool: %s has finished.",e.ToolInstance.Name))
-	return toolErr
+	return toolConfig,toolErr
 
 }
-func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowConfig) error {
+func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowConfig) (models.FlowConfig,error) {
 	e.ToolInstance = t
 	err := e.init(workflowConfig)
 	if err != nil {
-		return err
+		return nil,err
 	}
 	return e.execute()
 }
