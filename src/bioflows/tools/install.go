@@ -14,6 +14,7 @@ func InstallTool(newContext *context.BioContext , tool *models.Tool) error {
 	if len(installations) > 0 {
 		for _ , installation := range(installations){
 			executor := process.CommandExecutor{}
+			executor.Init()
 			processed_command := context.ParseCommandString(newContext,installation)
 			executor.Command = processed_command
 			result_error := executor.Run()

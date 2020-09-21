@@ -9,16 +9,23 @@ import (
 )
 
 type CommandExecutor struct{
-	Command string
-	buffer *bytes.Buffer
-	errorBuff *bytes.Buffer
+	Command        string
+	InitialCommand string
+	PreCommandArgs []string
+	buffer         *bytes.Buffer
+	errorBuff      *bytes.Buffer
+}
+
+func (e *CommandExecutor) Init() {
+	e.InitialCommand = "bash"
+	e.PreCommandArgs = []string{"-c"}
 }
 
 func (e *CommandExecutor) Run() error {
 	e.buffer = &bytes.Buffer{}
 	e.errorBuff = &bytes.Buffer{}
 	splittedCommand := strings.Split(e.Command," ")
-	cmd := exec.Command("bash", "-c",strings.Join(splittedCommand," "))
+	cmd := exec.Command(e.InitialCommand, strings.Join(e.PreCommandArgs," "),strings.Join(splittedCommand," "))
 	fmt.Println(cmd.String())
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff

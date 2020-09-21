@@ -176,6 +176,7 @@ func (e *ToolExecutor) execute() error {
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	executor := &process.CommandExecutor{Command: toolCommand}
+	executor.Init()
 	toolErr  := executor.Run()
 	if e.ToolInstance.Shadow{
 		return toolErr
