@@ -33,11 +33,11 @@ inputs:
 scripts:
   - type: js
     before: true
-    order: 2
+    order: 1
     code: >
       self.input_dir = "/home/snouto/projects";
   - type: js
-    order: 1
+    order: 2
     before: true
     code: >
       self.input_dir = "/home/snouto/Downloads";

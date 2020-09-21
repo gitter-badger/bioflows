@@ -2,7 +2,6 @@ package filesystem
 
 import (
 	"bioflows/config"
-	"bioflows/logs"
 	"strings"
 )
 
@@ -23,13 +22,13 @@ func init(){
 
 	result , err := config.HasKey(FILESYSTEM_SECTION_NAME,FILESYSTEM_MANAGER_KEY)
 	if !result && err != nil {
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return
 	}
 
 	val , err := config.GetKeyAsString(FILESYSTEM_SECTION_NAME,FILESYSTEM_MANAGER_KEY)
 	if err != nil {
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return
 	}
 

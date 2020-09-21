@@ -21,22 +21,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	OutputDir string
+	WorkflowId string
+	WorkflowName string
+
+
+)
 // ToolCmd represents the Tool command
 var ToolCmd = &cobra.Command{
 	Use:   "Tool",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Helper commands to manage and run single BioFlows Tools",
+	Long: `Helper commands to manage and run single BioFlows Tools`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Tool called")
 	},
 }
 
 func init() {
+	ToolCmd.PersistentFlags().StringVar(&OutputDir,"output_dir","","Output Directory where the running tool will save data.")
 	rootCmd.AddCommand(ToolCmd)
 
 	// Here you will define your flags and configuration settings.

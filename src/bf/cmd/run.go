@@ -16,27 +16,31 @@ limitations under the License.
 package cmd
 
 import (
+	"bioflows/cli"
 	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
+	Short: "This command will run a specific BioFlows Tool Definition file (.bt) and wraps the single Tool in a new Workflow.",
+	Long: `This command will run a specific BioFlows Tool Definition file (.bt) and wraps the single Tool in a new Workflow.`,
+	RunE: func(cmd *cobra.Command, args []string)  error{
+		if len(args) < 1{
+			return fmt.Errorf("Please specify the location of Bioflows Tool")
+		}
+		toolPath := args[0]
+		return cli.RunTool(toolPath,WorkflowId,WorkflowName,OutputDir)
 	},
 }
 
 func init() {
+	//define local flags for run subcommand
+	runCmd.Flags().StringVarP(&WorkflowId,"workflowId","i","","Assign a unique Identifier for the workflow in order to distinguish the workflow later.")
+	runCmd.Flags().StringVarP(&WorkflowName,"workflowName","n","myworkflow","Assign a human readable identifier for the current workflow.")
+	runCmd.MarkFlagRequired("workflowId")
+	runCmd.MarkFlagRequired("workflowName")
 	ToolCmd.AddCommand(runCmd)
 
 	// Here you will define your flags and configuration settings.

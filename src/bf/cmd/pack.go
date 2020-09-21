@@ -24,13 +24,8 @@ import (
 // packCmd represents the pack command
 var packCmd = &cobra.Command{
 	Use:   "pack",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "This command will create a BioFlows Tool or Pipeline file (.bt) or (.bp) from a directory containing the Tool/Pipeline definition file and any associated files.",
+	Long: `This command will create a BioFlows Tool or Pipeline file (.bt) or (.bp) from a directory containing the Tool/Pipeline definition file and any associated files.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("pack called")
 	},

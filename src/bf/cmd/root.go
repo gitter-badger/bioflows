@@ -28,8 +28,9 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "bf",
-	Short: "Distributed Containerized Bioinformatics and Computational Workflows/Pipeline Engine built in Golang",
-	Long: `Bioflows is a distributed container-enabled and general-purpose scientific Workflow/Pipeline Engine built in Golang.`,
+	Short: "Distributed Containerized Bioinformatics and Computational Workflows/Pipeline engine built in Golang",
+	Long: `Bioflows is a distributed container-enabled and general-purpose scientific Workflow/Pipeline engine built in Golang.`,
+	Version: "0.0.1b",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },

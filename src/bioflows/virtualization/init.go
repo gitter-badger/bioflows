@@ -2,7 +2,6 @@ package virtualization
 
 import (
 	"bioflows/config"
-	"bioflows/logs"
 	"bioflows/models"
 	"bytes"
 	"strings"
@@ -51,13 +50,13 @@ func init(){
 	result, err := config.HasKey(VIRTUALIZATION_SECTION_NAME,VIRTUALIZATION_KEY_NAME)
 	if !result && err != nil {
 
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return
 	}
 
 	val , err := config.GetKeyAsString(VIRTUALIZATION_SECTION_NAME,VIRTUALIZATION_KEY_NAME)
 	if err != nil {
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return
 	}
 
@@ -88,13 +87,13 @@ func NewVirtualManager() VirtualizationManager{
 	result, err := config.HasKey(VIRTUALIZATION_SECTION_NAME,VIRTUALIZATION_KEY_NAME)
 	if !result && err != nil {
 
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return nil
 	}
 
 	val , err := config.GetKeyAsString(VIRTUALIZATION_SECTION_NAME,VIRTUALIZATION_KEY_NAME)
 	if err != nil {
-		logs.WriteLog(err.Error())
+		//logs.WriteLog(err.Error())
 		return nil
 	}
 
