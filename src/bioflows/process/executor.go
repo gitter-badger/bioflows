@@ -3,6 +3,7 @@ package process
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 	"os/exec"
 )
@@ -17,10 +18,8 @@ func (e *CommandExecutor) Run() error {
 	e.buffer = &bytes.Buffer{}
 	e.errorBuff = &bytes.Buffer{}
 	splittedCommand := strings.Split(e.Command," ")
-	if splittedCommand[0] == "sudo" {
-		splittedCommand = splittedCommand[1:]
-	}
-	cmd := exec.Command(splittedCommand[0], splittedCommand[1:]...)
+	cmd := exec.Command("bash", "-c",strings.Join(splittedCommand," "))
+	fmt.Println(cmd.String())
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff
 	return cmd.Run()

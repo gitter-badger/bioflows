@@ -23,17 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bioflows/cli/tool.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/tool.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/tool.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Tool.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/pack.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/pack.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/root.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/root.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/run.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/run.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/filesystem/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/filesystem/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/logs/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/logs/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/virtualization/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/virtualization/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/bf" beforeDir="false" afterPath="$PROJECT_DIR$/bin/bf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/process/executor.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/process/executor.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
