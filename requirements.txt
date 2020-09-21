@@ -4,3 +4,6 @@ gopkg.in/ini.v1
 github.com/hoisie/mustache
 github.com/docker/docker/client
 github.com/dop251/goja
+github.com/spf13/cobra
+github.com/spf13/viper
+github.com/mitchellh/go-homedir
