@@ -28,7 +28,7 @@ func (instance ToolInstance) PrepareCommand() []string{
 func (instance ToolInstance) PrepareInstallations() [][]string{
 
 	installations := make([][]string,0)
-	for _,installation := range instance.Installations{
+	for _,installation := range instance.Dependencies {
 		temp_installation := make([]string,0)
 		splitted_installation := strings.Split(installation," ")
 		if splitted_installation[0] == "sudo" {

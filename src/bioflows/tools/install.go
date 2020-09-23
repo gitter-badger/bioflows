@@ -10,7 +10,7 @@ import (
 
 func InstallTool(newContext *context.BioContext , tool *models.Tool) error {
 	logs.WriteLog(fmt.Sprintf("Installing Tool : %s",tool.Name))
-	installations := tool.Installations
+	installations := tool.Dependencies
 	if len(installations) > 0 {
 		for _ , installation := range(installations){
 			executor := process.CommandExecutor{}
@@ -29,10 +29,10 @@ func InstallTool(newContext *context.BioContext , tool *models.Tool) error {
 }
 
 func PrepareInstallations(newContext *context.BioContext , tool *models.Tool) ([]string,error){
-	logs.WriteLog(fmt.Sprintf("Preparing Installations instructions for tool : %s",tool.Name))
-	if len(tool.Installations) > 0{
-		prepared_installations := make([]string,len(tool.Installations))
-		for _, installation := range(tool.Installations){
+	logs.WriteLog(fmt.Sprintf("Preparing Dependencies instructions for tool : %s",tool.Name))
+	if len(tool.Dependencies) > 0{
+		prepared_installations := make([]string,len(tool.Dependencies))
+		for _, installation := range(tool.Dependencies){
 			processed_command  := context.ParseCommandString(newContext,installation)
 			prepared_installations = append(prepared_installations,processed_command)
 		}
