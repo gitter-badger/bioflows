@@ -8,6 +8,7 @@ import (
 
 type CommandExecutor struct{
 	Command        string
+	CommandDir string
 	InitialCommand string
 	PreCommandArgs []string
 	buffer         *bytes.Buffer
@@ -24,6 +25,7 @@ func (e *CommandExecutor) Run() error {
 	e.errorBuff = &bytes.Buffer{}
 	splittedCommand := strings.Split(e.Command," ")
 	cmd := exec.Command(e.InitialCommand, strings.Join(e.PreCommandArgs," "),strings.Join(splittedCommand," "))
+	cmd.Dir = e.CommandDir
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff
 	return cmd.Run()

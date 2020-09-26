@@ -24,7 +24,9 @@ type ToolExecutor struct {
 }
 func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	flowConfig := make(models.FlowConfig)
-	flowConfig["tool_dir"] , _ = e.GetToolOutputDir()
+	toolConfigKey , toolDir , _ := e.GetToolOutputDir()
+	flowConfig[toolConfigKey] = toolDir
+	flowConfig["self_dir"] = toolDir
 	//Copy all flow configs at the workflow level into the current tool flowconfig
 	if len(e.flowConfig) > 0 {
 		for k,v := range e.flowConfig{
@@ -123,20 +125,23 @@ func (e *ToolExecutor) executeAfterScripts(configuration map[string]interface{})
 	}
 	return configuration , nil
 }
-func (e *ToolExecutor) GetToolOutputDir() (string,error) {
+func (e *ToolExecutor) GetToolOutputDir() (toolConfigKey string,toolDir string,err error) {
 	workflowOutputDir , ok := e.flowConfig[config.WF_INSTANCE_OUTDIR]
 	if !ok {
-		return "" , fmt.Errorf("Unable to get the Tool/Workflow Output Directory")
+		err = fmt.Errorf("Unable to get the Tool/Workflow Output Directory")
+		return
 	}
 	toolOutputDir := strings.Join([]string{e.ToolInstance.Name,e.ToolInstance.ID},"_")
-	toolOutputDir = strings.Join([]string{fmt.Sprintf("%v",workflowOutputDir),toolOutputDir},"/")
-	return toolOutputDir , nil
+	toolDir = strings.Join([]string{fmt.Sprintf("%v",workflowOutputDir),toolOutputDir},"/")
+	preparedToolName := strings.ReplaceAll(e.ToolInstance.ID," ","_")
+	toolConfigKey = fmt.Sprintf("%s_dir",preparedToolName)
+	return
 }
 func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 
 	outputFile := strings.Join([]string{e.ToolInstance.Name,e.ToolInstance.BioflowId,name},"_")
 	outputFile = strings.Join([]string{outputFile,ext},".")
-	toolOutputDir , err := e.GetToolOutputDir()
+	_ , toolOutputDir , err := e.GetToolOutputDir()
 	if err != nil {
 		return "" , err
 	}
@@ -176,7 +181,8 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	}
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
-	executor := &process.CommandExecutor{Command: toolCommand}
+	toolConfigKey, _ , _ := e.GetToolOutputDir()
+	executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}
 	executor.Init()
 	toolErr  := executor.Run()
 	toolConfig , err = e.executeAfterScripts(toolConfig)
@@ -202,6 +208,8 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 		return toolConfig,err
 	}
 	e.Log(fmt.Sprintf("Tool: %s has finished.",e.ToolInstance.Name))
+	//Delete the temporary mapped self_dir key from the configuration
+	delete(toolConfig,"self_dir")
 	return toolConfig,toolErr
 
 }
@@ -211,6 +219,7 @@ func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowCon
 	if err != nil {
 		return nil,err
 	}
+	fmt.Println(fmt.Sprintf("Executing (%s) Tool...",e.ToolInstance.Name))
 	return e.execute()
 }
 

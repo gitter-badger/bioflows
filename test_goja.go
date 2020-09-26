@@ -2,45 +2,31 @@ package main
 
 import (
 	"fmt"
+	"bioflows/scripts/io"
 	"github.com/dop251/goja"
-	"io/ioutil"
+
 )
 
-type io struct{
-	vm *goja.Runtime
-}
-
-func (o *io) Print(call goja.FunctionCall) goja.Value{
-	fmt.Println(call.Arguments[0].String())
-	return goja.Null()
-}
-func (o *io) Listdir(call goja.FunctionCall) goja.Value {
-	dir := call.Arguments[0].String()
-	files := make([]string,0)
-	found_files , err := ioutil.ReadDir(dir)
-	if err != nil {
-		return goja.Null()
-	}
-	for _ , file := range found_files{
-		files = append(files,file.Name())
-	}
-
-	return o.vm.ToValue(files)
-}
 
 func main(){
 	vm := goja.New()
-	js := `
-	var files = io.Listdir('/home/snouto/Downloads');
-	for(var i = 0 ; i < files.length;i++){
-	io.Print(files[i]);
-}
+//	js := `
+//	var files = io.SelectFiles('/home/snouto/Downloads',".tar.gz");
+//	for(var i = 0 ; i < files.length;i++){
+//	io.Print(files[i]);
+//}
+//`
+	js2 := `
+	var contents = io.ReadFile('/home/snouto/projects/bioflows/requirements.txt')
+	io.Print(contents)
 `
-	io := &io{
-		vm : vm,
+
+	io := &io.IO{
+		VM : vm,
 	}
 	vm.Set("io",io)
-	_ , err := vm.RunString(js)
+
+	_ , err := vm.RunString(js2)
 	if err != nil {
 		fmt.Printf("Error : %s",err.Error())
 	}

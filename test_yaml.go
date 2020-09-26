@@ -30,7 +30,7 @@ func main(){
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Println("Executing the current tool.")
+
 	executor := exec.ToolExecutor{}
 	workflowConfig := models.FlowConfig{}
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
