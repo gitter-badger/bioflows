@@ -9,3 +9,4 @@ github.com/spf13/viper
 github.com/mitchellh/go-homedir
 github.com/aidarkhanov/nanoid
 github.com/goombaio/dag
+github.com/awalterschulze/gographviz

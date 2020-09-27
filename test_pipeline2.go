@@ -3,6 +3,7 @@ package main
 import (
 	"bioflows/engine/pipelines"
 	"fmt"
+	"github.com/goombaio/dag"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -33,10 +34,15 @@ func main(){
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Println(g.String())
-	sources := g.SourceVertices()
-	for idx , v := range sources {
-		fmt.Println(fmt.Sprintf("%d : %s",idx,v.String()))
+	parents := g.SourceVertices()
+	for _, v := range parents {
+		fmt.Println("Executing: ",v.ID)
+		if v.Children.Size() > 0 {
+			for _ , c := range v.Children.Values(){
+				cv := c.(*dag.Vertex)
+				fmt.Println("===Executing : ",cv.ID)
+			}
+		}
 	}
 
 	//fmt.Println(pipeline.ToJson())

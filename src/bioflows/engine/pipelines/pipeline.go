@@ -1,6 +1,7 @@
 package pipelines
 
 import (
+	"bioflows/helpers/id"
 	"bioflows/models"
 	"encoding/json"
 	"fmt"
@@ -8,18 +9,18 @@ import (
 )
 
 type BioPipeline struct {
-	Type         string              `json:"type,omitempty" yaml:"type,omitempty"`
-	From         string              `json:"from,omitempty" yaml:"from,omitempty"`
-	ID           string              `json:"id,omitempty" yaml:"id,omitempty"`
-	Order        int                 `json:"order,omitempty" yaml:"order,omitempty"`
-	BioflowId    string              `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
-	URL          string              `json:"url,omitempty" yaml:"url,omitempty"`
-	Name         string              `json:"name" yaml:"name"`
-	Description  string              `json:"description,omitempty" yaml:"description,omitempty"`
-	Discussions  []string            `json:"discussions,omitempty" yaml:"discussions,omitempty"`
-	Website      string              `json:"website,omitempty" yaml:"website,omitempty"`
-	Version      string              `json:"version,omitempty" yaml:"version,omitempty"`
-	Icon         string              `json:"icon,omitempty" yaml:"icon,omitempty"`
+	Type        string   `json:"type,omitempty" yaml:"type,omitempty"`
+	Depends     string   `json:"depends,omitempty" yaml:"depends,omitempty"`
+	ID          string   `json:"id,omitempty" yaml:"id,omitempty"`
+	Order       int      `json:"order,omitempty" yaml:"order,omitempty"`
+	BioflowId   string   `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
+	URL         string   `json:"url,omitempty" yaml:"url,omitempty"`
+	Name        string   `json:"name" yaml:"name"`
+	Description string   `json:"description,omitempty" yaml:"description,omitempty"`
+	Discussions []string `json:"discussions,omitempty" yaml:"discussions,omitempty"`
+	Website     string   `json:"website,omitempty" yaml:"website,omitempty"`
+	Version     string   `json:"version,omitempty" yaml:"version,omitempty"`
+	Icon        string   `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Shadow       bool                `json:"shadow,omitempty" yaml:"shadow,omitempty"`
 	Maintainer   *models.Maintainer  `json:"maintainer,omitempty" yaml:"maintainer,omitempty"`
 	References   []models.Reference  `json:"references,omitempty" yaml:"references,omitempty"`
@@ -33,10 +34,26 @@ type BioPipeline struct {
 	Steps        []BioPipeline       `json:"steps,omitempty" yaml:"steps,omitempty"`
 }
 
+func (instance *BioPipeline) Prepare(){
+	//Generate random unique ID if the instance Tool ID is not set
+	if len(instance.ID) <= 0 {
+		instance.ID , _ = id.NewID()
+	}
+	//if the tool name is not set, then use the tool ID
+	if len(instance.Name) <= 0{
+		instance.Name = instance.ID
+	}else{
+		// If the tool name exists, replace whitespace with underscores
+		instance.Name = strings.ReplaceAll(instance.Name," ","_")
+	}
+	//If the tool name is set , use that as the tool instance name
+	instance.Name = instance.Name
+}
+
 func (p BioPipeline) ToTool() *models.Tool {
 	t := &models.Tool{}
 	t.Type = p.Type
-	t.From = p.From
+	t.Depends = p.Depends
 	t.URL = p.URL
 	t.ID = p.ID
 	t.Order = p.Order
