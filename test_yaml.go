@@ -34,7 +34,9 @@ func main(){
 	executor := exec.ToolExecutor{}
 	workflowConfig := models.FlowConfig{}
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
-	_, err = executor.Run(&models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool},workflowConfig)
+	currentTool := models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool}
+	currentTool.Prepare()
+	_, err = executor.Run(&currentTool,workflowConfig)
 	if err != nil {
 		fmt.Println(err)
 	}

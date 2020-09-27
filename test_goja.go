@@ -11,7 +11,7 @@ import (
 func main(){
 	vm := goja.New()
 //	js := `
-//	var files = io.SelectFiles('/home/snouto/Downloads',".tar.gz");
+//	var files = io.SelectMultiple('/home/snouto/Downloads',".tar.gz");
 //	for(var i = 0 ; i < files.length;i++){
 //	io.Print(files[i]);
 //}

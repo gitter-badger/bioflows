@@ -6,35 +6,39 @@ import (
 )
 
 type Parameter struct {
-	DisplayName string `json:"displayName,omitempty" yaml:"displayname,omitempty"`
-	Name string `json:"name" yaml:"name"`
-	Type string `json:"type,omitempty" yaml:"type,omitempty"`
-	Description string `json:"description,omitempty" yaml:"description,omitempty"`
-	Value interface{} `json:"value,omitempty" yaml:"value,omitempty"`
+	DisplayName string      `json:"displayName,omitempty" yaml:"displayname,omitempty"`
+	Name        string      `json:"name" yaml:"name"`
+	Type        string      `json:"type,omitempty" yaml:"type,omitempty"`
+	Description string      `json:"description,omitempty" yaml:"description,omitempty"`
+	Value       interface{} `json:"value,omitempty" yaml:"value,omitempty"`
 }
-func (p *Parameter) GetParamValue() string{
-	return fmt.Sprintf("%v",p.Value)
+
+func (p *Parameter) GetParamValue() string {
+	return fmt.Sprintf("%v", p.Value)
 }
 
 type Reference struct {
-	Name string `json:"name" yaml:"name"`
+	Name        string `json:"name" yaml:"name"`
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
-	Website string `json:"website,omitempty" yaml:"website,omitempty"`
+	Website     string `json:"website,omitempty" yaml:"website,omitempty"`
 }
 
 type Maintainer struct {
 	Username string `json:"username,omitempty" yaml:"username,omitempty"`
 	FullName string `json:"fullname,omitempty" yaml:"fullname,omitempty"`
-	Email string `json:"email,omitempty" yaml:"email,omitempty"`
-
+	Email    string `json:"email,omitempty" yaml:"email,omitempty"`
 }
 
 type Tool struct {
-	ID string `json:"id,omitempty" yaml:"id,omitempty"`
-	BioflowId string `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
-	Name string `json:"name" yaml:"name"`
-	Description string `json:"description,omitempty" yaml:"description,omitempty"`
-	Discussions []string `json:"discussions,omitempty" yaml:"discussions,omitempty"`
+	Type         string       `json:"type,omitempty" yaml:"type,omitempty"`
+	URL          string       `json:"url,omitempty" yaml:"url,omitempty"`
+	From         string       `json:"from,omitempty" yaml:"from,omitempty"`
+	ID           string       `json:"id,omitempty" yaml:"id,omitempty"`
+	Order        int          `json:"order,omitempty" yaml:"order,omitempty"`
+	BioflowId    string       `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
+	Name         string       `json:"name" yaml:"name"`
+	Description  string       `json:"description,omitempty" yaml:"description,omitempty"`
+	Discussions  []string     `json:"discussions,omitempty" yaml:"discussions,omitempty"`
 	Website      string       `json:"website,omitempty" yaml:"website,omitempty"`
 	Version      string       `json:"version,omitempty" yaml:"version,omitempty"`
 	Icon         string       `json:"icon,omitempty" yaml:"icon,omitempty"`
@@ -49,12 +53,10 @@ type Tool struct {
 	Deprecated   bool         `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
 	Conditions   []Scriptable `json:"conditions,omitempty" yaml:"conditions,omitempty"`
 	Scripts      []Script     `json:"scripts,omitempty" yaml:"scripts,omitempty"`
-
 }
 
-
 func (t *Tool) ToJson() string {
-	bytes , err := json.Marshal(t)
+	bytes, err := json.Marshal(t)
 	if err != nil {
 		panic("Unable to Convert the current tool into JSON.")
 	}

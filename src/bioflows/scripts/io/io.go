@@ -48,8 +48,9 @@ func (o *IO) SelectSingle(call goja.FunctionCall) goja.Value{
 	//Return only a single matched file
 	return o.VM.ToValue(filteredFiles[0])
 }
-//SelectFiles(dir,handles)
-func (o *IO) SelectFiles(call goja.FunctionCall) goja.Value {
+
+//SelectMultiple(dir,handles)
+func (o *IO) SelectMultiple(call goja.FunctionCall) goja.Value {
 	dir := call.Arguments[0].String()
 	handles := make([]string,0)
 	filteredFiles := make([]string,0)

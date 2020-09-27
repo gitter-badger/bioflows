@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bioflows/helpers/id"
 	"strings"
 	"time"
 )
@@ -11,8 +12,30 @@ type ToolInstance struct {
 	WorkflowID string `json:"workflowId"`
 	WorkflowName string `json:"workflowName"`
 	StartTime time.Duration
+	EndTime time.Duration
 	Status int `json:"status"`
 
+}
+
+func (instance *ToolInstance) Prepare() {
+	//Generate random unique ID if the instance Tool ID is not set
+	if len(instance.ID) <= 0 {
+		instance.Tool.ID , _ = id.NewID()
+	}
+	//if the tool name is not set, then use the tool ID
+	if len(instance.Name) <= 0{
+		instance.Tool.Name = instance.Tool.ID
+	}else{
+		// If the tool name exists, replace whitespace with underscores
+		instance.Tool.Name = strings.ReplaceAll(instance.Tool.Name," ","_")
+	}
+	//If the tool name is set , use that as the tool instance name
+	instance.Name = instance.Tool.Name
+
+	//If the workflow ID is not set, then generate new random unique ID
+	if len(instance.WorkflowID) <= 0{
+		instance.WorkflowID , _ = id.NewID()
+	}
 }
 
 func (instance ToolInstance) PrepareCommand() []string{
