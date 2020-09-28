@@ -107,8 +107,52 @@ steps:
 
   - id: 126
     bioflowId: xdir3528
-    depends: 124
+    depends: 123,124
     name: list directories 3
+    description: this is a tool that will list all linux directories for a given input directory parameter
+    discussions:
+      - this tool will list directories
+      - this tool will list all linux directories for a given input directory parameter
+    website: http://hub.bioflows.io
+    version: 1.0.0
+    icon: here you can place hexadecimal value of an icon in png format
+    # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
+    # as a decision tool
+    shadow: false
+    maintainer:
+      -fullname: mohamed ibrahim
+      email: mfawzy.sami@gmail.com
+      username: mfawzy
+
+    references:
+      - name: "name of the reference"
+        description: "long or short snippet of a description goes here"
+        website: http://www.ncbi.nlm.gov.nl
+
+    inputs:
+      - type: string
+        displayname: the input directory for the command
+        name: input_dir
+        description: long or short description about the parameter goes here
+        value: /home/snouto
+    scripts:
+      - type: js
+        before: true
+        order: 1
+        code: >
+          self.input_dir = "/home/snouto/projects";
+      - type: js
+        order: 2
+        before: true
+        code: >
+          self.input_dir = "/home/snouto/Downloads";
+    # this tool has no outputs
+    command: ls -ll {{input_dir}}
+
+  - id: 127
+    bioflowId: xdir3529
+    depends: 126
+    name: list directories 4
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories

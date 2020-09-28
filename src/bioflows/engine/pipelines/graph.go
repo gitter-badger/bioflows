@@ -1,9 +1,11 @@
 package pipelines
 
 import (
+	"bytes"
 	"fmt"
-	viz "github.com/awalterschulze/gographviz"
+	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/goombaio/dag"
+	viz "github.com/goccy/go-graphviz"
 	"strings"
 )
 
@@ -27,35 +29,87 @@ func CreateGraph(b *BioPipeline) (*dag.DAG,error){
 			processedSteps[step.ID] = vertex
 		}else{
 			from := step.Depends
-			currentVertex := dag.NewVertex(step.ID,step)
-			if parentVertex, ok := processedSteps[from]; !ok {
-				panic(fmt.Errorf("Unknown Bioflows Step mentioned in %s",step.Name))
-			}else{
-				g.AddVertex(currentVertex)
-				g.AddEdge(parentVertex,currentVertex)
-				processedSteps[step.ID] = currentVertex
+			fromNodes := strings.Split(from,",")
+			for _ , fromNode := range fromNodes{
+
+				currentVertex := dag.NewVertex(step.ID,step)
+				if parentVertex, ok := processedSteps[fromNode]; !ok {
+					panic(fmt.Errorf("Unknown Bioflows Step mentioned in %s",step.Name))
+				}else{
+					g.AddVertex(currentVertex)
+					g.AddEdge(parentVertex,currentVertex)
+					processedSteps[step.ID] = currentVertex
+				}
 			}
 		}
 	}
 	return g, nil
 }
 
-func ToDotGraph(b *BioPipeline , d *dag.DAG)  (*viz.Graph,error) {
+func ToDotGraph(b *BioPipeline , d *dag.DAG) (string,error){
 	parents := d.SourceVertices()
-	g := viz.NewGraph()
+	g := viz.New()
+	graph , err := g.Graph()
+	graph.SetLabel(b.Name)
 
-	g.SetName(strings.ReplaceAll(b.Name," ","_"))
+	if err != nil {
+		return "",err
+	}
+	defer graph.Close()
+	defer g.Close()
 	for _ , parent := range parents {
 		current := parent.Value.(BioPipeline)
-		g.AddNode(b.Name,current.Name,nil)
+		parentNode , _ :=graph.CreateNode(current.Name)
 		if parent.Children.Size() > 0 {
-			for _, child := range parent.Children.Values() {
+			for _ , child := range parent.Children.Values(){
 				currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
-				g.AddNode(b.Name,currentChild.Name,nil)
-				g.AddEdge(current.Name,currentChild.Name,true, nil)
+				currentChildNode , _ := graph.CreateNode(currentChild.Name)
+				edgeName := fmt.Sprintf("%s To %s",current.Name,currentChild.Name)
+				edge,_ := graph.CreateEdge(edgeName,parentNode,currentChildNode)
+				edge.SetLabel(edgeName)
+				appendChildren(graph,child.(*dag.Vertex),currentChildNode)
 			}
 		}
 	}
-	return g, nil
+	var buff bytes.Buffer
+	if err = g.Render(graph,"dot",&buff); err != nil{
+		return "" , err
+	}
+	return buff.String(), nil
 }
+func appendChildren(graph *cgraph.Graph,current *dag.Vertex, currentNode *cgraph.Node){
+	if current.Children.Size() <= 0{
+		return
+	}else{
+		currentPipeline := current.Value.(BioPipeline)
+		for _ , child := range current.Children.Values(){
+			currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
+			ChildNode, _ := graph.CreateNode(currentChild.Name)
+			edgeName := fmt.Sprintf("%s To %s", currentPipeline.Name,currentChild.Name)
+			edge , _ := graph.CreateEdge(edgeName,currentNode, ChildNode)
+			edge.SetLabel(edgeName)
+			appendChildren(graph,child.(*dag.Vertex),ChildNode)
+		}
+	}
+}
+
+//
+//func ToDotGraph(b *BioPipeline , d *dag.DAG)  (*viz.Graph,error) {
+//	parents := d.SourceVertices()
+//	g := viz.NewGraph()
+//
+//	g.SetName(strings.ReplaceAll(b.Name," ","_"))
+//	for _ , parent := range parents {
+//		current := parent.Value.(BioPipeline)
+//		g.AddNode(b.Name,current.Name,nil)
+//		if parent.Children.Size() > 0 {
+//			for _, child := range parent.Children.Values() {
+//				currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
+//				g.AddNode(b.Name,currentChild.Name,nil)
+//				g.AddEdge(current.Name,currentChild.Name,true, nil)
+//			}
+//		}
+//	}
+//	return g, nil
+//}
 
