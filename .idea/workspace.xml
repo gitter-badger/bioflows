@@ -23,13 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bf/cmd/Dag.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/cli/dag.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/bf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/pipelines/graph.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/engine/pipelines/graph.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_pipeline2.go" beforeDir="false" afterPath="$PROJECT_DIR$/test_pipeline2.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Dag.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Dag.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

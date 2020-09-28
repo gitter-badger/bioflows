@@ -6,10 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-
-
-)
 
 var DagCmd = &cobra.Command {
 	Use:"Dag",
