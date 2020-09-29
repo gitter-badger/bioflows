@@ -53,10 +53,10 @@ func (c *ClusterStateManager) Setup(config map[string]interface{}) error {
 	}
 	var FQDN , Scheme string
 
-	if section , ok := cluster.(map[string]string);ok {
+	if section , ok := cluster.(map[interface{}]interface{});ok {
 		address, _ := section["address"]
 		port , _ := section["port"]
-		Scheme , _ = section["scheme"]
+		Scheme = fmt.Sprintf("%v",section["scheme"])
 		FQDN = fmt.Sprintf("%s:%s",address,port)
 	}
 	agentConfig := &api.Config{

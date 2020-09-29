@@ -23,32 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/bf.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/managers/cluster.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/managers/context.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/managers/execution.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/managers/local.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/managers/state.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_consul_kv.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/dag.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/dag.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/tool.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/context/context.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/context/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/context/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/engine.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/engine/engine.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/pipelines/graph.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/graph.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/pipelines/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/pipeline.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/pipelines/reader.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/reader.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/engine/workflow.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/engine/workflow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/exec/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/tool.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/models/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/tool.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/models/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/types.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/tools/init.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/tools/install.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/test_pipeline.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_yaml.go" beforeDir="false" afterPath="$PROJECT_DIR$/test_yaml.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/managers/cluster.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/managers/cluster.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -244,29 +220,29 @@
     </state>
     <state x="2420" y="185" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360911229" />
     <state x="714" y="254" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1600255085254" />
-    <state width="1874" height="384" key="GridCell.Tab.0.bottom" timestamp="1601384721922">
+    <state width="1874" height="384" key="GridCell.Tab.0.bottom" timestamp="1601385075993">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434161" />
-    <state width="1874" height="384" key="GridCell.Tab.0.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601384721922" />
+    <state width="1874" height="384" key="GridCell.Tab.0.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601385075993" />
     <state width="1802" height="275" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state width="1874" height="384" key="GridCell.Tab.0.center" timestamp="1601384721922">
+    <state width="1874" height="384" key="GridCell.Tab.0.center" timestamp="1601385075993">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601384721922" />
+    <state width="1874" height="384" key="GridCell.Tab.0.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601385075993" />
     <state width="1802" height="275" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state width="1874" height="384" key="GridCell.Tab.0.left" timestamp="1601384721922">
+    <state width="1874" height="384" key="GridCell.Tab.0.left" timestamp="1601385075993">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601384721922" />
+    <state width="1874" height="384" key="GridCell.Tab.0.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601385075993" />
     <state width="1802" height="275" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992202" />
-    <state width="1874" height="384" key="GridCell.Tab.0.right" timestamp="1601384721922">
+    <state width="1874" height="384" key="GridCell.Tab.0.right" timestamp="1601385075993">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601384721922" />
+    <state width="1874" height="384" key="GridCell.Tab.0.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601385075993" />
     <state width="1802" height="275" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
     <state width="1874" height="341" key="GridCell.Tab.1.bottom" timestamp="1601383825403">
       <screen x="1920" y="0" width="1920" height="1080" />
