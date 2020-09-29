@@ -2,7 +2,7 @@ package cli
 
 import (
 	"bioflows/config"
-	"bioflows/exec"
+	"bioflows/executors"
 	"bioflows/models"
 	"fmt"
 	"gopkg.in/yaml.v2"
@@ -30,7 +30,7 @@ func RunTool(toolPath string,workflowId string , workflowName string,outputDir s
 		return err
 	}
 	fmt.Println("Executing the current tool.")
-	executor := exec.ToolExecutor{}
+	executor := executors.ToolExecutor{}
 	workflowConfig := models.FlowConfig{}
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	tool_name := tool.Name

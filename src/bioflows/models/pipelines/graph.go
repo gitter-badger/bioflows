@@ -3,9 +3,9 @@ package pipelines
 import (
 	"bytes"
 	"fmt"
+	viz "github.com/goccy/go-graphviz"
 	"github.com/goccy/go-graphviz/cgraph"
 	"github.com/goombaio/dag"
-	viz "github.com/goccy/go-graphviz"
 	"strings"
 )
 
@@ -46,7 +46,7 @@ func CreateGraph(b *BioPipeline) (*dag.DAG,error){
 	return g, nil
 }
 
-func ToDotGraph(b *BioPipeline , d *dag.DAG) (string,error){
+func ToDotGraph(b *BioPipeline, d *dag.DAG) (string,error){
 	parents := d.SourceVertices()
 	g := viz.New()
 	graph , err := g.Graph()

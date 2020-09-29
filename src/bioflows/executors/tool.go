@@ -1,4 +1,4 @@
-package exec
+package executors
 
 import (
 	"bioflows/config"
@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/smtp"
 	"os"
 	"sort"
 	"strings"
@@ -22,6 +23,33 @@ type ToolExecutor struct {
 	flowConfig models.FlowConfig
 	exprManager *expr.ExprManager
 }
+
+func (e *ToolExecutor) notify(tool *models.ToolInstance) {
+	if tool.Notification != nil {
+
+		if EmailSection , ok := e.flowConfig["email"]; !ok {
+			err := fmt.Errorf("Tool (%s) requires Email notification but BioFlows Configuration is missing The Email Section...")
+			e.Log(err.Error())
+		}else{
+			email := EmailSection.(map[interface{}]interface{})
+			username := fmt.Sprintf("%v",email["username"])
+			password := fmt.Sprintf("%v",email["password"])
+			SMTPHost := fmt.Sprintf("%v",email["host"])
+			SMTPPort := email["port"].(int)
+			message := []byte(tool.Notification.Body)
+			auth := smtp.PlainAuth("",username,password,SMTPHost)
+			To := strings.Split(tool.Notification.To,",")
+			e.Log("Start Sending Email Notifications....")
+			err := smtp.SendMail(fmt.Sprintf("%s:%d",SMTPHost,SMTPPort),auth,username,To,message)
+			if err != nil {
+				e.Log(err.Error())
+			}
+			e.Log(fmt.Sprintf("Tool (%s): The Email was sent Successfully....",tool.Name))
+		}
+
+	}
+}
+
 func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	flowConfig := make(models.FlowConfig)
 	toolConfigKey , toolDir , _ := e.GetToolOutputDir()
@@ -150,6 +178,7 @@ func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 	return outputFile , nil
 
 }
+
 func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	e.ContainerManager = nil
 	e.flowConfig = flowConfig
@@ -173,12 +202,13 @@ func (e *ToolExecutor) Log(logs ...interface{}) {
 	e.toolLogger.Print(logs)
 }
 func (e *ToolExecutor) execute() (models.FlowConfig,error) {
-
 	//prepare parameters
 	toolConfig, err := e.executeBeforeScripts()
 	if err != nil {
 		return toolConfig,err
 	}
+	//Defer the notification till the end of the execute method
+	defer e.notify(e.ToolInstance)
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	toolConfigKey, _ , _ := e.GetToolOutputDir()

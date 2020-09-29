@@ -1,39 +1,38 @@
 package context
 
 import (
-	"bioflows/config"
 	"fmt"
 )
 
 type BioContext struct {
-	Vars map[string]string
+	vars map[string]interface{}
 }
 
 func (c BioContext) init(){
-	if c.Vars == nil{
-		c.Vars = make(map[string]string)
+	if c.vars == nil{
+		c.vars = make(map[string]interface{})
 	}
 }
 
-func (c BioContext) AddVar(key , value string) bool {
+func (c BioContext) AddVar(key string, value interface{}) bool {
 	c.init()
-	c.Vars[key] = value
+	c.vars[key] = value
 	return true
 }
 
 func (c BioContext) HasKey(key string) bool {
 	c.init()
-	_ , ok := c.Vars[key]
+	_ , ok := c.vars[key]
 	return ok
 }
 
-func (c BioContext) GetKey(key string) (value string , err error){
+func (c BioContext) GetKey(key string) (value interface{}, err error){
 	c.init()
 	if c.HasKey(key){
-		value = c.Vars[key]
+		value = c.vars[key]
 		err = nil
 	}else{
-		value = ""
+		value = nil
 		err = fmt.Errorf("Key not Found")
 	}
 	return
@@ -41,25 +40,4 @@ func (c BioContext) GetKey(key string) (value string , err error){
 
 
 
-func NewContext() *BioContext {
-	return &BioContext{}
-}
-
-func GetDefaultContext() (*BioContext , error) {
-	default_context := &BioContext{}
-	cfg , err := config.GetConfig()
-	if err != nil {
-		return nil , err
-	}
-	for _ , section := range(cfg.Sections()){
-
-		for _ , key := range(section.Keys()){
-
-			default_context.AddVar(key.Name(),key.Value())
-
-		}
-
-	}
-	return default_context , nil
-}
 

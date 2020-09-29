@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bioflows/engine/pipelines"
+	"bioflows/models/pipelines"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"

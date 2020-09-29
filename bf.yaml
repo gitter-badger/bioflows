@@ -1,0 +1,15 @@
+remote: true
+email:
+  type: smtp
+  host: smtp.gmail.com
+  port: 587
+  username: "sgp.project.test@gmail.com"
+  password: itdgiisybsjhblvq
+  ssl: false
+  tls: true
+
+
+cluster:
+  address: 127.0.0.1
+  port: 8500
+  scheme: http
