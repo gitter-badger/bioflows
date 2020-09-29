@@ -31,7 +31,8 @@ var runCmd = &cobra.Command{
 			return fmt.Errorf("Please specify the location of Bioflows Tool")
 		}
 		toolPath := args[0]
-		return cli.RunTool(toolPath,WorkflowId,WorkflowName,OutputDir)
+
+		return cli.RunTool(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir)
 	},
 }
 

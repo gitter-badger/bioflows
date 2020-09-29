@@ -195,7 +195,7 @@ steps:
 
   - id: 128
     bioflowId: xdir3529
-    depends: 123,124
+    depends: 123
     name: list directories 4
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:

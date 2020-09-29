@@ -28,7 +28,7 @@ func (e *ToolExecutor) notify(tool *models.ToolInstance) {
 	if tool.Notification != nil {
 
 		if EmailSection , ok := e.flowConfig["email"]; !ok {
-			err := fmt.Errorf("Tool (%s) requires Email notification but BioFlows Configuration is missing The Email Section...")
+			err := fmt.Errorf("Tool (%s) requires Email notification but BioFlows Configuration is missing The Email Section...",tool.Name)
 			e.Log(err.Error())
 		}else{
 			email := EmailSection.(map[interface{}]interface{})
