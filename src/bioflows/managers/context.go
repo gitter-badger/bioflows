@@ -22,7 +22,7 @@ func (c *ContextManager) Setup(config map[string]interface{}) error {
 		c.stateManager = &LocalStateManager{}
 		c.remote = false
 	}
-	return c.Setup(config)
+	return c.stateManager.Setup(config)
 }
 
 func (c *ContextManager) GetStateManager() StateManager{

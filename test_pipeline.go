@@ -27,7 +27,7 @@ func main(){
 		fmt.Println(err.Error())
 		return
 	}
-	b , err := pipelines.PreparePipeline(pipeline)
+	b , err := pipelines.PreparePipeline(pipeline,nil)
 	g , err := pipelines.CreateGraph(b)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -11,7 +11,7 @@ import (
 
 
 
-func PreparePipeline(b *BioPipeline) (*BioPipeline,error) {
+func PreparePipeline(b *BioPipeline,funcCall func (b *BioPipeline) *BioPipeline) (*BioPipeline,error) {
 	//TODO: this function should perform the following tasks
 	// 1. Download the tool from the remote repository, in this order (URL , Bioflows Hub)
 	// 2. Update the downloaded tool parameters by the newly written parameters.
@@ -92,24 +92,4 @@ func appendChildren(graph *cgraph.Graph,current *dag.Vertex, currentNode *cgraph
 		}
 	}
 }
-
-//
-//func ToDotGraph(b *BioPipeline , d *dag.DAG)  (*viz.Graph,error) {
-//	parents := d.SourceVertices()
-//	g := viz.NewGraph()
-//
-//	g.SetName(strings.ReplaceAll(b.Name," ","_"))
-//	for _ , parent := range parents {
-//		current := parent.Value.(BioPipeline)
-//		g.AddNode(b.Name,current.Name,nil)
-//		if parent.Children.Size() > 0 {
-//			for _, child := range parent.Children.Values() {
-//				currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
-//				g.AddNode(b.Name,currentChild.Name,nil)
-//				g.AddEdge(current.Name,currentChild.Name,true, nil)
-//			}
-//		}
-//	}
-//	return g, nil
-//}
 

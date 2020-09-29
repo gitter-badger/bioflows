@@ -1,4 +1,4 @@
-remote: true
+remote: false
 email:
   type: smtp
   host: smtp.gmail.com
@@ -7,9 +7,3 @@ email:
   password: itdgiisybsjhblvq
   ssl: false
   tls: true
-
-
-cluster:
-  address: 127.0.0.1
-  port: 8500
-  scheme: http

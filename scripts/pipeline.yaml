@@ -84,6 +84,11 @@ steps:
       - name: "name of the reference"
         description: "long or short snippet of a description goes here"
         website: http://www.ncbi.nlm.gov.nl
+    notification:
+      to: mfawzy.sami@gmail.com
+      title: "Step 124 has finished"
+      body: "Step 124 has finished"
+
 
     inputs:
       - type: string
@@ -94,17 +99,16 @@ steps:
     scripts:
       - type: js
         before: true
-        order: 1
+        order: 2
         code: >
           self.input_dir = "/home/snouto/projects";
       - type: js
-        order: 2
+        order: 1
         before: true
         code: >
           self.input_dir = "/home/snouto/Downloads";
     # this tool has no outputs
-    command: ls -ll {{input_dir}}
-
+    command: ls -ll {{input_dir}} > myfile.txt
   - id: 126
     bioflowId: xdir3528
     depends: 123,124

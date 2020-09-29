@@ -27,7 +27,7 @@ func RenderGraphViz(pipelineFile string) (string,error) {
 		fmt.Println(err.Error())
 		return "" , err
 	}
-	b , err := pipelines.PreparePipeline(pipeline)
+	b , err := pipelines.PreparePipeline(pipeline,nil)
 	if err != nil {
 		fmt.Println(err.Error())
 		return "", err

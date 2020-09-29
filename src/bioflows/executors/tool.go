@@ -89,6 +89,7 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 }
 func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {
 	configuration := e.prepareParameters()
+	configuration["command"] = e.ToolInstance.Command.ToString()
 	beforeScripts := make([]models.Script,0)
 	for idx , script := range e.ToolInstance.Scripts {
 		if script.IsBefore() {
