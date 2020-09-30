@@ -9,7 +9,7 @@ import (
 func main(){
 
 	executor := &process.CommandExecutor{Command: "ls -ll /home/snouto"}
-	err := executor.Run()
+	_, err := executor.Run()
 	if err != nil {
 		fmt.Printf("Error : %v\n",err)
 		os.Exit(1)

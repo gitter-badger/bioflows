@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os/exec"
 	"strings"
+	"syscall"
 )
 
 type CommandExecutor struct{
@@ -20,7 +21,7 @@ func (e *CommandExecutor) Init() {
 	e.PreCommandArgs = []string{"-c"}
 }
 
-func (e *CommandExecutor) Run() error {
+func (e *CommandExecutor) Run() (int, error) {
 	e.buffer = &bytes.Buffer{}
 	e.errorBuff = &bytes.Buffer{}
 	splittedCommand := strings.Split(e.Command," ")
@@ -28,7 +29,17 @@ func (e *CommandExecutor) Run() error {
 	cmd.Dir = e.CommandDir
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff
-	return cmd.Run()
+	err := cmd.Run()
+	exitCode := 0
+	if err != nil {
+		if exiterr , ok := err.(*exec.ExitError) ; ok {
+			if status , ok := exiterr.Sys().(syscall.WaitStatus); ok {
+				exitCode = status.ExitStatus()
+			}
+		}
+	}
+
+	return exitCode , err
 }
 
 func (e CommandExecutor) GetOutput() *bytes.Buffer {

@@ -32,7 +32,7 @@ func main(){
 	}
 	executor := executors.PipelineExecutor{}
 	workflowConfig := models.FlowConfig{}
-	var Configuration map[string]interface{} = make(map[string]interface{})
+	var Configuration models.SystemConfig = models.SystemConfig{}
 	config_in , err := os.Open(".bf.yaml")
 	config_contents , err := ioutil.ReadAll(config_in)
 	err = yaml.Unmarshal(config_contents,&Configuration)
@@ -40,7 +40,7 @@ func main(){
 		fmt.Println(err.Error())
 		return
 	}
-	workflowConfig.Fill(Configuration)
+	workflowConfig.Fill(Configuration.ToMap())
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
 	err = executor.Setup(workflowConfig)
 	if err != nil {

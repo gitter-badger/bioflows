@@ -3,10 +3,10 @@ package resolver
 import "strings"
 
 const (
-	BIOFLOWS_NAME = "BIOFLOWS"
-	BIOFLOWS_PIPELINES = "PIPELINES"
-	BIOFLOWS_NODES = "NODES"
-	BIOFLOWS_LEADER = "LEADER"
+	BIOFLOWS_NAME = "bioflows"
+	BIOFLOWS_PIPELINES = "pipelines"
+	BIOFLOWS_NODES = "nodes"
+	BIOFLOWS_LEADER = "leader"
 
 )
 

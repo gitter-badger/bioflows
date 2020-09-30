@@ -19,9 +19,9 @@ references:
     website: http://www.ncbi.nlm.gov.nl
 
 steps:
-  - id: 123
+  - id: 1
     bioflowId: xdir3525
-    name: list directories
+    name: 1
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories
@@ -62,9 +62,9 @@ steps:
     # this tool has no outputs
     command: ls -ll {{input_dir}}
 
-  - id: 124
+  - id: 2
     bioflowId: xdir3526
-    name: list directories 2
+    name: 2
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories
@@ -86,8 +86,8 @@ steps:
         website: http://www.ncbi.nlm.gov.nl
     notification:
       to: mfawzy.sami@gmail.com
-      title: "Step 124 has finished"
-      body: "Step 124 has finished"
+      title: "Step 2 has finished"
+      body: "Step 2 has finished"
 
 
     inputs:
@@ -109,10 +109,11 @@ steps:
           self.input_dir = "/home/snouto/Downloads";
     # this tool has no outputs
     command: ls -ll {{input_dir}} > myfile.txt
-  - id: 126
+
+  - id: 3
     bioflowId: xdir3528
-    depends: 123,124
-    name: list directories 3
+    depends: 1,2
+    name: 3
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories
@@ -153,10 +154,10 @@ steps:
     # this tool has no outputs
     command: ls -ll {{input_dir}}
 
-  - id: 127
+  - id: 4
     bioflowId: xdir3529
-    depends: 126
-    name: list directories 4
+    depends: 3
+    name: 4
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories
@@ -197,10 +198,10 @@ steps:
     # this tool has no outputs
     command: ls -ll {{input_dir}}
 
-  - id: 128
+  - id: 5
     bioflowId: xdir3529
-    depends: 123
-    name: list directories 4
+    depends: 1
+    name: 5
     description: this is a tool that will list all linux directories for a given input directory parameter
     discussions:
       - this tool will list directories

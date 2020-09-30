@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+
 type ClusterStateManager struct {
 	client *api.Client
 }
@@ -19,6 +20,9 @@ func (c *ClusterStateManager) GetStateByID(stepId string) (interface{},error){
 		kpair , _ , err := kv.Get(stepId,nil)
 		if err != nil {
 			return nil , err
+		}
+		if kpair == nil {
+			return nil , fmt.Errorf("Not Found")
 		}
 		state := make(map[string]interface{})
 		err = json.Unmarshal(kpair.Value,&state)

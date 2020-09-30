@@ -19,11 +19,11 @@ type ToolInstance struct {
 
 func (instance *ToolInstance) Prepare() {
 	//Generate random unique ID if the instance Tool ID is not set
-	if len(instance.ID) <= 0 {
+	if len(instance.Tool.ID) <= 0 {
 		instance.Tool.ID , _ = id.NewID()
 	}
 	//if the tool name is not set, then use the tool ID
-	if len(instance.Name) <= 0{
+	if len(instance.Tool.Name) <= 0{
 		instance.Tool.Name = instance.Tool.ID
 	}else{
 		// If the tool name exists, replace whitespace with underscores

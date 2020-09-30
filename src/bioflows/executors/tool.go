@@ -31,7 +31,7 @@ func (e *ToolExecutor) notify(tool *models.ToolInstance) {
 			err := fmt.Errorf("Tool (%s) requires Email notification but BioFlows Configuration is missing The Email Section...",tool.Name)
 			e.Log(err.Error())
 		}else{
-			email := EmailSection.(map[interface{}]interface{})
+			email := EmailSection.(map[string]interface{})
 			username := fmt.Sprintf("%v",email["username"])
 			password := fmt.Sprintf("%v",email["password"])
 			SMTPHost := fmt.Sprintf("%v",email["host"])
@@ -215,7 +215,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	toolConfigKey, _ , _ := e.GetToolOutputDir()
 	executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}
 	executor.Init()
-	toolErr  := executor.Run()
+	exitCode , toolErr  := executor.Run()
 	toolConfig , err = e.executeAfterScripts(toolConfig)
 	if e.ToolInstance.Shadow{
 		return toolConfig,toolErr
@@ -241,6 +241,16 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	e.Log(fmt.Sprintf("Tool: %s has finished.",e.ToolInstance.Name))
 	//Delete the temporary mapped self_dir key from the configuration
 	delete(toolConfig,"self_dir")
+	toolConfig["exitCode"] = exitCode
+	if toolErr != nil {
+		toolConfig["status"] = false
+	}
+	if exitCode == 0 {
+		toolConfig["status"] = true
+	}
+	if exitCode > 0 {
+		toolConfig["status"] = false
+	}
 	return toolConfig,toolErr
 
 }

@@ -13,6 +13,10 @@ func (f *FlowConfig) Fill(config map[string]interface{})  {
 
 }
 
+func (f *FlowConfig) GetAsMap() map[string]interface{}{
+	return *f
+}
+
 type Parameter struct {
 	DisplayName string      `json:"displayName,omitempty" yaml:"displayname,omitempty"`
 	Name        string      `json:"name" yaml:"name"`
