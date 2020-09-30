@@ -9,6 +9,7 @@ import (
 	"github.com/goombaio/dag"
 	"strings"
 	"sync"
+	"time"
 )
 
 type PipelineExecutor struct {
@@ -17,13 +18,32 @@ type PipelineExecutor struct {
 	transformations []TransformCall
 	waitGroup sync.WaitGroup
 	mutex *sync.Mutex
-	waitQueue chan pipelines.BioPipeline
-	stopChan chan struct{}
+	waitQueue chan *dag.Vertex
+	stopChan chan interface{}
 	parentPipeline *pipelines.BioPipeline
+	ticker *time.Ticker
 }
 
 func (p *PipelineExecutor) IsRemote() bool {
 	return p.contextManager.IsRemote()
+}
+
+func (p *PipelineExecutor) handleWaitQueue(config models.FlowConfig) {
+
+	go func(){
+
+		for{
+			select{
+			case <- p.ticker.C:
+				if task , ok := <- p.waitQueue; ok {
+
+					p.executeSingleVertex(p.parentPipeline,config,task)
+
+				}
+			}
+		}
+	}()
+
 }
 
 func (p *PipelineExecutor) SetContext(c *managers.ContextManager) {
@@ -35,6 +55,8 @@ func (p *PipelineExecutor) GetContext() *managers.ContextManager {
 }
 func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) error {
 	p.parentPipeline = b
+	//Start handling wait queue
+	p.handleWaitQueue(config)
 	// Start processing the current pipeline
 	PreprocessPipeline(b,config,p.transformations...)
 	var finalError error
@@ -43,7 +65,7 @@ func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig
 	}else{
 		finalError = p.runLocally(b,config)
 	}
-	<-p.stopChan
+
 	return finalError
 
 }
@@ -55,31 +77,47 @@ func (p *PipelineExecutor) canRun(pipelineId string , step pipelines.BioPipeline
 	result := true
 	for _ , v := range depends {
 		toolName := resolver.ResolveToolKey(v,pipelineId)
-		data , err := p.GetContext().GetStateManager().GetStateByID(toolName)
+		_ , err := p.GetContext().GetStateManager().GetStateByID(toolName)
 		if err != nil {
 			result = false
 			return result
 		}
-		toolConfig := data.(map[string]interface{})
-		if status , ok := toolConfig["status"]; !ok {
-			result = false
-		}else{
-			result = result && status.(bool)
-		}
+		//toolConfig := data.(map[string]interface{})
+		//if status , ok := toolConfig["status"]; !ok {
+		//	result = false
+		//}else{
+		//	result = result && !(status.(bool))
+		//}
 	}
 	return result
 }
+func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
+	result := false
+	section , err := p.contextManager.GetStateManager().GetStateByID(toolKey)
+	if err != nil {
+		result = false
+		return result
+	}
+	data := section.(map[string]interface{})
+	if _ , ok := data["status"] ; ok {
+		result = true
+	}
+	return result
+
+}
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
-	p.waitGroup.Add(1)
 	defer p.waitGroup.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	finalFlowConfig := models.FlowConfig{}
+	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 
-	fmt.Println(fmt.Sprintf("Running Tool (%s) Now...",currentFlow.Name))
 	if p.canRun(b.ID,currentFlow) {
+		if p.isAlreadyRun(toolKey){
+
+			goto RunChildren
+		}
 		if currentFlow.IsTool() {
 			// It is a single tool
-			toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 			executor := ToolExecutor{}
 			toolInstance := &models.ToolInstance{
 				WorkflowID: b.ID,
@@ -100,11 +138,10 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 		}else{
 			//TODO : it is a nested pipeline
 		}
-
+		RunChildren:
 		// Check children
 		if vertex.Children.Size() > 0 {
 			// Run those children
-
 			for _ , child := range vertex.Children.Values() {
 				childFlow := child.(*dag.Vertex)
 				p.executeSingleVertex(b,config,childFlow)
@@ -116,7 +153,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 	}else{
 		//Spawn the current step until all other dependencies are run successfully
 		fmt.Println(fmt.Sprintf("Spawning Tool (%s) until dependencies finish execution....",currentFlow.Name))
-		p.waitQueue <- currentFlow
+		p.waitQueue <- vertex
 	}
 
 
@@ -130,12 +167,13 @@ func (p *PipelineExecutor) runLocally(b *pipelines.BioPipeline, config models.Fl
 		return nil
 	}
 	parents := graph.SourceVertices()
-	p.waitGroup.Add(len(parents))
+	p.waitGroup.Add(graph.Size())
 	for _ , parent := range parents{
 		//Run each parent individually.
 		go p.executeSingleVertex(b,config,parent)
 	}
 	p.waitGroup.Wait()
+	p.stopChan <- nil
 	return nil
 }
 
@@ -155,8 +193,9 @@ func (p *PipelineExecutor) ClearTransformations() bool {
 func (p *PipelineExecutor) Setup(config models.FlowConfig) error {
 	p.waitGroup = sync.WaitGroup{}
 	p.mutex = &sync.Mutex{}
-	p.waitQueue = make(chan pipelines.BioPipeline,5)
-	p.stopChan = make(chan struct{})
+	p.ticker = time.NewTicker(5 * time.Second)
+	p.waitQueue = make(chan *dag.Vertex,5)
+	p.stopChan = make(chan interface{},1)
 	p.transformations = make([]TransformCall,0)
 	p.contextManager = &managers.ContextManager{}
 	p.planManager = &managers.ExecutionPlanManager{}

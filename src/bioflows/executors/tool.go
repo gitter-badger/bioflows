@@ -260,7 +260,7 @@ func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowCon
 	if err != nil {
 		return nil,err
 	}
-	fmt.Println(fmt.Sprintf("Executing (%s) Tool...",e.ToolInstance.Name))
+	fmt.Println(fmt.Sprintf("Running (%s) Tool...",t.ID))
 	return e.execute()
 }
 
