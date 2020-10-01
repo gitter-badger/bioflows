@@ -55,6 +55,7 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	toolConfigKey , toolDir , _ := e.GetToolOutputDir()
 	flowConfig[toolConfigKey] = toolDir
 	flowConfig["self_dir"] = toolDir
+	flowConfig["location"] = toolDir
 	//Copy all flow configs at the workflow level into the current tool flowconfig
 	if len(e.flowConfig) > 0 {
 		for k,v := range e.flowConfig{
@@ -252,7 +253,6 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 		toolConfig["status"] = false
 	}
 	return toolConfig,toolErr
-
 }
 func (e *ToolExecutor) Run(t *models.ToolInstance, workflowConfig models.FlowConfig) (models.FlowConfig,error) {
 	e.ToolInstance = t

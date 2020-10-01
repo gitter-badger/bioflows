@@ -10,7 +10,7 @@ import (
 
 func RenderGraphViz(pipelineFile string) (string,error) {
 	pipeline := &pipelines.BioPipeline{}
-	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/pipeline.yaml")
+	tool_in, err := os.Open(pipelineFile)
 
 	if err != nil {
 		fmt.Printf("There was an error opening the tool file, %v\n",err)

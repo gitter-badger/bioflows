@@ -23,7 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/scripts/secondpipe.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.bf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.bf.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/dag.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/dag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/context/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/context/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/pipelines/graph.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/graph.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_pipeline2.go" beforeDir="false" afterPath="$PROJECT_DIR$/test_pipeline2.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_yaml.go" beforeDir="false" afterPath="$PROJECT_DIR$/test_yaml.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,9 +155,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build test_pipeline2.go" />
+        <item itemvalue="Go Build.go build test_yaml.go" />
         <item itemvalue="Go Build.go build test.go" />
         <item itemvalue="Go Build.go build main.go" />
-        <item itemvalue="Go Build.go build test_yaml.go" />
         <item itemvalue="Go Build.go build tool.go" />
       </list>
     </recent_temporary>
@@ -202,14 +212,14 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2338" y="198" width="1084" height="791" key="#com.intellij.execution.impl.EditConfigurationsDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601406318550" />
-    <state x="2586" y="342" width="577" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1600542709313">
+    <state x="2586" y="342" width="609" height="403" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1601542813922">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2586" y="342" width="577" height="403" key="#com.intellij.fileTypes.FileTypeChooser/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1600542709313" />
-    <state x="3122" y="232" key="#xdebugger.evaluate" timestamp="1601467279760">
+    <state x="2586" y="342" width="609" height="403" key="#com.intellij.fileTypes.FileTypeChooser/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601542813922" />
+    <state x="3122" y="232" key="#xdebugger.evaluate" timestamp="1601550071228">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="3122" y="232" key="#xdebugger.evaluate/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601467279760" />
+    <state x="3122" y="232" key="#xdebugger.evaluate/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550071228" />
     <state x="2533" y="290" key="EnvironmentVariablesDialog" timestamp="1596360807700">
       <screen x="1920" y="0" width="1440" height="860" />
     </state>
@@ -219,46 +229,46 @@
     </state>
     <state x="2420" y="185" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360911229" />
     <state x="714" y="254" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1600255085254" />
-    <state width="1874" height="384" key="GridCell.Tab.0.bottom" timestamp="1601538764098">
+    <state width="1874" height="384" key="GridCell.Tab.0.bottom" timestamp="1601550155138">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.bottom/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434161" />
-    <state width="1874" height="384" key="GridCell.Tab.0.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601538764098" />
+    <state width="1874" height="384" key="GridCell.Tab.0.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550155138" />
     <state width="1802" height="275" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state width="1874" height="384" key="GridCell.Tab.0.center" timestamp="1601538764098">
+    <state width="1874" height="384" key="GridCell.Tab.0.center" timestamp="1601550155138">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.center/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601538764098" />
+    <state width="1874" height="384" key="GridCell.Tab.0.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550155138" />
     <state width="1802" height="275" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state width="1874" height="384" key="GridCell.Tab.0.left" timestamp="1601538764098">
+    <state width="1874" height="384" key="GridCell.Tab.0.left" timestamp="1601550155138">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.left/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601538764098" />
+    <state width="1874" height="384" key="GridCell.Tab.0.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550155138" />
     <state width="1802" height="275" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992202" />
-    <state width="1874" height="384" key="GridCell.Tab.0.right" timestamp="1601538764098">
+    <state width="1874" height="384" key="GridCell.Tab.0.right" timestamp="1601550155138">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1397" height="220" key="GridCell.Tab.0.right/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596365434160" />
-    <state width="1874" height="384" key="GridCell.Tab.0.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601538764098" />
+    <state width="1874" height="384" key="GridCell.Tab.0.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550155138" />
     <state width="1802" height="275" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1600255992203" />
-    <state width="1874" height="341" key="GridCell.Tab.1.bottom" timestamp="1601469889602">
+    <state width="1874" height="341" key="GridCell.Tab.1.bottom" timestamp="1601550111531">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1874" height="341" key="GridCell.Tab.1.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601469889602" />
-    <state width="1874" height="341" key="GridCell.Tab.1.center" timestamp="1601469889602">
+    <state width="1874" height="341" key="GridCell.Tab.1.bottom/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550111531" />
+    <state width="1874" height="341" key="GridCell.Tab.1.center" timestamp="1601550111530">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1874" height="341" key="GridCell.Tab.1.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601469889602" />
-    <state width="1874" height="341" key="GridCell.Tab.1.left" timestamp="1601469889602">
+    <state width="1874" height="341" key="GridCell.Tab.1.center/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550111530" />
+    <state width="1874" height="341" key="GridCell.Tab.1.left" timestamp="1601550111530">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1874" height="341" key="GridCell.Tab.1.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601469889602" />
-    <state width="1874" height="341" key="GridCell.Tab.1.right" timestamp="1601469889602">
+    <state width="1874" height="341" key="GridCell.Tab.1.left/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550111530" />
+    <state width="1874" height="341" key="GridCell.Tab.1.right" timestamp="1601550111530">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1874" height="341" key="GridCell.Tab.1.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601469889602" />
+    <state width="1874" height="341" key="GridCell.Tab.1.right/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601550111530" />
     <state x="2275" y="126" width="1022" height="737" key="SettingsEditor" timestamp="1600583863036">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -309,12 +319,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/test_yaml.go</url>
-          <line>33</line>
+          <line>31</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/test_yaml.go</url>
-          <line>27</line>
+          <line>25</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -324,7 +334,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/test_yaml.go</url>
-          <line>14</line>
+          <line>12</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -358,19 +368,29 @@
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>180</line>
-          <option name="timeStamp" value="73" />
+          <url>file://$PROJECT_DIR$/src/bioflows/executors/tool.go</url>
+          <line>207</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/src/bioflows/executors/tool.go</url>
+          <line>53</line>
+          <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>68</line>
-          <option name="timeStamp" value="74" />
+          <line>103</line>
+          <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>110</line>
-          <option name="timeStamp" value="75" />
+          <url>file://$PROJECT_DIR$/src/bioflows/context/init.go</url>
+          <line>18</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/src/bioflows/context/init.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="86" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

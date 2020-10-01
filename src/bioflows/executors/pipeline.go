@@ -98,6 +98,9 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 		result = false
 		return result
 	}
+	if section == nil {
+		return false
+	}
 	data := section.(map[string]interface{})
 	if _ , ok := data["status"] ; ok {
 		result = true
@@ -113,6 +116,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	finalFlowConfig := models.FlowConfig{}
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
+	pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
 
 	if p.canRun(b.ID,currentFlow) {
 		if p.isAlreadyRun(toolKey){
@@ -128,12 +132,16 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 				Tool:currentFlow.ToTool(),
 			}
 			toolInstance.Prepare()
-			toolInstanceFlowConfig , err := executor.Run(toolInstance,config)
+			generalConfig := p.prepareConfig(p.parentPipeline,config)
+			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 			if err != nil {
 				executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
 
 			}else{
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
+				pipelineConfig := make(map[string]interface{})
+				pipelineConfig[currentFlow.ID] = toolInstanceFlowConfig.GetAsMap()
+				err = p.contextManager.SaveState(pipelineKey,pipelineConfig)
 				p.mutex.Lock()
 				finalFlowConfig[toolInstance.ID] = toolInstanceFlowConfig
 				p.mutex.Unlock()
@@ -180,6 +188,24 @@ func (p *PipelineExecutor) runLocally(b *pipelines.BioPipeline, config models.Fl
 	p.waitGroup.Wait()
 	p.stopChan <- nil
 	return nil
+}
+func (p *PipelineExecutor) prepareConfig(b *pipelines.BioPipeline,config models.FlowConfig) models.FlowConfig {
+	tempConfig := make(map[string]interface{})
+	for k , v := range config{
+		tempConfig[k] = v
+	}
+	pipelineKey := resolver.ResolvePipelineKey(b.ID)
+	pipelineConfig , err := p.GetContext().GetStateManager().GetStateByID(pipelineKey)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Unable to fetch Pipeline Configuration for %s",pipelineKey))
+		return tempConfig
+	}
+	if parentConfig , ok  := pipelineConfig.(map[string]interface{}) ; ok {
+		for k , v := range parentConfig {
+			tempConfig[k] = v
+		}
+	}
+	return tempConfig
 }
 
 func (p *PipelineExecutor) runOnCluster(b *pipelines.BioPipeline, config models.FlowConfig) error {

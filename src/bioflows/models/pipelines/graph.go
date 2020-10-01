@@ -31,7 +31,6 @@ func CreateGraph(b *BioPipeline) (*dag.DAG,error){
 			from := step.Depends
 			fromNodes := strings.Split(from,",")
 			for _ , fromNode := range fromNodes{
-
 				currentVertex := dag.NewVertex(step.ID,step)
 				if parentVertex, ok := processedSteps[fromNode]; !ok {
 					panic(fmt.Errorf("Unknown Bioflows Step mentioned in %s",step.Name))

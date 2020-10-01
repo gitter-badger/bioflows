@@ -18,7 +18,7 @@ func (f *FlowConfig) GetAsMap() map[string]interface{}{
 }
 
 type Parameter struct {
-	DisplayName string      `json:"displayName,omitempty" yaml:"displayname,omitempty"`
+	DisplayName string      `json:"displayname,omitempty" yaml:"displayname,omitempty"`
 	Name        string      `json:"name" yaml:"name"`
 	Type        string      `json:"type,omitempty" yaml:"type,omitempty"`
 	Description string      `json:"description,omitempty" yaml:"description,omitempty"`

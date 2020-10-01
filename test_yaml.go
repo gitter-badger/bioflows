@@ -1,11 +1,9 @@
 package main
 
 import (
-	"bioflows/config"
-	"bioflows/executors"
+	"bioflows/models"
 	"fmt"
 	"gopkg.in/yaml.v2"
-	"bioflows/models"
 	"io/ioutil"
 	"os"
 )
@@ -13,7 +11,7 @@ import (
 func main(){
 
 	tool := &models.Tool{}
-	tool_in, err := os.Open("/home/snouto/workflows/ls.yaml")
+	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/secondpipe.yaml")
 	if err != nil {
 		fmt.Printf("There was an error opening the tool file, %v\n",err)
 		os.Exit(1)
@@ -31,24 +29,24 @@ func main(){
 		return
 	}
 
-	executor := executors.ToolExecutor{}
-	workflowConfig := models.FlowConfig{}
-	var Configuration map[string]interface{} = make(map[string]interface{})
-	config_in , err := os.Open("bf.yaml")
-	config_contents , err := ioutil.ReadAll(config_in)
-	err = yaml.Unmarshal(config_contents,&Configuration)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	workflowConfig.Fill(Configuration)
-	workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
-	currentTool := models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool}
-	currentTool.Prepare()
-	_, err = executor.Run(&currentTool,workflowConfig)
-	if err != nil {
-		fmt.Println(err)
-	}
+	//executor := executors.ToolExecutor{}
+	//workflowConfig := models.FlowConfig{}
+	//var Configuration map[string]interface{} = make(map[string]interface{})
+	//config_in , err := os.Open("bf.yaml")
+	//config_contents , err := ioutil.ReadAll(config_in)
+	//err = yaml.Unmarshal(config_contents,&Configuration)
+	//if err != nil {
+	//	fmt.Println(err.Error())
+	//	return
+	//}
+	//workflowConfig.Fill(Configuration)
+	//workflowConfig[config.WF_INSTANCE_OUTDIR] = "/home/snouto/workflows"
+	//currentTool := models.ToolInstance{WorkflowID: "myworkflowId",Name: "mytool",WorkflowName: "MyworkflowName",Tool:tool}
+	//currentTool.Prepare()
+	//_, err = executor.Run(&currentTool,workflowConfig)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 
 
 //
