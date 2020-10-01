@@ -36,7 +36,7 @@ func (p *PipelineExecutor) handleWaitQueue(config models.FlowConfig) {
 			select{
 			case <- p.ticker.C:
 				if task , ok := <- p.waitQueue; ok {
-
+					p.waitGroup.Add(1)
 					p.executeSingleVertex(p.parentPipeline,config,task)
 
 				}
@@ -106,7 +106,10 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
-	defer p.waitGroup.Done()
+	defer func(){
+		fmt.Println(fmt.Sprintf("Deferring %s",vertex.ID))
+		p.waitGroup.Done()
+	}()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	finalFlowConfig := models.FlowConfig{}
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
@@ -144,6 +147,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			// Run those children
 			for _ , child := range vertex.Children.Values() {
 				childFlow := child.(*dag.Vertex)
+				p.waitGroup.Add(1)
 				p.executeSingleVertex(b,config,childFlow)
 			}
 
@@ -167,9 +171,10 @@ func (p *PipelineExecutor) runLocally(b *pipelines.BioPipeline, config models.Fl
 		return nil
 	}
 	parents := graph.SourceVertices()
-	p.waitGroup.Add(graph.Size())
+	//p.waitGroup.Add(graph.Order())
 	for _ , parent := range parents{
 		//Run each parent individually.
+		p.waitGroup.Add(1)
 		go p.executeSingleVertex(b,config,parent)
 	}
 	p.waitGroup.Wait()
