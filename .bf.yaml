@@ -1,4 +1,4 @@
-remote: false
+remote: true
 email:
   type: smtp
   host: smtp.gmail.com

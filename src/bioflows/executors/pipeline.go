@@ -110,6 +110,7 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer func(){
+		//TODO : remove this deferring message when the system becomes stable enough
 		fmt.Println(fmt.Sprintf("Deferring %s",vertex.ID))
 		p.waitGroup.Done()
 	}()
@@ -139,9 +140,8 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 
 			}else{
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
-				pipelineConfig := make(map[string]interface{})
-				pipelineConfig[currentFlow.ID] = toolInstanceFlowConfig.GetAsMap()
-				err = p.contextManager.SaveState(pipelineKey,pipelineConfig)
+				toolInstanceFlowConfig[currentFlow.ID] = toolInstanceFlowConfig.GetAsMap()
+				err = p.contextManager.SaveState(pipelineKey,toolInstanceFlowConfig)
 				p.mutex.Lock()
 				finalFlowConfig[toolInstance.ID] = toolInstanceFlowConfig
 				p.mutex.Unlock()

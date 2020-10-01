@@ -37,3 +37,7 @@ steps:
         description: Destination Directory
         value: "{{self_dir}}/movedFile.txt"
     command: mv {{input_file}} {{dest_dir}}
+  - id: 3
+    name: count
+    depends: 1
+    command: wc -l {{2.dest_dir}} > {{self_dir}}/count.txt

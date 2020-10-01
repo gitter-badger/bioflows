@@ -14,7 +14,11 @@ func (f *FlowConfig) Fill(config map[string]interface{})  {
 }
 
 func (f *FlowConfig) GetAsMap() map[string]interface{}{
-	return *f
+	newMap := make(map[string]interface{})
+	for k , v := range *f {
+		newMap[k] = v
+	}
+	return newMap
 }
 
 type Parameter struct {
