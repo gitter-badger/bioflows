@@ -191,7 +191,7 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 		return err
 	}
 	e.toolLogger = &log.Logger{}
-	e.toolLogger.SetPrefix(config.BIOFLOWS_NAME)
+	e.toolLogger.SetPrefix(fmt.Sprintf("%v: ",config.BIOFLOWS_NAME))
 	file , err := os.Create(logFileName)
 	if err != nil {
 		fmt.Printf("Can't Create Tool (%s) log file %s",e.ToolInstance.Name, logFileName)
@@ -201,7 +201,7 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	return nil
 }
 func (e *ToolExecutor) Log(logs ...interface{}) {
-	e.toolLogger.Print(logs)
+	e.toolLogger.Println(logs...)
 }
 func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	//prepare parameters

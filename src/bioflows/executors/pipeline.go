@@ -1,12 +1,15 @@
 package executors
 
 import (
+	config2 "bioflows/config"
 	"bioflows/managers"
 	"bioflows/models"
 	"bioflows/models/pipelines"
 	"bioflows/resolver"
 	"fmt"
 	"github.com/goombaio/dag"
+	"log"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -22,6 +25,8 @@ type PipelineExecutor struct {
 	stopChan chan interface{}
 	parentPipeline *pipelines.BioPipeline
 	ticker *time.Ticker
+	logger *log.Logger
+
 }
 
 func (p *PipelineExecutor) IsRemote() bool {
@@ -65,7 +70,7 @@ func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig
 	}else{
 		finalError = p.runLocally(b,config)
 	}
-
+	p.Log(fmt.Sprintf("Workflow: (%s) has finished....",b.Name))
 	return finalError
 
 }
@@ -109,11 +114,7 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
-	defer func(){
-		//TODO : remove this deferring message when the system becomes stable enough
-		fmt.Println(fmt.Sprintf("Deferring %s",vertex.ID))
-		p.waitGroup.Done()
-	}()
+	defer p.waitGroup.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	finalFlowConfig := models.FlowConfig{}
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
@@ -148,6 +149,19 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			}
 		}else{
 			//TODO : it is a nested pipeline
+			nestedPipelineExecutor := PipelineExecutor{}
+			nestedPipelineConfig := models.FlowConfig{}
+			pipelineConfig := p.prepareConfig(&currentFlow,config)
+			nestedPipelineConfig.Fill(config)
+			nestedPipelineConfig.Fill(pipelineConfig)
+			nestedPipelineExecutor.Setup(nestedPipelineConfig)
+			err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
+			if err != nil {
+				//TODO: Create a pipelineExecutor Log method
+				nestedPipelineExecutor.Log(err.Error())
+			}
+
+
 		}
 		RunChildren:
 		// Check children
@@ -231,7 +245,26 @@ func (p *PipelineExecutor) Setup(config models.FlowConfig) error {
 		return err
 	}
 	p.planManager.SetContextManager(p.contextManager)
+	p.createLogFile(config)
 	return p.planManager.Setup(config)
+}
+func (p *PipelineExecutor) createLogFile(config models.FlowConfig) error {
+	workflowOutputFile := strings.Join([]string{
+		fmt.Sprintf("%v",config[config2.WF_INSTANCE_OUTDIR]),
+		"workflow.logs",
+	},"/")
+	p.logger = &log.Logger{}
+	p.logger.SetPrefix(fmt.Sprintf("%v: ",config2.BIOFLOWS_NAME))
+	file,  err := os.Create(workflowOutputFile)
+	if err != nil {
+		return err
+	}
+	p.logger.SetOutput(file)
+	return nil
+}
+
+func (p *PipelineExecutor) Log(logs ...interface{}) {
+	p.logger.Println(logs...)
 }
 
 
