@@ -29,6 +29,19 @@ type PipelineExecutor struct {
 
 }
 
+//This function returns the final result of the current pipeline
+func (p *PipelineExecutor) GetPipelineOutput() models.FlowConfig {
+	tempConfig := models.FlowConfig{}
+	pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
+	pipelineConfig , err := p.GetContext().GetStateManager().GetPipelineState(pipelineKey)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Unable to fetch Pipeline Configuration for %s",pipelineKey))
+		return tempConfig
+	}
+	tempConfig.Fill(pipelineConfig)
+	return tempConfig
+}
+
 func (p *PipelineExecutor) IsRemote() bool {
 	return p.contextManager.IsRemote()
 }
@@ -116,7 +129,6 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer p.waitGroup.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
-	finalFlowConfig := models.FlowConfig{}
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 	//pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
 
@@ -141,14 +153,10 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 
 			}else{
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
-				//toolInstanceFlowConfig[currentFlow.ID] = toolInstanceFlowConfig.GetAsMap()
-				//err = p.contextManager.SaveState(pipelineKey,toolInstanceFlowConfig)
-				p.mutex.Lock()
-				finalFlowConfig[toolInstance.ID] = toolInstanceFlowConfig
-				p.mutex.Unlock()
+
 			}
 		}else{
-			//TODO : it is a nested pipeline
+			//it is a nested pipeline
 			nestedPipelineExecutor := PipelineExecutor{}
 			nestedPipelineConfig := models.FlowConfig{}
 			pipelineConfig := p.prepareConfig(&currentFlow,config)
@@ -157,11 +165,10 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			nestedPipelineExecutor.Setup(nestedPipelineConfig)
 			err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
 			if err != nil {
-				//TODO: Create a pipelineExecutor Log method
 				nestedPipelineExecutor.Log(err.Error())
 			}
-
-
+			pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
+			err = p.contextManager.SaveState(toolKey,pipeConfig)
 		}
 		RunChildren:
 		// Check children
