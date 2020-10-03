@@ -1,6 +1,8 @@
 package managers
 
 import (
+	"bioflows/helpers"
+	"bioflows/models"
 	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/consul/api"
@@ -10,9 +12,41 @@ import (
 	"time"
 )
 
+var (
+	ERR_CONSUL_CLIENT_NULL = fmt.Errorf("Consul Client is null....")
+	ERR_KV_EMPTY           = fmt.Errorf("KV Store is Empty....")
+	ERR_NOT_FOUND = fmt.Errorf("Not Found")
+)
 
 type ClusterStateManager struct {
 	client *api.Client
+}
+func (c *ClusterStateManager) GetPipelineState(pipelineKey string) (models.FlowConfig, error) {
+
+	if c.client != nil {
+		finalConfig := models.FlowConfig{}
+		kv := c.client.KV()
+		pairs , _ , err := kv.List(pipelineKey,nil)
+		if err != nil {
+			return nil , err
+		}
+		if len(pairs) <= 0 {
+			return nil , ERR_KV_EMPTY
+		}
+		for _ , pair := range pairs {
+			if pair == nil{
+				continue
+			}
+			state := make(map[string]interface{})
+			err = json.Unmarshal(pair.Value,&state)
+			if err != nil {
+				continue
+			}
+			finalConfig[helpers.GetToolIdFromKey(pair.Key)] = state
+		}
+		return finalConfig , nil
+	}
+	return nil , ERR_CONSUL_CLIENT_NULL
 }
 func (c *ClusterStateManager) GetStateByID(stepId string) (interface{},error){
 	if c.client != nil{
@@ -22,7 +56,7 @@ func (c *ClusterStateManager) GetStateByID(stepId string) (interface{},error){
 			return nil , err
 		}
 		if kpair == nil {
-			return nil , fmt.Errorf("Not Found")
+			return nil , ERR_NOT_FOUND
 		}
 		state := make(map[string]interface{})
 		err = json.Unmarshal(kpair.Value,&state)
@@ -31,7 +65,7 @@ func (c *ClusterStateManager) GetStateByID(stepId string) (interface{},error){
 		}
 		return state, nil
 	}
-	return nil , nil
+	return nil , ERR_CONSUL_CLIENT_NULL
 }
 func (c *ClusterStateManager) SetStateByID(stepId string,config interface{}) error {
 	if c.client != nil {

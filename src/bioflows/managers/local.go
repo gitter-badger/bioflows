@@ -2,13 +2,44 @@ package managers
 
 import (
 	"bioflows/context"
+	"bioflows/helpers"
+	"bioflows/models"
 	"fmt"
+	"strings"
 )
 
 type LocalStateManager struct {
 
 	context *context.BioContext
 
+}
+
+func (c *LocalStateManager) filterKeys(query string) []string {
+	filteredKeys := make([]string,0)
+	keys := c.context.GetKeys()
+	for _ , key := range keys{
+		if strings.HasPrefix(key,query) {
+			filteredKeys = append(filteredKeys,key)
+		}
+	}
+	return filteredKeys
+}
+func (c *LocalStateManager) GetPipelineState(pipelineKey string) (models.FlowConfig, error) {
+	finalConfig := models.FlowConfig{}
+	filteredKeys := c.filterKeys(pipelineKey)
+	if len(filteredKeys) <= 0 {
+		return nil , ERR_NOT_FOUND
+	}
+	for _ , key := range filteredKeys {
+		state , err := c.GetStateByID(key)
+		if err != nil {
+			continue
+		}
+		if converted_state , ok := state.(map[string]interface{}); ok {
+			finalConfig[helpers.GetToolIdFromKey(key)] = converted_state
+		}
+	}
+	return finalConfig , nil
 }
 func (c *LocalStateManager) GetStateByID(stepId string) (interface{},error){
 	if c.context.HasKey(stepId){

@@ -26,6 +26,14 @@ func (c *BioContext) HasKey(key string) bool {
 	return ok
 }
 
+func (c *BioContext) GetKeys() []string{
+	keys := make([]string,0)
+	for k , _ := range c.vars {
+		keys = append(keys,k)
+	}
+	return keys
+}
+
 func (c *BioContext) GetKey(key string) (value interface{}, err error){
 	c.init()
 	if c.HasKey(key){
