@@ -1,7 +1,9 @@
 package managers
 
 import (
+	"bioflows/helpers/profiling"
 	"bioflows/models"
+	"bioflows/resolver"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	"net"
@@ -10,12 +12,25 @@ import (
 	"time"
 )
 
+const (
+	RENEW_INTERVAL = "30s"
+)
+
 type ClusterServiceManager struct {
 	config models.FlowConfig
 	client *api.Client
+	sessionId string
+	isLeader bool
+	doneChan chan struct{}
 }
+
+func (c *ClusterServiceManager) IsLeader() bool {
+	return c.isLeader
+}
+
 func (c *ClusterServiceManager) Services() (map[string]*api.AgentService,error){
 	return c.client.Agent().Services()
+
 }
 func (c *ClusterServiceManager) FindService(serviceName , tag string , passingOnly bool) ([]*api.ServiceEntry, *api.QueryMeta, error) {
 	addrs , meta , err := c.client.Health().Service(serviceName,tag,passingOnly,nil)
@@ -31,6 +46,63 @@ func (c *ClusterServiceManager) FindService(serviceName , tag string , passingOn
 func (c *ClusterServiceManager) Deregister(id string) error {
 	return c.client.Agent().ServiceDeregister(id)
 }
+
+func (c *ClusterServiceManager) createSession(sessionEntry *api.SessionEntry) error {
+	sessionId, _ , err := c.client.Session().Create(sessionEntry,nil)
+	if err != nil {
+		return err
+	}
+	c.sessionId = sessionId
+	return nil
+}
+
+func (c *ClusterServiceManager) ReleaseSession() error {
+	_ , err := c.client.Session().Destroy(c.sessionId,nil)
+	return err
+}
+func (c *ClusterServiceManager) SelfElect() bool {
+	c.Release()
+	err := c.createSession(&api.SessionEntry{
+		Name: resolver.ResolveLeaderKey(),
+		Behavior: "delete",
+		TTL:RENEW_INTERVAL,
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	jsonData, _ := profiling.GetCPUProfile().ToJson()
+	c.isLeader,_ , err = c.client.KV().Acquire(&api.KVPair{
+		Key:resolver.ResolveLeaderKey(),
+		Value: jsonData,
+		Session:c.sessionId,
+	},nil)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Acquiring Leader: %s",err.Error()))
+		return false
+	}
+	// That means we have successfully acquired Leadership
+	if c.isLeader{
+		c.doneChan = make(chan struct{})
+		go func(){
+			c.client.Session().RenewPeriodic(
+				RENEW_INTERVAL,
+				c.sessionId,
+				nil,c.doneChan)
+		}()
+
+	}
+	return true
+}
+func (c *ClusterServiceManager) Release() error {
+	//Close the done Channel
+	close(c.doneChan)
+	return c.ReleaseSession()
+
+}
+
+
+
 func (c *ClusterServiceManager) Register(name, address string , port int) error {
 	serviceEntry := &api.AgentServiceRegistration{
 		Name : name,
@@ -47,6 +119,7 @@ func (c *ClusterServiceManager) Register(name, address string , port int) error 
 
 func (c *ClusterServiceManager) Setup(config models.FlowConfig) error {
 	c.config = config
+	c.doneChan = make(chan struct{})
 	cluster, ok := config["cluster"]
 	if !ok {
 		return fmt.Errorf("Cluster Section in Configuration settings doesn't exist")
