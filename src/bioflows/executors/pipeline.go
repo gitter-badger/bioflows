@@ -54,7 +54,6 @@ func (p *PipelineExecutor) handleWaitQueue(config models.FlowConfig) {
 			select{
 			case <- p.ticker.C:
 				if task , ok := <- p.waitQueue; ok {
-					p.waitGroup.Add(1)
 					p.executeSingleVertex(p.parentPipeline,config,task)
 
 				}
@@ -191,6 +190,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 	}else{
 		//Spawn the current step until all other dependencies are run successfully
 		fmt.Println(fmt.Sprintf("Spawning Tool (%s) until dependencies finish execution....",currentFlow.Name))
+		p.waitGroup.Add(1)
 		p.waitQueue <- vertex
 	}
 
