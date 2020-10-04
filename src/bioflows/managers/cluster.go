@@ -95,7 +95,7 @@ func (c *ClusterStateManager) Setup(config map[string]interface{}) error {
 		address, _ := section["address"]
 		port , _ := section["port"]
 		Scheme = fmt.Sprintf("%v",section["scheme"])
-		FQDN = fmt.Sprintf("%s:%s",address,port)
+		FQDN = fmt.Sprintf("%s:%d",address,port)
 	}
 	agentConfig := &api.Config{
 		Address : FQDN,

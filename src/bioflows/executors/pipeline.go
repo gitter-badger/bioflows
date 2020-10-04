@@ -97,6 +97,7 @@ func (p *PipelineExecutor) canRun(pipelineId string , step pipelines.BioPipeline
 		toolName := resolver.ResolveToolKey(v,pipelineId)
 		_ , err := p.GetContext().GetStateManager().GetStateByID(toolName)
 		if err != nil {
+			fmt.Println(fmt.Sprintf("Error: %s",err.Error()))
 			result = false
 			return result
 		}
@@ -153,6 +154,10 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 
 			}else{
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
+				if err != nil {
+					fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
+					return
+				}
 
 			}
 		}else{

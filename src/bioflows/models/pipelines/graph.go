@@ -64,8 +64,8 @@ func ToDotGraph(b *BioPipeline, d *dag.DAG) (string,error){
 				currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
 				currentChildNode , _ := graph.CreateNode(currentChild.Name)
 				edgeName := fmt.Sprintf("%s To %s",current.Name,currentChild.Name)
-				edge,_ := graph.CreateEdge(edgeName,parentNode,currentChildNode)
-				edge.SetLabel(edgeName)
+				graph.CreateEdge(edgeName,parentNode,currentChildNode)
+				//edge.SetLabel(edgeName)
 				appendChildren(graph,child.(*dag.Vertex),currentChildNode)
 			}
 		}
@@ -85,8 +85,8 @@ func appendChildren(graph *cgraph.Graph,current *dag.Vertex, currentNode *cgraph
 			currentChild := (child.(*dag.Vertex)).Value.(BioPipeline)
 			ChildNode, _ := graph.CreateNode(currentChild.Name)
 			edgeName := fmt.Sprintf("%s To %s", currentPipeline.Name,currentChild.Name)
-			edge , _ := graph.CreateEdge(edgeName,currentNode, ChildNode)
-			edge.SetLabel(edgeName)
+			graph.CreateEdge(edgeName,currentNode, ChildNode)
+			//edge.SetLabel(edgeName)
 			appendChildren(graph,child.(*dag.Vertex),ChildNode)
 		}
 	}

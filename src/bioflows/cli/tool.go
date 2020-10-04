@@ -14,11 +14,13 @@ func ReadConfig(cfgFile string) (models.FlowConfig,error) {
 	workflowConfig := models.FlowConfig{}
 	config_in , err := os.Open(cfgFile)
 	config_contents , err := ioutil.ReadAll(config_in)
-	err = yaml.Unmarshal(config_contents,&workflowConfig)
+	var Configuration models.SystemConfig = models.SystemConfig{}
+	err = yaml.Unmarshal(config_contents,&Configuration)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil , err
 	}
+	workflowConfig.Fill(Configuration.ToMap())
 	return workflowConfig,nil
 }
 

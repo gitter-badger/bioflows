@@ -32,6 +32,7 @@ var WorkflowCmd = &cobra.Command{
 }
 
 func init() {
+	WorkflowCmd.PersistentFlags().StringVar(&OutputDir,"output_dir","","Output Directory where the running pipeline will save data.")
 	rootCmd.AddCommand(WorkflowCmd)
 
 	// Here you will define your flags and configuration settings.

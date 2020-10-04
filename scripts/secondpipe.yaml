@@ -39,5 +39,5 @@ steps:
     command: mv {{input_file}} {{dest_dir}}
   - id: 3
     name: count
-    depends: 1
+    depends: 1,2
     command: wc -l {{2.dest_dir}} > {{self_dir}}/count.txt
