@@ -5,14 +5,26 @@ import (
 	"bioflows/models/pipelines"
 )
 
-type TransformCall func (b *pipelines.BioPipeline,config models.FlowConfig)
+var (
+	DEFAULT_CHAINERS = make([]TransformCall,0)
+)
+
+type TransformCall func (b *pipelines.BioPipeline,config models.FlowConfig) error
+
+func init(){
+	DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,[]TransformCall{UseUrl,UseBioFlowId,}...)
+}
 
 func PreprocessPipeline(b *pipelines.BioPipeline,config models.FlowConfig, transforms ...TransformCall)  {
-
-	if len(transforms) <= 0{
+	DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,transforms...)
+	if len(DEFAULT_CHAINERS) <= 0{
 		return
 	}
-	for _ , transform := range transforms {
-		transform(b,config)
+	var err error
+	for _ , transform := range DEFAULT_CHAINERS {
+		err = transform(b,config)
+		if err != nil {
+			panic(err)
+		}
 	}
 }

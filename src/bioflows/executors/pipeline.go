@@ -6,6 +6,7 @@ import (
 	"bioflows/models"
 	"bioflows/models/pipelines"
 	"bioflows/resolver"
+	"errors"
 	"fmt"
 	"github.com/goombaio/dag"
 	"log"
@@ -71,12 +72,27 @@ func (p *PipelineExecutor) GetContext() *managers.ContextManager {
 	return p.contextManager
 }
 func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) error {
+	var finalError error
+	defer func() error{
+		if r := recover(); r != nil {
+			switch r.(type) {
+			case error:
+				finalError = r.(error)
+				fmt.Println(fmt.Sprintf("Error: %s. Aborting.....",finalError.Error()))
+			case string:
+				finalError = errors.New(r.(string))
+			default:
+				finalError = errors.New("There was an exception while running the current pipeline....")
+			}
+
+		}
+		return finalError
+	}()
 	p.parentPipeline = b
 	//Start handling wait queue
 	p.handleWaitQueue(config)
 	// Start processing the current pipeline
 	PreprocessPipeline(b,config,p.transformations...)
-	var finalError error
 	if p.IsRemote(){
 		finalError = p.runOnCluster(b,config)
 	}else{
