@@ -7,7 +7,7 @@ import (
 )
 
 var workflowRunCmd = &cobra.Command{
-	Use:"run",
+	Use:"run [pipeline file .bp]",
 	Short: "",
 	Long:"",
 	RunE: func(cmd *cobra.Command, args []string) error {

@@ -23,7 +23,7 @@ import (
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
-	Use:   "run",
+	Use:   "run [tool file .bt]",
 	Short: "This command will run a specific BioFlows Tool Definition file (.bt) and wraps the single Tool in a new Workflow.",
 	Long: `This command will run a specific BioFlows Tool Definition file (.bt) and wraps the single Tool in a new Workflow.`,
 	RunE: func(cmd *cobra.Command, args []string)  error{
@@ -42,6 +42,7 @@ func init() {
 	runCmd.Flags().StringVarP(&WorkflowName,"workflowName","n","myworkflow","Assign a human readable identifier for the current workflow.")
 	runCmd.MarkFlagRequired("workflowId")
 	runCmd.MarkFlagRequired("workflowName")
+
 	ToolCmd.AddCommand(runCmd)
 
 	// Here you will define your flags and configuration settings.
