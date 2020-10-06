@@ -22,22 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/architecture.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/authoring.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/cluster.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/commandline.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/configuration.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/getting-started.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/scripting.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/sharing.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/variables.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/pages/yaml.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/pages/introduction.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/pages/introduction.rst" afterDir="false" />
-    </list>
+    <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
