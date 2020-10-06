@@ -4,20 +4,25 @@
    contain the root `toctree` directive.
 
 Welcome to BioFlows's documentation!
-====================================
+####################################
+
+.. image:: _static/images/logo.gif
+
+BioFlows Framework enables researchers to run massively parallel bioinformatics pipelines on multiple Cloud Platforms , Operating Systems and different Cloud Containers.
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    pages/introduction
-
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   pages/architecture
+   pages/getting-started
+   pages/yaml
+   pages/authoring
+   pages/scripting
+   pages/variables
+   pages/commandline
+   pages/configuration
+   pages/cluster
+   pages/sharing
