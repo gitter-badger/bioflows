@@ -7,8 +7,8 @@ BioFlows Documentation
 
    pages/introduction
    pages/architecture
-   pages/getting-started
    pages/yaml
+   pages/getting-started
    pages/authoring
    pages/scripting
    pages/variables
