@@ -23,17 +23,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bf/cmd/validate.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/cli/validate.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bioflows/helpers/http.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bioflows/helpers/hub.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Hub.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Hub.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Node.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Node.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Show.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Show.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Tool.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/display.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/display.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/list.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bf/cmd/pack.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/pack.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/config/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/config/params.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/preprocessing.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/preprocessing.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +76,7 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/bioflows/models/pipelines" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -90,17 +87,19 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
+    <key name="GoMoveDeclarationDialog.RECENT_KEY">
+      <recent name="$PROJECT_DIR$/src/bioflows/models/pipelines" />
+      <recent name="$PROJECT_DIR$/src/bioflows/helpers" />
+      <recent name="$PROJECT_DIR$/src/bioflows/models" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/bioflows/models" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/bioflows/engine" />
       <recent name="$PROJECT_DIR$/src/bioflows" />
-    </key>
-    <key name="GoMoveDeclarationDialog.RECENT_KEY">
-      <recent name="$PROJECT_DIR$/src/bioflows/models" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build bioflows.go">
@@ -235,10 +234,11 @@
       <screen x="1920" y="0" width="1440" height="860" />
     </state>
     <state x="2533" y="290" key="EnvironmentVariablesDialog/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360807700" />
-    <state x="714" y="254" width="424" height="491" key="FileChooserDialogImpl" timestamp="1600255085254">
-      <screen x="72" y="27" width="1848" height="1053" />
+    <state x="2587" y="233" width="424" height="491" key="FileChooserDialogImpl" timestamp="1602025597041">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2420" y="185" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360911229" />
+    <state x="2587" y="233" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602025597041" />
     <state x="714" y="254" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1600255085254" />
     <state width="1874" height="275" key="GridCell.Tab.0.bottom" timestamp="1601998404835">
       <screen x="1920" y="0" width="1920" height="1080" />
@@ -299,10 +299,10 @@
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="620" y="419" width="484" height="143" key="com.goide.codeInsight.imports.GoImportConfigurable$AddImportExclusionDialog/72.27.1848.1053@72.27.1848.1053" timestamp="1600255724756" />
-    <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog" timestamp="1601380772450">
+    <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog" timestamp="1602025600659">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601380772450" />
+    <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602025600659" />
     <state x="330" y="27" width="1225" height="653" maximized="true" key="dock-window-1" timestamp="1602023538551">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
@@ -386,7 +386,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>146</line>
+          <line>147</line>
           <option name="timeStamp" value="96" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -401,7 +401,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>157</line>
+          <line>158</line>
           <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -411,7 +411,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/executors/pipeline.go</url>
-          <line>170</line>
+          <line>171</line>
           <option name="timeStamp" value="104" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">

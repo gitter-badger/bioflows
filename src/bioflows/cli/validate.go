@@ -1,29 +1,15 @@
 package cli
 
 import (
+	"bioflows/helpers"
 	"bioflows/models/pipelines"
 	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"os"
 )
-
-func isValidUrl(toTest string) bool {
-	_, err := url.ParseRequestURI(toTest)
-	if err != nil {
-		return false
-	}
-
-	u, err := url.Parse(toTest)
-	if err != nil || u.Scheme == "" || u.Host == "" {
-		return false
-	}
-
-	return true
-}
 
 func ValidateYAML(filePath string) (bool,error){
 	// Test if the current file is remote or local
@@ -32,7 +18,7 @@ func ValidateYAML(filePath string) (bool,error){
 	var data []byte = nil
 	var err error = nil
 	pipeline := &pipelines.BioPipeline{}
-	if isValidUrl(filePath) {
+	if helpers.IsValidUrl(filePath) {
 		//The file is remote URI
 		//Download and save the file to temporary directory
 		resp , err := http.Get(filePath)

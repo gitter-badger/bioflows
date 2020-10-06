@@ -92,7 +92,7 @@ func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig
 	//Start handling wait queue
 	p.handleWaitQueue(config)
 	// Start processing the current pipeline
-	PreprocessPipeline(b,config,p.transformations...)
+	//PreprocessPipeline(b,config,p.transformations...)
 	if p.IsRemote(){
 		finalError = p.runOnCluster(b,config)
 	}else{
@@ -144,6 +144,7 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer p.waitGroup.Done()
+	PreprocessPipeline(b,config,p.transformations...)
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 	//pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
