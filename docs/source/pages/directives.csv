@@ -23,7 +23,7 @@ deprecated,An optional boolean directive which indicates that the maintainer of 
 steps,A list of other individual tools or nested pipelines to use as step(s) In the current pipeline. Please take a look at how to define a complete pipeline in the tutorial in this documentation.
 notification,An optional complex directive which indicates that this tool should notify mentioned person(s) via email with a custom email message in case it has run. Please take a look at how to define this directive in the following sections of this tutorial.
 caps,An optional complex directive which lists some execution constraints or preferences for the current tool or pipeline to meet in order to successfully execute the current tool or pipeline like how many CPU cores required and/or How many GigaBytes of RAM required for the current tool in order to successfully run. Please look at the following sections on how to define a correct caps directive.
-,
+scripts,"An Optional List of embedded scripts to run before or after the current tool execution. Bioflows currently supports Javascript but we will support Lua in the future. The embedded script can modify internal state parameters for the current tool either before or after execution and also contains additional injected code helper libraries that allow manipulation of files, sockets and other data management tasks. Please look at the scripts directive section to fully understand how to embedd those scripts in your tool definition file."
 ,
 ,
 ,
