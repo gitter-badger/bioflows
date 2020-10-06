@@ -1,5 +1,5 @@
-Introduction
-############
+BioFlows Introduction
+#####################
 
 .. image:: ../_static/images/logo.gif
 
