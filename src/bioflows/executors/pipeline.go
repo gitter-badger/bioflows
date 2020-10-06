@@ -144,8 +144,8 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer p.waitGroup.Done()
-	PreprocessPipeline(b,config,p.transformations...)
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
+	PreprocessPipeline(&currentFlow,config,p.transformations...)
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 	//pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
 
