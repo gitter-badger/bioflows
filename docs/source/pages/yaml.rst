@@ -15,10 +15,97 @@ BioFlows Directives
    :header-rows: 1
    :widths: 130, 170
 
-Example Tool Definition
-=======================
 
-Please use the following tool as an example to understand how to define the previously explained directives in the table above.
+Maintainer Directive
+^^^^^^^^^^^^^^^^^^^^
+
+Maintainer directive describes metadata information about the researcher or the bioinformatician who has written that tool or pipeline.
+This person is considered to be in charge and support for this tool or pipeline. Users of the pipeline can use this information to communicate with him.
+
+.. code-block:: yaml
+
+   maintainer:
+    username: xxxx
+    fullname: xxxxx xxxxx
+    email: xxx@xx.com
+
+References Directive
+^^^^^^^^^^^^^^^^^^^^
+
+This is an optional list of references. Each reference is an object composed of nested directives.
+this directive is used to include references to any scientific publications, papers,
+posters and/or articles that might act as additional information sources for users
+of this tool and/or pipeline.
+
+You define references directive, as follows....
+
+.. code-block:: yaml
+
+   references:
+    - name: "Name of your reference"
+      description: "long or short snippet of description about this reference"
+      website: http://www.yourreference-url.com
+    - name: "Name of your reference"
+      description: "long or short snippet of description about this reference"
+      website: http://www.yourreference-url.com
+
+Inputs Directive
+^^^^^^^^^^^^^^^^
+
+How to define Input Parameters (Inputs)
+***************************************
+
+Each separate tool or a tool in a bioinformatics pipeline requires some input(s) parameters
+to work on and might or might not produce any output(s). Some Bioflows tools might act as decision steps
+or state modifiers in a pipeline and hence these tools will only require some input(s) from previous step(s)
+and will not produce any output(s). These tools should be shadowed having ``shadow=true`` in their definition.
+
+In order to define input(s) for a tool or a pipeline, the following is an example inputs definition for a dummy tool..
+
+.. code-block:: yaml
+
+   inputs:
+      - type: string
+        displayname: The input directory for the command
+        description: short or long description of the input file
+        name: input_dir
+        value: /your/original/dir/location
+      - type: string
+        displayname: The data directory where the rest of the required files reside
+        description: short or long description of the data directory
+        name: data_dir
+        value: /your/data/dir
+
+
+
+The type of the input parameter could be a ``string``, a ``file`` , a ``dir`` or it could be anything else.
+It really does not matter the value of this type directive as long as the author of the tool knows how to use it
+in either the scripts directive or the command directive.
+
+Output(s) Directive
+^^^^^^^^^^^^^^^^^^^
+
+Output(s) directive defines a set of output parameter(s) which might be produced
+by a tool during its execution. the outputs are the actual variables which could be utilized
+by other downstream dependent tools in the pipeline. A tool might or might not produce any output(s).
+Outputs directive follows the same definition markup as that of the inputs shown above.
+
+.. code-block:: yaml
+
+   outputs:
+      - type: file
+        displayname: "...."
+        description: "...."
+        name: output_file
+        value: myfile.txt
+
+
+
+
+Pipeline Definition Example(s)
+==============================
+
+Please use the following pipeline as an example to understand how to define the previously explained directives in the table above.
 
 .. code-block:: yaml
 
