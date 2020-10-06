@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var displayCmd = &cobra.Command{
 	Use:   "display",
 	Short: "This command will manipulate an Existing Tool Definition File by displaying and reading specific sections inside the Tool file.",
 	Long: `This command will manipulate an Existing Tool Definition File by displaying and reading specific sections inside the Tool file.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("display called")
+	RunE: func(cmd *cobra.Command, args []string)  error {
+		return cmd.Usage()
 	},
 }
 

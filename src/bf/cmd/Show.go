@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,9 @@ var ShowCmd = &cobra.Command{
 	Use:   "Show",
 	Short: "This command enables manipulation of tools and BioFlows Pipeline(s)",
 	Long: `This command enables manipulation of tools and BioFlows Pipeline(s)`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Show called")
+	RunE: func(cmd *cobra.Command, args []string)  error {
+
+		return cmd.Usage()
 	},
 }
 

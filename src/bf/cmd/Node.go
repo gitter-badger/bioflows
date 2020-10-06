@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var NodeCmd = &cobra.Command{
 	Use:   "Node",
 	Short:"A group of helper commands which enables joining remote cluster or starts a local cluster of Bioflows workers",
 	Long: `A group of helper commands which enables joining remote cluster or starts a local cluster of Bioflows workers`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Node called")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Usage()
 	},
 }
 

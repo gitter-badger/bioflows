@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +31,8 @@ var ToolCmd = &cobra.Command{
 	Use:   "Tool",
 	Short: "Helper commands to manage and run single BioFlows Tools",
 	Long: `Helper commands to manage and run single BioFlows Tools`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Tool called")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Usage()
 	},
 }
 

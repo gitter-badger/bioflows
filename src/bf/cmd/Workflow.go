@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var WorkflowCmd = &cobra.Command{
 	Use:   "Workflow",
 	Short: "A group of helper commands that allow manipulating, managing , running and submitting BioFlows Pipeline(s)",
 	Long: `A group of helper commands that allow manipulating, managing , running and submitting BioFlows Pipeline(s)`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Workflow called")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Usage()
 	},
 }
 

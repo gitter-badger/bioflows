@@ -23,9 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.bf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.bf.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bf/cmd/validate.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bioflows/cli/validate.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/source/pages/yaml.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/pages/yaml.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Hub.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Hub.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Node.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Node.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Show.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Show.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/Workflow.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/display.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/display.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/list.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/pack.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/pack.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +47,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" path="C:\Go" />
+  <component name="GOROOT" path="$USER_HOME$/go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -201,10 +209,11 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="2667" y="453" width="410" height="141" key="#GOROOT" timestamp="1601999234767">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="2667" y="470" width="410" height="141" key="#GOROOT" timestamp="1602022310068">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2667" y="453" key="#GOROOT/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1601999234767" />
+    <state x="2667" y="470" key="#GOROOT/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602022310068" />
     <state x="791" y="486" width="410" height="141" key="#GOROOT/72.27.1848.1053@72.27.1848.1053" timestamp="1600252100789" />
     <state x="2432" y="263" key="#Go_Modules" timestamp="1596360548547">
       <screen x="1920" y="0" width="1440" height="860" />
@@ -294,11 +303,11 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601380772450" />
-    <state x="131" y="0" width="1386" height="882" key="dock-window-1" timestamp="1602012545513">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="330" y="27" width="1225" height="653" maximized="true" key="dock-window-1" timestamp="1602023538551">
+      <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="131" y="0" width="1386" height="882" key="dock-window-1/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1602012545513" />
-    <state x="342" y="27" width="1297" height="1008" key="dock-window-1/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601714618889" />
+    <state x="330" y="27" width="1225" height="653" maximized="true" key="dock-window-1/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602023538551" />
     <state x="356" y="115" width="1385" height="731" maximized="true" key="dock-window-2" timestamp="1600672658506">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>

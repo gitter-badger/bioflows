@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "This command will list all registered categories in BioFlows Central Repository",
 	Long: `This command will list all registered categories in BioFlows Central Repository`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Usage()
 	},
 }
 

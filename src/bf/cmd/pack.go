@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var packCmd = &cobra.Command{
 	Use:   "pack",
 	Short: "This command will create a BioFlows Tool or Pipeline file (.bt) or (.bp) from a directory containing the Tool/Pipeline definition file and any associated files.",
 	Long: `This command will create a BioFlows Tool or Pipeline file (.bt) or (.bp) from a directory containing the Tool/Pipeline definition file and any associated files.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pack called")
+	RunE: func(cmd *cobra.Command, args []string) error{
+		return cmd.Usage()
 	},
 }
 

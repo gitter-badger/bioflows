@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,8 @@ var HubCmd = &cobra.Command{
 	Use:   "Hub",
 	Short: "Helper actions to interact with BioFlows centralized hub which contains published tools and pipelines",
 	Long: `Helper actions to interact with BioFlows centralized hub which contains published tools and pipelines`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Hub called")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Usage()
 	},
 }
 
