@@ -1,6 +1,5 @@
 BioFlows Documentation
 ======================
-.. image:: _static/images/logo.gif
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
