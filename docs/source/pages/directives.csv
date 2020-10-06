@@ -1,0 +1,40 @@
+﻿Directive Name,Description
+Type,"It could be ""tool"" or ""pipeline"". If you are defining an individual tool, you specify ""tool"" otherwise, if you are defining a whole complete pipeline for performing some kind of computational analysis you specify ""pipeline"""
+ID,An internal identifier for the current tool or pipeline that could be used to reference this tool or pipeline internally.
+depends,"Comma Separated List of IDs that the current tool depends on, it is only valid in case of an individual tool."
+imageId,A Docker image name to pull from DockerHub to use for starting a separate container. This image could provide necessary tools and operating environment for running the command of the current tool.
+order,"a number indicating the order of the tool in a pipeline, it is an optional."
+bioflowId,An optional identifier that globally identifies the current tool in BioFlows Hub
+url,An optional Full URL from which to download the original tool or pipeline definition file to use directly or in order to override some directives from the original file in the current tool definition file.
+name,A name for the current tool or pipeline to use during executing the current tool or pipeline.
+description,an optional long text description for the purpose of the current tool or pipeline.
+discussions,A list of long text description that could discusses in details the scientific purpose of the current tool or pipeline.
+website,an optional directives that could help users to find the website of the creator of the current tool or the research that has used the following tool or pipeline.
+version,"an optional directive which indicates the version of the tool, the version should be expressed as [Release].[Major].[Minor]"
+icon,An optional base64 encoded string of an icon or image to be used as a logo for the current tool or pipeline in BioFlows Hub - Sharing Platform.
+shadow,An optional boolean directive (true/false). Which indicates that the current tool has no output files. The default is false.
+maintainer,An optional Directive which describes the maintainer of the current tool or pipeline. Please look at the maintainer directive section below for more details.
+references,An optional List of References. Each reference contains nested directives which fully defines a reference object. Please look at the reference directive section below for more details.
+inputs,A complex list of directives which defines a list of input files required for the current tool or pipeline to run. Please look at the inputs directive section below for more details.
+config,An Optional List of internal configuration variables that are constant and not to be changed by the person who executes the current tool or pipeline. Please look at the config directive section below for more details.
+outputs,An optional list of directives that define a set of output parameters from the execution of the given tool or pipeline. These parameters are visible for downstream processing Bioflows tools and/or pipelines to use in a directed acyclic graph manner (DAG).
+command,This is the mandatory linux command line to use for executing the current tool. The command can reference inputs and/or output files as placeholders. Please check The tutorial for more details on how to define a tool or pipeline in order to fully understand how to express a tool command directive.
+deprecated,An optional boolean directive which indicates that the maintainer of this tool has already created another newer tool that supercedes the current one and this one should not be used anymore. Defaults to false.
+steps,A list of other individual tools or nested pipelines to use as step(s) In the current pipeline. Please take a look at how to define a complete pipeline in the tutorial in this documentation.
+notification,An optional complex directive which indicates that this tool should notify mentioned person(s) via email with a custom email message in case it has run. Please take a look at how to define this directive in the following sections of this tutorial.
+caps,An optional complex directive which lists some execution constraints or preferences for the current tool or pipeline to meet in order to successfully execute the current tool or pipeline like how many CPU cores required and/or How many GigaBytes of RAM required for the current tool in order to successfully run. Please look at the following sections on how to define a correct caps directive.
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,

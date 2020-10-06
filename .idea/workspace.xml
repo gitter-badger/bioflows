@@ -24,8 +24,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bioflows.go" beforeDir="false" afterPath="$PROJECT_DIR$/bioflows.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/process/executor.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/process/executor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/conf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/pages/yaml.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/pages/yaml.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/pipeline.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/pipelines/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/pipeline.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +41,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" path="$USER_HOME$/go" />
+  <component name="GOROOT" path="C:\Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -79,7 +81,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -201,9 +203,10 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="791" y="486" width="410" height="141" key="#GOROOT" timestamp="1600252100789">
-      <screen x="72" y="27" width="1848" height="1053" />
+    <state x="2667" y="453" width="410" height="141" key="#GOROOT" timestamp="1601999234767">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
+    <state x="2667" y="453" key="#GOROOT/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1601999234767" />
     <state x="791" y="486" width="410" height="141" key="#GOROOT/72.27.1848.1053@72.27.1848.1053" timestamp="1600252100789" />
     <state x="2432" y="263" key="#Go_Modules" timestamp="1596360548547">
       <screen x="1920" y="0" width="1440" height="860" />
@@ -274,10 +277,11 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2676" y="223" width="398" height="640" key="RollbackChangesDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601553853063" />
-    <state x="2275" y="126" width="1022" height="737" key="SettingsEditor" timestamp="1600583863036">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="2275" y="121" width="1022" height="737" key="SettingsEditor" timestamp="1601999563186">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2141" y="75" key="SettingsEditor/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360921689" />
+    <state x="2275" y="121" key="SettingsEditor/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1601999563186" />
     <state x="2275" y="126" width="1022" height="737" key="SettingsEditor/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1600583863036" />
     <state x="356" y="119" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1600255818594" />
     <state width="960" height="540" key="XDebugger.FullValuePopup" timestamp="1601792295043">
@@ -292,9 +296,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601380772450" />
-    <state x="342" y="27" width="1297" height="1008" key="dock-window-1" timestamp="1601714618889">
-      <screen x="72" y="27" width="1848" height="1053" />
+    <state x="2541" y="20" width="1419" height="882" maximized="true" key="dock-window-1" timestamp="1602005423029">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
+    <state x="2541" y="20" width="1419" height="882" maximized="true" key="dock-window-1/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1602005423029" />
     <state x="342" y="27" width="1297" height="1008" key="dock-window-1/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601714618889" />
     <state x="356" y="115" width="1385" height="731" maximized="true" key="dock-window-2" timestamp="1600672658506">
       <screen x="72" y="27" width="1848" height="1053" />

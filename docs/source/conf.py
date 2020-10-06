@@ -27,6 +27,7 @@ author = 'Mohamed Fawzy'
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
 
+pygments_style = 'sphinx'
 
 # -- General configuration ---------------------------------------------------
 

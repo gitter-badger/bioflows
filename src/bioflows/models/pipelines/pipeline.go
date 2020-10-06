@@ -28,6 +28,7 @@ type BioPipeline struct {
 	Inputs       []models.Parameter   `json:"inputs,omitempty" yaml:"inputs,omitempty"`
 	Config       []models.Parameter   `json:"config,omitempty" yaml:"config,omitempty"`
 	Outputs      []models.Parameter   `json:"outputs,omitempty" yaml:"outputs,omitempty"`
+	Scripts      []models.Script      `json:"scripts,omitempty" yaml:"scripts,omitempty"`
 	Command      models.Scriptable    `json:"command" yaml:"command"`
 	Dependencies []string             `json:"dependencies,omitempty" yaml:"dependencies,omitempty"`
 	Deprecated   bool                 `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
@@ -77,6 +78,8 @@ func (p BioPipeline) ToTool() *models.Tool {
 	t.Icon = p.Icon
 	t.Shadow = p.Shadow
 	t.Maintainer = p.Maintainer
+	t.Scripts = make([]models.Script,len(p.Scripts))
+	copy(t.Scripts,p.Scripts)
 	t.References = make([]models.Reference, len(p.References))
 	copy(t.References, p.References)
 	t.Inputs = make([]models.Parameter, len(p.Inputs))
