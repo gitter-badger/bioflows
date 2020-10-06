@@ -23,14 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/bioflows/helpers/http.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/helpers/hub.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/config/params.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/config/params.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/preprocessing.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/preprocessing.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
