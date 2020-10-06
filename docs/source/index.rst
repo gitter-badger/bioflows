@@ -10,6 +10,9 @@ Welcome to BioFlows's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   pages/introduction
+
+
 
 
 Indices and tables
