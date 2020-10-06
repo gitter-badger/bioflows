@@ -32,17 +32,3 @@ func (workflow BioWorkflow) ToJson() string {
 	}
 	return buffer.String()
 }
-
-func (workflow BioWorkflow) PrepareInstallations() [][]string {
-	installations := make([][]string,0)
-	for _, instances := range workflow.Tools {
-		toolInstallations := make([]string,0)
-		for _,instance := range instances.PrepareInstallations(){
-
-			toolInstallations = append(toolInstallations,instance...)
-		}
-		installations = append(installations,toolInstallations)
-
-	}
-	return installations
-}

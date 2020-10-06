@@ -23,7 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bf/cmd/root.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bf/cmd/root.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/workflow.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/workflow.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
