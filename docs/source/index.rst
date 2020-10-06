@@ -11,18 +11,4 @@ Welcome to BioFlows's documentation!
 BioFlows Framework enables researchers to run massively parallel bioinformatics pipelines on multiple Cloud Platforms , Operating Systems and different Cloud Containers.
 
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   pages/introduction
-   pages/architecture
-   pages/getting-started
-   pages/yaml
-   pages/authoring
-   pages/scripting
-   pages/variables
-   pages/commandline
-   pages/configuration
-   pages/cluster
-   pages/sharing
+.. include:: contents.rst

@@ -16,3 +16,4 @@ BioFlows Documentation
    pages/configuration
    pages/cluster
    pages/sharing
+   pages/contribute
