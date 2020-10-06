@@ -24,8 +24,7 @@ func (e *CommandExecutor) Init() {
 func (e *CommandExecutor) Run() (int, error) {
 	e.buffer = &bytes.Buffer{}
 	e.errorBuff = &bytes.Buffer{}
-	splittedCommand := strings.Split(e.Command," ")
-	cmd := exec.Command(e.InitialCommand, strings.Join(e.PreCommandArgs," "),strings.Join(splittedCommand," "))
+	cmd := exec.Command(e.InitialCommand, strings.Join(e.PreCommandArgs," "),e.Command)
 	cmd.Dir = e.CommandDir
 	cmd.Stdout = e.buffer
 	cmd.Stderr = e.errorBuff
