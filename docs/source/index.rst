@@ -8,7 +8,7 @@ Welcome to BioFlows's documentation!
 
 .. image:: _static/images/logo.gif
 
-BioFlows Framework enables researchers to run massively parallel bioinformatics pipelines on multiple Cloud Platforms , Operating Systems and different Cloud Containers.
+BioFlows Framework enables researchers to run bioinformatics pipelines on multiple Cloud Platforms , Operating Systems and different Cloud Containers.
 
 
 .. include:: contents.rst
