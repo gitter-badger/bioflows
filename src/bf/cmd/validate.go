@@ -4,6 +4,7 @@ import (
 	"bioflows/cli"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/ttacon/chalk"
 )
 
 var ValidateCmd = &cobra.Command{
@@ -30,7 +31,14 @@ var ValidateCmd = &cobra.Command{
 		} else {
 			fmt.Println("Validate Tool: The tool is not valid.")
 		}
-
+		table , err := cli.GetRequirementsTableFor(filePath)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("%s",err.Error()))
+			return err
+		}
+		fmt.Println("")
+		fmt.Println(chalk.Underline.TextStyle("BioFlows Pipeline Input Requirements"))
+		fmt.Println(table.String())
 		return nil
 	},
 }
