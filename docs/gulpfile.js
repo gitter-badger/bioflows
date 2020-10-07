@@ -1,14 +1,17 @@
-var gulp = require("gulp");
+const {series,watch} = require('gulp');
 var shell = require('gulp-shell');
-// This compiles new binary with source change
-gulp.task("make-clean", shell.task([
-   'make clean'
-]));
-gulp.task("make-html", ["make-clean"], shell.task([
-   'make html'
-]))
-gulp.task('watch', function() {
-// Watch the source code for all changes
-   gulp.watch("*", ['make-clean', 'make-html']);
-});
-gulp.task('default', ['watch']);
+
+function make_clean(cb){
+   shell(['make clean']);
+   cb();
+}
+
+function make_html(cb){
+   shell(['make html']);
+   cb();
+}
+
+
+exports.default = function(){
+   watch("source/*",series(shell.task('make clean'),shell.task('make html')));
+}
