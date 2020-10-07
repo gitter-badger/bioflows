@@ -1,18 +1,14 @@
-var gulp = require('gulp');
-
+var gulp = require("gulp");
 var shell = require('gulp-shell');
-
-
-gulp.task('make-clean',function (){
-   shell.task(['make clean']);
+// This compiles new binary with source change
+gulp.task("make-clean", shell.task([
+   'make clean'
+]));
+gulp.task("make-html", ["make-clean"], shell.task([
+   'make html'
+]))
+gulp.task('watch', function() {
+// Watch the source code for all changes
+   gulp.watch("*", ['make-clean', 'make-html']);
 });
-
-gulp.task('make-html',function (){
-   shell.task(['make html']);
-});
-
-gulp.task('watch',function (){
-   gulp.watch('*',gulp.series('make-clean','make-html'));
-});
-
-gulp.task('default',gulp.series('watch'))
+gulp.task('default', ['watch']);
