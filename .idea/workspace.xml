@@ -23,10 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/dag.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/dag.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/pipeline.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/helpers/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/helpers/http.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,12 +149,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Build.go build bioflows.go" />
       <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="Go Build.go build test_yaml.go" />
       <item itemvalue="Go Build.go build test.go" />
       <item itemvalue="Go Build.go build test_pipeline2.go" />
       <item itemvalue="Go Build.go build test_runtime.go" />
-      <item itemvalue="Go Build.go build test_yaml.go" />
+      <item itemvalue="Go Build.go build bioflows.go" />
     </list>
     <recent_temporary>
       <list>
