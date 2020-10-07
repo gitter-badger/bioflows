@@ -24,7 +24,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/dag.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/dag.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/cli/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/cli/tool.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,12 +149,12 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go Build.go build bioflows.go" />
       <item itemvalue="Go Build.go build main.go" />
-      <item itemvalue="Go Build.go build test_yaml.go" />
       <item itemvalue="Go Build.go build test.go" />
       <item itemvalue="Go Build.go build test_pipeline2.go" />
       <item itemvalue="Go Build.go build test_runtime.go" />
-      <item itemvalue="Go Build.go build bioflows.go" />
+      <item itemvalue="Go Build.go build test_yaml.go" />
     </list>
     <recent_temporary>
       <list>
@@ -306,10 +308,10 @@
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="356" y="115" width="1385" height="731" maximized="true" key="dock-window-2/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1600672658506" />
-    <state x="2571" y="148" width="618" height="783" key="find.popup" timestamp="1601406441907">
+    <state x="2571" y="148" width="618" height="783" key="find.popup" timestamp="1602053462784">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2571" y="148" width="618" height="783" key="find.popup/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601406441907" />
+    <state x="2571" y="148" width="618" height="783" key="find.popup/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602053462784" />
     <state x="2543" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1601801615347">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -340,7 +342,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/cli/dag.go</url>
-          <line>11</line>
+          <line>12</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -350,17 +352,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/cli/tool.go</url>
-          <line>51</line>
+          <line>62</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/cli/tool.go</url>
-          <line>46</line>
+          <line>57</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/src/bioflows/cli/tool.go</url>
-          <line>9</line>
+          <line>11</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
