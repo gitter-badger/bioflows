@@ -1,12 +1,6 @@
 id: secondPipeline
-bioflowId: secondPipeline
 type: pipeline
 name: Second Pipeline
-description:
-  -"This tool is the second pipeline"
-  -"This tool is the second pipeline"
-website: http://hub.bioflows.io
-version: 1.0.0
 steps:
   - id: remoteOne
     name: remoteOne
@@ -16,7 +10,7 @@ steps:
   - id: remoteTwo
     name: remoteTwo
     depends: remoteOne
-    command: wc -l {{Second.location}}/{{Second.output_file}} > {{self_dir}}/count.txt
+    command: wc -l {{remoteOne.location}}/{{remoteOne.output_file}} > {{self_dir}}/count.txt
 
 #  - id: Fourth
 #    name: Fourth
