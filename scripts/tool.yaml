@@ -1,47 +1,55 @@
----
-bioflowId: xdir3525
-command: "ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}"
-description: "this is a tool that will list all linux directories for a given input directory parameter"
-discussions:
-  - "this tool will list directories"
-  - "this tool will list all linux directories for a given input directory parameter"
-icon: "here you can place hexadecimal value of an icon in png format"
+# this is an example of a bioflow tool definition
 id: 123
-inputs:
-  -
-    description: "long or short description about the parameter goes here"
-    displayname: "the input directory for the command"
-    name: input_dir
-    type: string
-    value: /home/snouto
-maintainer:
-  ? "-fullname"
-    : "mohamed ibrahim"
-  email: mfawzy.sami@gmail.com
-  username: mfawzy
-name: "list directories"
-outputs:
-  -
-    displayname: "the output file"
-    name: output_file
-    type: string
-    value: myoutputfile.txt
-references:
-  -
-    description: "long or short snippet of a description goes here"
-    name: "name of the reference"
-    website: "http://www.ncbi.nlm.gov.nl"
-scripts:
-  -
-    before: true
-    code: "self.input_dir = \"/home/snouto/projects\";\n"
-    order: 1
-    type: js
-  -
-    before: true
-    code: "self.input_dir = \"/home/snouto/Downloads\";\n"
-    order: 2
-    type: js
+type: tool
+bioflowId: xdir3525
+name: list directories
+description: this is a tool that will list all linux directories for a given input directory parameter
+discussions:
+  - this tool will list directories
+  - this tool will list all linux directories for a given input directory parameter
+website: http://hub.bioflows.io
+version: 1.0.0
+icon: here you can place hexadecimal value of an icon in png format
+# shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
+# as a decision tool
 shadow: false
-version: "1.0.0"
-website: "http://hub.bioflows.io"
+maintainer:
+    -fullname: mohamed ibrahim
+    email: mfawzy.sami@gmail.com
+    username: mfawzy
+
+references:
+  - name: "name of the reference"
+    description: "long or short snippet of a description goes here"
+    website: http://www.ncbi.nlm.gov.nl
+
+inputs:
+  - type: string
+    displayname: the input directory for the command
+    name: input_dir
+    description: long or short description about the parameter goes here
+    value: /home/snouto
+
+outputs:
+  - type: string
+    displayname: the output file
+    name: output_file
+    value: myoutputfile.txt
+
+
+scripts:
+  - type: js
+    before: true
+    order: 1
+    code: >
+      self.input_dir = "/home/snouto/projects";
+  - type: js
+    order: 2
+    before: true
+    code: >
+      self.input_dir = "/home/snouto/Downloads";
+
+# this tool has no outputs
+command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
+
+# this tool has no installations
