@@ -22,7 +22,8 @@ steps:
         value: myfile.txt
     command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
   - id: 2
-    url:
+    url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/tool.yaml
+
   - id: 3
     name: count
     depends: 1,2
