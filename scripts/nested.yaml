@@ -9,7 +9,19 @@ steps:
   - id: nestedtwo
     name: nestedtwo
     depends: nestedone
-    command: cp {{second_input_file}} {{self_dir}} && echo "Copying finished"
+    command: cp {{second_input_file}} {{self_dir}} && echo {{output_str}}
+    outputs:
+      - type: string
+        name: output_str
+        description: this file will contain the contents of the count.txt from the previous step
+    scripts:
+      - type: js
+        before: true
+        code: >
+          var output_file = self.remoteTwo.location + "/" + "count.txt";
+          var contents = io.ReadFile(output_file);
+          self.output_str = contents
+
     inputs:
       - type: string
         name: second_input_file
