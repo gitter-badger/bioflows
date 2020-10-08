@@ -8,23 +8,12 @@ description:
 website: http://hub.bioflows.io
 version: 1.0.0
 steps:
-  - id: 1
-    bioflowId: mytool1
-    name: Generate
-    inputs:
-      - type: string
-        displayname: The input directory for the command
-        name: input_dir
-        value: /home/snouto
-    outputs:
-      - type: file
-        name: output_file
-        value: myfile.txt
-    command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
-  - id: 2
+  - id: Second
+    name: Second
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/tool.yaml
 
-  - id: 3
-    name: count
-    depends: 1,2
-    command: wc -l {{2.dest_dir}} > {{self_dir}}/count.txt
+
+  - id: Third
+    name: Third
+    depends: Second
+    command: wc -l {{Second.location}}/{{Second.output_file}} > {{self_dir}}/count.txt

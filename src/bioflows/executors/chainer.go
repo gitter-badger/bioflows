@@ -12,7 +12,7 @@ var (
 type TransformCall func (b *pipelines.BioPipeline,config models.FlowConfig) error
 
 func init(){
-	DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,[]TransformCall{UseUrl,UseBioFlowId,}...)
+	DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,[]TransformCall{UseUrl,}...)
 }
 
 func PreprocessPipeline(b *pipelines.BioPipeline,config models.FlowConfig, transforms ...TransformCall)  {
