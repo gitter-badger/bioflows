@@ -1,6 +1,6 @@
-id: secondPipeline
+id: remotePipeline
 type: pipeline
-name: Second Pipeline
+name: Remote Pipeline
 steps:
   - id: remoteOne
     name: remoteOne
