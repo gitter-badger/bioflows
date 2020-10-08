@@ -63,6 +63,7 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 	workflowConfig.Fill(BfConfig)
 	fmt.Println("Executing the current tool.")
 	executor := executors.ToolExecutor{}
+	executor.SetPipelineName(workflowName)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	tool_name := tool.Name
 	if len(tool_name) <= 0 {

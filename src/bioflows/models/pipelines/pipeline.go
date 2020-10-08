@@ -1,7 +1,6 @@
 package pipelines
 
 import (
-	"bioflows/helpers/id"
 	"bioflows/models"
 	"encoding/json"
 	"fmt"
@@ -43,10 +42,6 @@ func (instance *BioPipeline) GetIdentifier() string {
 }
 
 func (instance *BioPipeline) Prepare() {
-	//Generate random unique ID if the instance Tool ID is not set
-	if len(instance.ID) <= 0 {
-		instance.ID, _ = id.NewID()
-	}
 	//if the tool name is not set, then use the tool ID
 	if len(instance.Name) <= 0 {
 		instance.Name = instance.ID

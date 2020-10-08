@@ -14,4 +14,4 @@ steps:
       - type: string
         name: second_input_file
         description: "Second Input File"
-        value: "{{nestedone.Third.location}}/count.txt"
+        value: "{{nestedone.remoteTwo.location}}/count.txt"

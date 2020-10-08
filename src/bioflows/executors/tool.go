@@ -22,6 +22,11 @@ type ToolExecutor struct {
 	toolLogger *log.Logger
 	flowConfig models.FlowConfig
 	exprManager *expr.ExprManager
+	pipelineName string
+}
+func (e *ToolExecutor) SetPipelineName(name string) {
+	//e.pipelineName = strings.
+	e.pipelineName = strings.ReplaceAll(name," ","_")
 }
 
 func (e *ToolExecutor) notify(tool *models.ToolInstance) {
@@ -161,7 +166,7 @@ func (e *ToolExecutor) GetToolOutputDir() (toolConfigKey string,toolDir string,e
 		err = fmt.Errorf("Unable to get the Tool/Workflow Output Directory")
 		return
 	}
-	toolOutputDir := strings.Join([]string{e.ToolInstance.Name,e.ToolInstance.ID},"_")
+	toolOutputDir := strings.Join([]string{e.pipelineName,e.ToolInstance.ID},"_")
 	toolDir = strings.Join([]string{fmt.Sprintf("%v",workflowOutputDir),toolOutputDir},"/")
 	preparedToolName := strings.ReplaceAll(e.ToolInstance.ID," ","_")
 	toolConfigKey = fmt.Sprintf("%s_dir",preparedToolName)
@@ -169,7 +174,7 @@ func (e *ToolExecutor) GetToolOutputDir() (toolConfigKey string,toolDir string,e
 }
 func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 
-	outputFile := strings.Join([]string{e.ToolInstance.Name,e.ToolInstance.BioflowId,name},"_")
+	outputFile := strings.Join([]string{e.ToolInstance.Name,name},"_")
 	outputFile = strings.Join([]string{outputFile,ext},".")
 	_ , toolOutputDir , err := e.GetToolOutputDir()
 	if err != nil {

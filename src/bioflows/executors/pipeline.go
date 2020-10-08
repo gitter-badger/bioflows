@@ -157,6 +157,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 		if currentFlow.IsTool() {
 			// It is a single tool
 			executor := ToolExecutor{}
+			executor.SetPipelineName(p.parentPipeline.Name)
 			toolInstance := &models.ToolInstance{
 				WorkflowID: b.ID,
 				WorkflowName: b.Name,
@@ -174,7 +175,6 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 					fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
 					return
 				}
-
 			}
 		}else{
 			//it is a nested pipeline
