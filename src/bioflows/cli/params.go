@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/alexeyco/simpletable"
+	"github.com/goombaio/dag"
 )
 
 func GetRequirementsTableFor(toolPath string) (*simpletable.Table,error){
@@ -19,7 +20,19 @@ func GetRequirementsTableFor(toolPath string) (*simpletable.Table,error){
 	if err != nil {
 		return nil , err
 	}
-	successors := graph.SourceVertices()
+	var successors []*dag.Vertex
+
+	if pipeline.Type == "tool" {
+
+		successors = make([]*dag.Vertex,0)
+		oneVertex := &dag.Vertex{
+			Value: *pipeline,
+		}
+		successors = append(successors,oneVertex)
+	}else{
+		successors = graph.SourceVertices()
+	}
+
 	if len(successors) <= 0 {
 		return nil , errors.New(fmt.Sprintf("BioFlows Definition File: %s is invalid.",pipeline.Name))
 	}
