@@ -1,0 +1,29 @@
+id: secondPipeline
+bioflowId: secondPipeline
+type: pipeline
+name: Second Pipeline
+description:
+  -"This tool is the second pipeline"
+  -"This tool is the second pipeline"
+website: http://hub.bioflows.io
+version: 1.0.0
+steps:
+  - id: 1
+    bioflowId: mytool1
+    name: Generate
+    inputs:
+      - type: string
+        displayname: The input directory for the command
+        name: input_dir
+        value: /home/snouto
+    outputs:
+      - type: file
+        name: output_file
+        value: myfile.txt
+    command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
+  - id: 2
+    url:
+  - id: 3
+    name: count
+    depends: 1,2
+    command: wc -l {{2.dest_dir}} > {{self_dir}}/count.txt

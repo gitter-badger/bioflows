@@ -32,6 +32,21 @@ type Parameter struct {
 func (p *Parameter) GetParamValue() string {
 	return fmt.Sprintf("%v", p.Value)
 }
+func (p *Parameter) Fill(t *Parameter) error {
+	if t.Value != nil {
+		p.Value = t.Value
+	}
+	if t.Description != "" {
+		p.Description = t.Description
+	}
+	if t.DisplayName != "" {
+		p.DisplayName = t.DisplayName
+	}
+	if t.Type != "" {
+		p.Type = t.Type
+	}
+	return nil
+}
 
 type Reference struct {
 	Name        string `json:"name" yaml:"name"`

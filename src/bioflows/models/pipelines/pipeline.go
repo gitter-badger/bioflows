@@ -93,6 +93,7 @@ func (p BioPipeline) ToTool() *models.Tool {
 	copy(t.Dependencies, p.Dependencies)
 	t.Deprecated = p.Deprecated
 	t.Conditions = make([]models.Scriptable, len(p.Conditions))
+	copy(t.Conditions,p.Conditions)
 	return t
 }
 

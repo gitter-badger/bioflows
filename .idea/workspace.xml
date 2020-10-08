@@ -24,7 +24,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b941d4fb-022f-4dd2-8a2f-7be8232b4b42" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/executors/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gorequirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gorequirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/tool.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/tool.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/clone.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/pipelines/pipeline.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/pipelines/pipeline.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bioflows/models/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/bioflows/models/types.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -278,12 +282,12 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2676" y="223" width="398" height="640" key="RollbackChangesDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601553853063" />
-    <state x="2275" y="121" width="1022" height="737" key="SettingsEditor" timestamp="1601999563186">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="2275" y="126" width="1022" height="737" key="SettingsEditor" timestamp="1602150662818">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2141" y="75" key="SettingsEditor/0.0.1536.824/1920.0.1440.860@1920.0.1440.860" timestamp="1596360921689" />
     <state x="2275" y="121" key="SettingsEditor/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1601999563186" />
-    <state x="2275" y="126" width="1022" height="737" key="SettingsEditor/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1600583863036" />
+    <state x="2275" y="126" width="1022" height="737" key="SettingsEditor/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602150662818" />
     <state x="356" y="119" width="1022" height="737" key="SettingsEditor/72.27.1848.1053@72.27.1848.1053" timestamp="1600255818594" />
     <state width="960" height="540" key="XDebugger.FullValuePopup" timestamp="1601792295043">
       <screen x="1920" y="0" width="1920" height="1080" />
@@ -297,11 +301,11 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2641" y="323" width="467" height="440" key="com.goide.refactor.move.GoMoveDeclarationDialog/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602025600659" />
-    <state x="330" y="27" width="1225" height="653" maximized="true" key="dock-window-1" timestamp="1602023538551">
+    <state x="361" y="27" width="1210" height="1008" maximized="true" key="dock-window-1" timestamp="1602151062085">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="131" y="0" width="1386" height="882" key="dock-window-1/0.0.1536.824/1920.0.1920.1040@1920.0.1920.1040" timestamp="1602012545513" />
-    <state x="330" y="27" width="1225" height="653" maximized="true" key="dock-window-1/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602023538551" />
+    <state x="361" y="27" width="1210" height="1008" maximized="true" key="dock-window-1/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602151062085" />
     <state x="356" y="115" width="1385" height="731" maximized="true" key="dock-window-2" timestamp="1600672658506">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
@@ -310,10 +314,10 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2571" y="148" width="618" height="783" key="find.popup/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601406441907" />
-    <state x="2543" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1601801615347">
+    <state x="2543" y="239" width="672" height="678" key="search.everywhere.popup" timestamp="1602151815232">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2543" y="239" width="672" height="678" key="search.everywhere.popup/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1601801615347" />
+    <state x="2543" y="239" width="672" height="678" key="search.everywhere.popup/72.27.1848.1053/1920.0.1920.1080@1920.0.1920.1080" timestamp="1602151815232" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

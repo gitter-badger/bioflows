@@ -11,3 +11,6 @@ github.com/aidarkhanov/nanoid
 github.com/goombaio/dag
 github.com/awalterschulze/gographviz
 github.com/goccy/go-graphviz
+github.com/gorilla/mux
+github.com/gorilla/handlers
+github.com/gorilla/rpc

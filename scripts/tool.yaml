@@ -29,6 +29,12 @@ inputs:
     description: long or short description about the parameter goes here
     value: /home/snouto
 
+outputs:
+  - type: string
+    displayname: the output file
+    name: output_file
+    value: myoutputfile.txt
+
 
 scripts:
   - type: js
@@ -43,6 +49,6 @@ scripts:
       self.input_dir = "/home/snouto/Downloads";
 
 # this tool has no outputs
-command: ls -ll {{input_dir}}
+command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
 
 # this tool has no installations
