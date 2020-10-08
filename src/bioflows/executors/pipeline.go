@@ -71,7 +71,19 @@ func (p *PipelineExecutor) SetContext(c *managers.ContextManager) {
 func (p *PipelineExecutor) GetContext() *managers.ContextManager {
 	return p.contextManager
 }
+func (p PipelineExecutor) SetPipelineGeneralConfig(b *pipelines.BioPipeline,originalConfig *models.FlowConfig) {
+	// Read the pipeline general configuration section
+	if b.Config != nil && len(b.Config) > 0 {
+		internalConfig := make(map[string]interface{})
+		for _ , param := range b.Config {
+			internalConfig[param.Name] = param.Value
+		}
+		(*originalConfig)[config2.BIOFLOWS_INTERNAL_CONFIG] = internalConfig
+	}
+}
 func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) error {
+	//Set default pipeline general configuration if exists..
+	p.SetPipelineGeneralConfig(b,&config)
 	var finalError error
 	defer func() error{
 		if r := recover(); r != nil {
