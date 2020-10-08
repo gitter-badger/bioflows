@@ -11,15 +11,28 @@ import (
 	"github.com/goombaio/dag"
 	"strings"
 )
+func RecursiveProcessing(b *pipelines.BioPipeline) {
+	if b.URL == "" && len(b.URL) == 0 && len(b.Steps) <= 0 {
+		return
+	}else{
+		executors.PreprocessPipeline(b,nil,nil)
+		for idx , child := range b.Steps {
+			RecursiveProcessing(&child)
+			b.Steps[idx] = child
+		}
+	}
+
+}
 
 func GetRequirementsTableFor(toolPath string) (*simpletable.Table,error){
 	table := simpletable.New()
 	pipeline := &pipelines.BioPipeline{}
 	err := helpers.ReadPipelineFile(pipeline,toolPath)
-	executors.PreprocessPipeline(pipeline,nil,nil)
 	if err != nil {
 		return nil , err
 	}
+
+	RecursiveProcessing(pipeline)
 	graph , err := pipelines.CreateGraph(pipeline)
 	if err != nil {
 		return nil , err
@@ -50,7 +63,7 @@ func GetRequirementsTableFor(toolPath string) (*simpletable.Table,error){
 	TotalInputs := make([]models.Parameter,0)
 	for index , parent := range successors {
 		parentPipeline := parent.Value.(pipelines.BioPipeline)
-		executors.PreprocessPipeline(&parentPipeline,nil,nil)
+
 		if strings.EqualFold(strings.ToLower(parentPipeline.Type),"pipeline") && len(parentPipeline.Steps) > 0 {
 
 			nestedGraph , err  := pipelines.CreateGraph(&parentPipeline)
@@ -63,7 +76,6 @@ func GetRequirementsTableFor(toolPath string) (*simpletable.Table,error){
 			}
 			for _ , nested := range nested_successors {
 				current := nested.Value.(pipelines.BioPipeline)
-				executors.PreprocessPipeline(&current,nil,nil)
 				TotalInputs = append(TotalInputs,current.Inputs...)
 			}
 		}else{

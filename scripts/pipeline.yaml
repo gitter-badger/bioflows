@@ -93,7 +93,7 @@ steps:
     inputs:
       - type: string
         displayname: the input directory for the command
-        name: input_dir
+        name: input_dir2
         description: long or short description about the parameter goes here
         value: /your/dir
     scripts:
