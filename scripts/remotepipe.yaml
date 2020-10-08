@@ -8,14 +8,14 @@ description:
 website: http://hub.bioflows.io
 version: 1.0.0
 steps:
-  - id: Second
-    name: Second
+  - id: remoteOne
+    name: remoteOne
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/tool.yaml
 
 
-  - id: Third
-    name: Third
-    depends: Second
+  - id: remoteTwo
+    name: remoteTwo
+    depends: remoteOne
     command: wc -l {{Second.location}}/{{Second.output_file}} > {{self_dir}}/count.txt
 
 #  - id: Fourth
