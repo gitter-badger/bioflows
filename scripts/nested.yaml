@@ -1,0 +1,17 @@
+id: nestedPipeline
+name: nestedPipeline
+type: pipeline
+steps:
+  - id: first
+    name: first
+    url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/remotepipe.yaml
+
+  - id: second
+    name: second
+    depends: first
+    command: cp {{second_input_file}} {{self_dir}} && echo "Copying finished"
+    inputs:
+      - type: string
+        name: second_input_file
+        description: "Second Input File"
+        value: "{{first.Third.location}}/count.txt"

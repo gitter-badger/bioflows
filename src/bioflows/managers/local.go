@@ -35,9 +35,8 @@ func (c *LocalStateManager) GetPipelineState(pipelineKey string) (models.FlowCon
 		if err != nil {
 			continue
 		}
-		if converted_state , ok := state.(map[string]interface{}); ok {
-			finalConfig[helpers.GetToolIdFromKey(key)] = converted_state
-		}
+		finalConfig[helpers.GetToolIdFromKey(key)] = state
+
 	}
 	return finalConfig , nil
 }

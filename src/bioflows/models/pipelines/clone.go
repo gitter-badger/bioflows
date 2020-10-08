@@ -22,6 +22,7 @@ func Clone(o *BioPipeline, t *BioPipeline) error {
 	o.URL = t.URL
 	o.ImageId = t.ImageId
 	o.Caps = t.Caps
+	o.Type = t.Type
 	o.BioflowId = t.BioflowId
 	o.Name = t.Name
 	o.Description = t.Description

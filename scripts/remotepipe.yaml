@@ -17,3 +17,7 @@ steps:
     name: Third
     depends: Second
     command: wc -l {{Second.location}}/{{Second.output_file}} > {{self_dir}}/count.txt
+
+#  - id: Fourth
+#    name: Fourth
+#    url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/pipeline.yaml
