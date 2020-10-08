@@ -34,5 +34,5 @@ func (manager *JSScriptManager) RunBefore(script models.Script,config map[string
 }
 
 func (manager *JSScriptManager) RunAfter(script models.Script,config map[string]interface{}) error {
-	return nil
+	return manager.RunBefore(script,config)
 }

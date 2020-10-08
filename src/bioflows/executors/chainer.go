@@ -16,7 +16,9 @@ func init(){
 }
 
 func PreprocessPipeline(b *pipelines.BioPipeline,config models.FlowConfig, transforms ...TransformCall)  {
-	DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,transforms...)
+	if transforms != nil && len(transforms) > 0 && transforms[0] != nil {
+		DEFAULT_CHAINERS = append(DEFAULT_CHAINERS,transforms...)
+	}
 	if len(DEFAULT_CHAINERS) <= 0{
 		return
 	}
