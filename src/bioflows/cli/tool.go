@@ -3,7 +3,9 @@ package cli
 import (
 	"bioflows/config"
 	"bioflows/executors"
+	"bioflows/helpers"
 	"bioflows/models"
+	"bioflows/models/pipelines"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -25,24 +27,33 @@ func ReadConfig(cfgFile string) (models.FlowConfig,error) {
 }
 
 func RunTool(configFile string, toolPath string,workflowId string , workflowName string,outputDir string) error{
-	tool := &models.Tool{}
+	tool := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
-	tool_in, err := os.Open(toolPath)
-	if err != nil {
-		fmt.Printf("There was an error opening the tool file, %v\n",err)
-		os.Exit(1)
-	}
-	mytool_content, err := ioutil.ReadAll(tool_in)
-	if err != nil {
-		fmt.Printf("Error reading the contents of the tool , %v\n",err)
-		os.Exit(1)
-	}
+	if !helpers.IsValidUrl(toolPath){
+		tool_in, err := os.Open(toolPath)
+		if err != nil {
+			fmt.Printf("There was an error opening the tool file, %v\n",err)
+			os.Exit(1)
+		}
+		mytool_content, err := ioutil.ReadAll(tool_in)
+		if err != nil {
+			fmt.Printf("Error reading the contents of the tool , %v\n",err)
+			os.Exit(1)
+		}
 
-	err = yaml.Unmarshal([]byte(mytool_content),tool)
-	if err != nil {
-		//fmt.Println("There was a problem unmarshaling the current tool")
-		fmt.Println(err.Error())
-		return err
+		err = yaml.Unmarshal([]byte(mytool_content),tool)
+		if err != nil {
+			//fmt.Println("There was a problem unmarshaling the current tool")
+			fmt.Println(err.Error())
+			return err
+		}
+	}else{
+		//Download the tool remotely
+		err := helpers.DownloadBioFlowFile(tool,toolPath)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("Error Downloading the file: %s",err.Error()))
+			return err
+		}
 	}
 	BfConfig , err := ReadConfig(configFile)
 	if err != nil {
@@ -57,7 +68,7 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 	if len(tool_name) <= 0 {
 		tool_name = workflowName
 	}
-	_ ,err = executor.Run(&models.ToolInstance{WorkflowID: workflowId,Name: workflowName ,WorkflowName: workflowName,Tool:tool},workflowConfig)
+	_ ,err = executor.Run(&models.ToolInstance{WorkflowID: workflowId,Name: workflowName ,WorkflowName: workflowName,Tool:tool.ToTool()},workflowConfig)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -3,6 +3,7 @@ package cli
 import (
 	"bioflows/config"
 	"bioflows/executors"
+	"bioflows/helpers"
 	"bioflows/models"
 	"bioflows/models/pipelines"
 	"fmt"
@@ -15,20 +16,28 @@ func RunPipeline(configFile,toolPath,workflowId,workflowName,outputDir string) e
 	fmt.Println(fmt.Sprintf("Using Configuration File: %s",configFile))
 	pipeline := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
-	pipeline_in,err := os.Open(toolPath)
-	if err != nil {
-		fmt.Printf("There was an error opening the tool File: %s",err.Error())
-		return err
-	}
-	mypipeline_contents , err := ioutil.ReadAll(pipeline_in)
-	if err != nil {
-		fmt.Println(fmt.Sprintf("Error: %s",err.Error()))
-		return err
-	}
-	err = yaml.Unmarshal([]byte(mypipeline_contents),pipeline)
-	if err != nil {
-		fmt.Printf("Error: %s",err.Error())
-		return err
+	if !helpers.IsValidUrl(toolPath) {
+		pipeline_in,err := os.Open(toolPath)
+		if err != nil {
+			fmt.Printf("There was an error opening the tool File: %s",err.Error())
+			return err
+		}
+		mypipeline_contents , err := ioutil.ReadAll(pipeline_in)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("Error: %s",err.Error()))
+			return err
+		}
+		err = yaml.Unmarshal([]byte(mypipeline_contents),pipeline)
+		if err != nil {
+			fmt.Printf("Error: %s",err.Error())
+			return err
+		}
+	}else{
+		err := helpers.DownloadBioFlowFile(pipeline,toolPath)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("Error Downloading the file: %s",err.Error()))
+			return err
+		}
 	}
 	BfConfig, err := ReadConfig(configFile)
 	if err != nil {

@@ -32,6 +32,7 @@ type Parameter struct {
 func (p *Parameter) GetParamValue() string {
 	return fmt.Sprintf("%v", p.Value)
 }
+
 func (p *Parameter) Fill(t *Parameter) error {
 	if t.Value != nil {
 		p.Value = t.Value
@@ -46,6 +47,15 @@ func (p *Parameter) Fill(t *Parameter) error {
 		p.Type = t.Type
 	}
 	return nil
+}
+
+func (p *Parameter) GetDescription() string{
+	if len(p.Description) > 0{
+		return p.Description
+	}else{
+		return p.DisplayName
+	}
+
 }
 
 type Reference struct {

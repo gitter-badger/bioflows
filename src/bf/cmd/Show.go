@@ -16,7 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"bioflows/cli"
+	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/ttacon/chalk"
 )
 
 // ShowCmd represents the Show command
@@ -25,8 +28,19 @@ var ShowCmd = &cobra.Command{
 	Short: "This command enables manipulation of tools and BioFlows Pipeline(s)",
 	Long: `This command enables manipulation of tools and BioFlows Pipeline(s)`,
 	RunE: func(cmd *cobra.Command, args []string)  error {
-
-		return cmd.Usage()
+		if len(args) <= 0 {
+			return cmd.Usage()
+		}
+		filePath := args[0]
+		table , err := cli.GetRequirementsTableFor(filePath)
+		if err != nil {
+			fmt.Println(fmt.Sprintf("%s",err.Error()))
+			return err
+		}
+		fmt.Println("")
+		fmt.Println(chalk.Underline.TextStyle("BioFlows Pipeline Input Requirements"))
+		fmt.Println(table.String())
+		return nil
 	},
 }
 
