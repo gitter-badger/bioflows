@@ -9,7 +9,7 @@ steps:
   - id: nestedtwo
     name: nestedtwo
     depends: nestedone
-    command: cp {{second_input_file}} {{self_dir}} && echo {{output_str}}
+    command: cp {{second_input_file}} {{self_dir}} && echo "{{output_str}}"
     outputs:
       - type: string
         name: output_str
@@ -18,9 +18,9 @@ steps:
       - type: js
         before: true
         code: >
-          var output_file = self.remoteTwo.location + "/" + "count.txt";
+          var output_file = self.nestedone.remoteTwo.location + "/" + "count.txt";
           var contents = io.ReadFile(output_file);
-          self.output_str = contents
+          self.output_str = "Hello Mohamed, this is the contents of the file : " + contents;
 
     inputs:
       - type: string

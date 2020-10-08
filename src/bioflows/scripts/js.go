@@ -2,6 +2,7 @@ package scripts
 
 import (
 	"bioflows/models"
+	"bioflows/scripts/io"
 	"github.com/dop251/goja"
 )
 
@@ -24,6 +25,7 @@ func (manager *JSScriptManager) RunBefore(script models.Script,config map[string
 	vm := goja.New()
 	config["command"] = manager.toolInstance.Command.ToString()
 	vm.Set("self",config)
+	vm.Set("io",&io.IO{})
 	_ , err := vm.RunString(script.Code.ToString())
 	if err != nil {
 		return  err

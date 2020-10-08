@@ -15,7 +15,7 @@ func main(){
 		return
 	}
 	fmt.Println(pullbuffer.String())
-	stdout,stderr , err := docker_manager.StartContainer("","alpine",[]string{"echo","Hello Ibrahim Fawzy"})
+	stdout,stderr , err := docker_manager.StartContainer("","alpine",[]string{"sleep","10"})
 	if err != nil {
 		fmt.Println(err.Error())
 		return
