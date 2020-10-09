@@ -58,7 +58,7 @@ How to define Input Parameters (Inputs)
 Each separate tool or a tool in a bioinformatics pipeline requires some input(s) parameters
 to work on and might or might not produce any output(s). Some Bioflows tools might act as decision steps
 or state modifiers in a pipeline and hence these tools will only require some input(s) from previous step(s)
-and will not produce any output(s). These tools should be shadowed having ``shadow=true`` in their definition.
+and will not produce any output(s). These tools should be shadowed having ``shadow: true`` in their definition.
 
 In order to define input(s) for a tool or a pipeline, the following is an example inputs definition for a dummy tool..
 
@@ -173,10 +173,10 @@ This script is an example embedded JS script within a BioFlows step, It opens a 
 sample pipeline and it reads the file contents then it writes this contents concatenated with additional text into an output parameter
 named ``output_str`` which will be echoed back to the standard output of that particular step.
 
-``io.ReadFile`` is not a standard Javascript code library, But instead, we developed a set of custom code libraries in GoLang
- and injected these libraries within the embedded JS virtual machine to make it available for script writers.
-
-These custom code libraries are developed to perform some lower level OS tasks that Javascript doesn't handle by default.
+.. note::
+    **io.ReadFile** is not a standard Javascript code library, But instead, we developed a set of custom code libraries in GoLang
+    and injected these libraries within the embedded JS virtual machine to make it available for script writers.
+    These custom code libraries are developed to perform some lower level OS tasks that Javascript doesn't handle by default.
 
 For more information about all the available code libraries, please take a look at Embedded Scripting section of this documentation.
 
