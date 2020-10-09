@@ -100,10 +100,90 @@ Outputs directive follows the same definition markup as that of the inputs shown
         value: myfile.txt
 
 
+Notification Directive
+^^^^^^^^^^^^^^^^^^^^^^
+
+In complex and long running scientific pipelines, sometimes, we want to be notified about the status of one or more analysis step(s).
+The notification in BioFlows happens through sending emails. In order to be notified about a specific task in a pipeline,
+you have to add a notification directive within the definition of that particular task specifying three or four attributes
+which defines an email [to,cc,title and body] , as follows.
+
+.. code-block:: yaml
+
+    to: <The receiver Email Address>
+    cc: <an optional directive for a carbon copy to other recipients>
+    title: the title of the email
+    body: short or long textual description of the email
 
 
-Pipeline Definition Example(s)
-==============================
+.. note::
+    Please note, to make the notification feature available, you have to define proper email settings in BioFlows system configuration section of this documentation.
+
+
+Capabilities Directive
+^^^^^^^^^^^^^^^^^^^^^^
+
+Some Bioinformatics analysis steps require specific computing requirements in terms of how many CPU cores and memory size needed.
+For instance, RNA-seq Junction aware aligner ``Hisat2`` requires at least ``160 GB`` of available memory if you need to create
+HGFM index with transcripts from a whole reference genome of an organism taking into account that particular organism SNP recorded
+variants. To declare a task with specific computing capabilities, you have to define a capabilities directive within the definition
+of the task specifying how many computing cores and memory in Mega Bytes (``MB``) required for the job as follows:
+
+.. code-block:: yaml
+
+    caps:
+        cpu: 20
+        memory: 163840 # 160 GB
+
+
+By adding a ``caps`` directive in a task, BioFlows master node takes care of executing that particular task onto a suitable computing
+cluster node that is able to support both CPU and memory specified.
+
+
+
+Scripts Directive
+^^^^^^^^^^^^^^^^^
+
+In Scientific computing, especially in Bioinformatics, Pipelines are not fixed chain of steps. These analysis steps have
+internal state variables, Input parameters and Output parameters that control the behavior of a given step.
+You can control the execution of a given step based on any of its internal state variables using embedded scripting. In BioFlows, currently, we support a fully compatible ``ECMAScript 6 Javascript Embedded engine`` for writing Javascript code within
+a specific pipeline step to control the task internal state. In the future, we will support ``Lua`` as well as ``Python``.
+
+A script in BioFlows is meant to control these internal state variables including Configuration parameters, Input Parameters
+as well as Output Parameters. Moreover, when you write a script within a bioflow step, you can control when the script will execute,
+either before the current step or after it executes using ``before`` and ``after`` directives.
+
+Example Script:
+***************
+
+For a full example usage of a script in a complete pipeline, please check the pipeline example(s) section below.
+
+
+.. code-block:: yaml
+
+    scripts:
+          - type: js
+            before: true
+            code: >
+              var output_file = self.nestedone.remoteTwo.location + "/" + "count.txt";
+              var contents = io.ReadFile(output_file);
+              self.output_str = "Hello Mohamed, this is the contents of the file : " + contents;
+
+This script is an example embedded JS script within a BioFlows step, It opens a specific generated file in a previous step in the
+sample pipeline and it reads the file contents then it writes this contents concatenated with additional text into an output parameter
+named ``output_str`` which will be echoed back to the standard output of that particular step.
+
+``io.ReadFile`` is not a standard Javascript code library, But instead, we developed a set of custom code libraries in GoLang
+ and injected these libraries within the embedded JS virtual machine to make it available for script writers.
+
+These custom code libraries are developed to perform some lower level OS tasks that Javascript doesn't handle by default.
+
+For more information about all the available code libraries, please take a look at Embedded Scripting section of this documentation.
+
+
+
+Pipeline Example(s)
+===================
 
 Please use the following pipeline as an example to understand how to define the previously explained directives in the table above.
 
@@ -158,246 +238,31 @@ Another Tool definition....
 
 .. code-block:: yaml
 
-    id: pipeline1
-    bioflowId: pipeline123
+    id: nestedPipeline
+    name: nestedPipeline
     type: pipeline
-    name: my pipeline
-    description:
-      -"this tool will list directories"
-      -"this tool will list all linux directories for a given input directory parameter"
-    website: http://www.google.com
-    version: 1.0.0
-    icon: here you can place the base64 encoded string value of an icon in png format
-    maintainer:
-      -fullname: XXXXXXXX
-      email: XXXXXXX@gmail.com
-      username: XXXXXXX
-
-    references:
-      - name: "name of the reference"
-        description: "long or short snippet of a description goes here"
-        website: http://www.ncbi.nlm.gov.nl
-
     steps:
-      - id: 1
-        bioflowId: xdir3525
-        name: 1
-        description: this is a tool that will list all linux directories for a given input directory parameter
-        discussions:
-          - this tool will list directories
-          - this tool will list all linux directories for a given input directory parameter
-        website: http://hub.bioflows.io
-        version: 1.0.0
-        icon: here you can place base64 encoded string value of an icon in png format
-        # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
-        # as a decision tool
-        shadow: false
-        maintainer:
-          -fullname: XXXXXXXX
-          email: xxxx@XXX.com
-          username: xxxx
-
-        references:
-          - name: "name of the reference"
-            description: "long or short snippet of a description goes here"
-            website: http://www.ncbi.nlm.gov.nl
-
-        inputs:
+      - id: nestedone
+        name: nestedone
+        url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/remotepipe.yaml
+      - id: nestedtwo
+        name: nestedtwo
+        depends: nestedone
+        command: cp {{second_input_file}} {{self_dir}} && echo "{{output_str}}"
+        outputs:
           - type: string
-            displayname: the input directory for the command
-            name: input_dir
-            description: long or short description about the parameter goes here
-            value: /your/dir/location
+            name: output_str
+            description: this file will contain the contents of the count.txt from the previous step
         scripts:
           - type: js
             before: true
-            order: 1
             code: >
-              self.input_dir = "/your/dir/location";
-          - type: js
-            order: 2
-            before: true
-            code: >
-              self.input_dir = "/your/other/dir";
-        # this tool has no outputs
-        command: ls -ll {{input_dir}}
-
-      - id: 2
-        bioflowId: xdir3526
-        name: 2
-        description: this is a tool that will list all linux directories for a given input directory parameter
-        discussions:
-          - this tool will list directories
-          - this tool will list all linux directories for a given input directory parameter
-        website: http://hub.bioflows.io
-        version: 1.0.0
-        icon: here you can place base64 encoded string value of an icon in png format
-        # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
-        # as a decision tool
-        shadow: false
-        maintainer:
-          -fullname: XXXXXXXXX
-          email: xx@xx.com
-          username: XXXX
-
-        references:
-          - name: "name of the reference"
-            description: "long or short snippet of a description goes here"
-            website: http://www.ncbi.nlm.gov.nl
-        notification:
-          to: xx@xx.com
-          title: "Step 2 has finished"
-          body: "Step 2 has finished"
-
+              var output_file = self.nestedone.remoteTwo.location + "/" + "count.txt";
+              var contents = io.ReadFile(output_file);
+              self.output_str = "Hello Mohamed, this is the contents of the file : " + contents;
 
         inputs:
           - type: string
-            displayname: the input directory for the command
-            name: input_dir
-            description: long or short description about the parameter goes here
-            value: /your/dir
-        scripts:
-          - type: js
-            before: true
-            order: 2
-            code: >
-              self.input_dir = "/your/dir/location";
-          - type: js
-            order: 1
-            before: true
-            code: >
-              self.input_dir = "/your/dir/location";
-        # this tool has no outputs
-        command: ls -ll {{input_dir}} > myfile.txt
-
-      - id: 3
-        bioflowId: xdir3528
-        depends: 1,2
-        name: 3
-        description: this is a tool that will list all linux directories for a given input directory parameter
-        discussions:
-          - this tool will list directories
-          - this tool will list all linux directories for a given input directory parameter
-        website: http://hub.bioflows.io
-        version: 1.0.0
-        icon: here you can place base64 encoded string value of an icon in png format
-        # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
-        # as a decision tool
-        shadow: false
-        maintainer:
-          -fullname: XXXXXXXXX
-          email: xx@xx.com
-          username: XXXX
-
-        references:
-          - name: "name of the reference"
-            description: "long or short snippet of a description goes here"
-            website: http://www.ncbi.nlm.gov.nl
-
-        inputs:
-          - type: string
-            displayname: the input directory for the command
-            name: input_dir
-            description: long or short description about the parameter goes here
-            value: /your/dir
-        scripts:
-          - type: js
-            before: true
-            order: 1
-            code: >
-              self.input_dir = "/your/dir/location";
-          - type: js
-            order: 2
-            before: true
-            code: >
-              self.input_dir = "/your/dir/location";
-        # this tool has no outputs
-        command: ls -ll {{input_dir}}
-
-      - id: 5
-        bioflowId: xdir3529
-        depends: 1,3
-        name: 5
-        description: this is a tool that will list all linux directories for a given input directory parameter
-        discussions:
-          - this tool will list directories
-          - this tool will list all linux directories for a given input directory parameter
-        website: http://hub.bioflows.io
-        version: 1.0.0
-        icon: here you can place base64 encoded string value of an icon in png format
-        # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
-        # as a decision tool
-        shadow: false
-        maintainer:
-          -fullname: XXXXXXXXX
-          email: xx@xx.com
-          username: XXXX
-
-        references:
-          - name: "name of the reference"
-            description: "long or short snippet of a description goes here"
-            website: http://www.ncbi.nlm.gov.nl
-
-        inputs:
-          - type: string
-            displayname: the input directory for the command
-            name: input_dir
-            description: long or short description about the parameter goes here
-            value: /your/dir
-        scripts:
-          - type: js
-            before: true
-            order: 1
-            code: >
-              self.input_dir = "/your/dir/location";
-          - type: js
-            order: 2
-            before: true
-            code: >
-              self.input_dir = "/your/dir/location";
-        # this tool has no outputs
-        command: ls -ll {{input_dir}}
-
-      - id: 4
-        bioflowId: xdir3529
-        depends: 3,5
-        name: 4
-        description: this is a tool that will list all linux directories for a given input directory parameter
-        discussions:
-          - this tool will list directories
-          - this tool will list all linux directories for a given input directory parameter
-        website: http://hub.bioflows.io
-        version: 1.0.0
-        icon: here you can place base64 encoded string value of an icon in png format
-        # shadow property indicates that this tool will have no output, it exists in a pipeline perhaps to modify some pipeline config param values or act
-        # as a decision tool
-        shadow: false
-        maintainer:
-          -fullname: XXXXXXXXX
-          email: xx@xx.com
-          username: XXXX
-
-        references:
-          - name: "name of the reference"
-            description: "long or short snippet of a description goes here"
-            website: http://www.ncbi.nlm.gov.nl
-
-        inputs:
-          - type: string
-            displayname: the input directory for the command
-            name: input_dir
-            description: long or short description about the parameter goes here
-            value: /your/dir
-        scripts:
-          - type: js
-            before: true
-            order: 1
-            code: >
-              self.input_dir = "/your/dir/location";
-          - type: js
-            order: 2
-            before: true
-            code: >
-              self.input_dir = "/your/dir/location";
-        # this tool has no outputs
-        command: ls -ll {{input_dir}}
+            name: second_input_file
+            description: "Second Input File"
+            value: "{{nestedone.remoteTwo.location}}/count.txt"
