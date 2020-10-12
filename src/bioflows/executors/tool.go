@@ -91,6 +91,12 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	for k,v  := range outputs{
 		flowConfig[k] = v
 	}
+	//Copy all flow configs at the workflow level into the current tool flowconfig , in order to override any initials given
+	if len(e.flowConfig) > 0 {
+		for k,v := range e.flowConfig{
+			flowConfig[k] = v
+		}
+	}
 	return flowConfig
 }
 func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {

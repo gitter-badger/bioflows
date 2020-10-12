@@ -72,7 +72,6 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 		}
 		workflowConfig.Fill(initialParams)
 	}
-
 	tool_name := tool.Name
 	if len(tool_name) <= 0 {
 		tool_name = workflowName
