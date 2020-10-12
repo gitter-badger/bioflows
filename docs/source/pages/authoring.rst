@@ -153,8 +153,9 @@ of this tool and a website where other people could visit who are interested to 
     website: http://john.university.com
     version: 1.0.0
     maintainer:
-        - fullname: Dr. John Doe
-          email: john.doe@university.com
+      -fullname: mohamed ibrahim
+      email: mfawzy.sami@gmail.com
+      username: mfawzy
     outputs:
         - type: file
           name: output_file
@@ -190,7 +191,7 @@ Let's do just this....
     description: this pipeline will list the contents of a specific directory and save that to a file and count the lines in this file.
     steps:
         - id: listDir
-          url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/tool.yaml
+          url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/listdir.yaml
 
         - id: countstep
           name: countstep

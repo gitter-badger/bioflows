@@ -1,0 +1,25 @@
+id: listDir
+type: tool
+name: list_directories
+description: "this tool will list directories on a linux server"
+discussions:
+  - this tool will list directories
+  - this tool will list all linux directories for a given input directory parameter
+website: http://john.university.com
+version: 1.0.0
+maintainer:
+  -fullname: mohamed ibrahim
+  email: mfawzy.sami@gmail.com
+  username: mfawzy
+outputs:
+  - type: file
+    name: output_file
+    value: "{{self_dir}}/ls_output.txt"
+inputs:
+  - type: dir
+    name: input_dir
+    displayname: Input directory
+    description: "Input directory to list its contents"
+    value: /your/directory/location
+
+command: "ls -ll {{input_dir}} > {{output_file}}"
