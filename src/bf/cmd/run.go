@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"bioflows/cli"
+	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -29,6 +30,12 @@ var runCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string)  error{
 		if len(args) < 1{
 			return fmt.Errorf("Please specify the location of Bioflows Tool")
+		}
+		if len(DataDir) < 1{
+			return errors.New("Data Directory Flag is required.")
+		}
+		if len(OutputDir) < 1 {
+			return errors.New("Output Directory Flag is required.")
 		}
 		toolPath := args[0]
 
