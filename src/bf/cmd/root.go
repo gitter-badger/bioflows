@@ -28,6 +28,7 @@ var (
 	DataDir string
 	WorkflowId string
 	WorkflowName string
+	ParamsConfig string
 )
 
 var cfgFile string
@@ -61,6 +62,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&OutputDir,"output_dir","","Output Directory where the running tool will save data.")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.bf.yaml)")
 	rootCmd.PersistentFlags().StringVar(&DataDir,"data_dir","","The directory which contains raw data.")
+	rootCmd.PersistentFlags().StringVar(&ParamsConfig,"params_config","","A file which contains your Pipeline specific initial parameters' values. You can know the required parameters for your pipeline through reading its definition file or running bf validate command.")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

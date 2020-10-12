@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-func RunPipeline(configFile,toolPath,outputDir,dataDir string) error{
+func RunPipeline(configFile,toolPath,outputDir,dataDir,paramsConfig string) error{
 	fmt.Println(fmt.Sprintf("Using Configuration File: %s",configFile))
 	pipeline := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
@@ -47,6 +47,13 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir string) error{
 	workflowConfig.Fill(BfConfig)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	workflowConfig[config.WF_INSTANCE_DATADIR] = dataDir
+	if len(paramsConfig) > 0 {
+		initialParams, err := ReadParamsConfig(paramsConfig)
+		if err != nil {
+			return err
+		}
+		workflowConfig.Fill(initialParams)
+	}
 	fmt.Println(fmt.Sprintf("Executing Workflow: %s",pipeline.Name))
 	executor := executors.PipelineExecutor{}
 	err = executor.Setup(workflowConfig)

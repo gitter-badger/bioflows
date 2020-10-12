@@ -26,7 +26,7 @@ func ReadConfig(cfgFile string) (models.FlowConfig,error) {
 	return workflowConfig,nil
 }
 
-func RunTool(configFile string, toolPath string,workflowId string , workflowName string,outputDir string,dataDir string) error{
+func RunTool(configFile string, toolPath string,workflowId string , workflowName string,outputDir string,dataDir string, paramsConfig string) error{
 	tool := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
 	if !helpers.IsValidUrl(toolPath){
@@ -40,7 +40,6 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 			fmt.Printf("Error reading the contents of the tool , %v\n",err)
 			os.Exit(1)
 		}
-
 		err = yaml.Unmarshal([]byte(mytool_content),tool)
 		if err != nil {
 			//fmt.Println("There was a problem unmarshaling the current tool")
@@ -66,6 +65,13 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 	executor.SetPipelineName(workflowName)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	workflowConfig[config.WF_INSTANCE_DATADIR] = dataDir
+	if len(paramsConfig) > 0 {
+		initialParams, err := ReadParamsConfig(paramsConfig)
+		if err != nil {
+			return err
+		}
+		workflowConfig.Fill(initialParams)
+	}
 
 	tool_name := tool.Name
 	if len(tool_name) <= 0 {

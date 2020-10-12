@@ -39,7 +39,7 @@ var runCmd = &cobra.Command{
 		}
 		toolPath := args[0]
 
-		return cli.RunTool(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir,DataDir)
+		return cli.RunTool(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir,DataDir,ParamsConfig)
 	},
 }
 
