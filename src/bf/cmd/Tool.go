@@ -19,13 +19,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	OutputDir string
-	WorkflowId string
-	WorkflowName string
-
-
-)
 // ToolCmd represents the Tool command
 var ToolCmd = &cobra.Command{
 	Use:   "Tool",
@@ -37,7 +30,7 @@ var ToolCmd = &cobra.Command{
 }
 
 func init() {
-	ToolCmd.PersistentFlags().StringVar(&OutputDir,"output_dir","","Output Directory where the running tool will save data.")
+	//ToolCmd.PersistentFlags().StringVar(&OutputDir,"output_dir","","Output Directory where the running tool will save data.")
 	rootCmd.AddCommand(ToolCmd)
 
 	// Here you will define your flags and configuration settings.

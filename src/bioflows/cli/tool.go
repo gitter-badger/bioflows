@@ -26,7 +26,7 @@ func ReadConfig(cfgFile string) (models.FlowConfig,error) {
 	return workflowConfig,nil
 }
 
-func RunTool(configFile string, toolPath string,workflowId string , workflowName string,outputDir string) error{
+func RunTool(configFile string, toolPath string,workflowId string , workflowName string,outputDir string,dataDir string) error{
 	tool := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
 	if !helpers.IsValidUrl(toolPath){
@@ -65,6 +65,8 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 	executor := executors.ToolExecutor{}
 	executor.SetPipelineName(workflowName)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
+	workflowConfig[config.WF_INSTANCE_DATADIR] = dataDir
+
 	tool_name := tool.Name
 	if len(tool_name) <= 0 {
 		tool_name = workflowName

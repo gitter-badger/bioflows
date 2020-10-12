@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"bioflows/cli"
-	"fmt"
+	"errors"
 	"github.com/spf13/cobra"
 )
 
@@ -11,18 +11,22 @@ var workflowRunCmd = &cobra.Command{
 	Short: "",
 	Long:"",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			return fmt.Errorf("The command requires some parameters. Please provide these paramters..")
+		if len(args) < 1{
+			return errors.New("Please provide a pipeline file to run.")
+		}
+		if len(DataDir) < 1{
+			return errors.New("Data Directory Flag is required.")
+		}
+		if len(OutputDir) < 1 {
+			return errors.New("Output Directory Flag is required.")
 		}
 		toolPath := args[0]
-		return cli.RunPipeline(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir)
+		return cli.RunPipeline(cfgFile,toolPath,OutputDir,DataDir)
 	},
 }
 
 func init(){
-	workflowRunCmd.Flags().StringVarP(&WorkflowId,"workflowId","i","","Assign a unique Identifier for the workflow in order to distinguish the workflow later.")
-	workflowRunCmd.Flags().StringVarP(&WorkflowName,"workflowName","n","myworkflow","Assign a human readable identifier for the current workflow.")
-	workflowRunCmd.MarkFlagRequired("workflowId")
-	workflowRunCmd.MarkFlagRequired("workflowName")
+	workflowRunCmd.MarkFlagRequired(OutputDir)
+	workflowRunCmd.MarkFlagRequired(DataDir)
 	WorkflowCmd.AddCommand(workflowRunCmd)
 }
