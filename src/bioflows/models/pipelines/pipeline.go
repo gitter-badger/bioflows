@@ -10,7 +10,7 @@ import (
 type BioPipeline struct {
 	Type         string               `json:"type,omitempty" yaml:"type,omitempty"`
 	Depends      string               `json:"depends,omitempty" yaml:"depends,omitempty"`
-	ImageId      string               `json:"imageId,omitempty"`
+	ImageId      string               `json:"imageId,omitempty" yaml:"imageId,omitempty"`
 	ID           string               `json:"id,omitempty" yaml:"id,omitempty"`
 	Order        int                  `json:"order,omitempty" yaml:"order,omitempty"`
 	BioflowId    string               `json:"bioflowId,omitempty" yaml:"bioflowId,omitempty"`
@@ -35,6 +35,7 @@ type BioPipeline struct {
 	Steps        []BioPipeline        `json:"steps,omitempty" yaml:"steps,omitempty"`
 	Notification *models.Notification `json:"notification,omitempty" yaml:"notification,omitempty"`
 	Caps         *models.Capabilities `json:"caps,omitempty" yaml:"caps,omitempty"`
+	ContainerConfig *models.ContainerConfig `json:"container,omitempty" yaml:"container,omitempty"`
 }
 
 func (instance *BioPipeline) GetIdentifier() string {
@@ -89,6 +90,7 @@ func (p BioPipeline) ToTool() *models.Tool {
 	t.Deprecated = p.Deprecated
 	t.Conditions = make([]models.Scriptable, len(p.Conditions))
 	copy(t.Conditions,p.Conditions)
+	t.ContainerConfig = p.ContainerConfig
 	return t
 }
 

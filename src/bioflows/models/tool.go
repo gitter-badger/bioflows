@@ -29,6 +29,7 @@ type Tool struct {
 	Scripts      []Script      `json:"scripts,omitempty" yaml:"scripts,omitempty"`
 	Notification *Notification `json:"notification,omitempty" yaml:"notification,omitempty"`
 	Caps         *Capabilities `json:"caps,omitempty" yaml:"caps,omitempty"`
+	ContainerConfig *ContainerConfig `json:"container,omitempty" yaml:"container,omitempty"`
 }
 
 func (t *Tool) ToJson() string {

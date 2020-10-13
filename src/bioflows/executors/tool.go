@@ -2,12 +2,14 @@ package executors
 
 import (
 	"bioflows/config"
+	dockcontainer "bioflows/container"
 	"bioflows/expr"
 	"bioflows/models"
 	"bioflows/process"
 	"bioflows/scripts"
 	"bioflows/virtualization"
 	"fmt"
+	"github.com/docker/docker/api/types/container"
 	"io/ioutil"
 	"log"
 	"net/smtp"
@@ -17,12 +19,15 @@ import (
 )
 
 type ToolExecutor struct {
-	ToolInstance *models.ToolInstance
+	ToolInstance     *models.ToolInstance
 	ContainerManager *virtualization.VirtualizationManager
-	toolLogger *log.Logger
-	flowConfig models.FlowConfig
-	exprManager *expr.ExprManager
-	pipelineName string
+	toolLogger       *log.Logger
+	flowConfig       models.FlowConfig
+	exprManager      *expr.ExprManager
+	pipelineName     string
+	dockerManager    *dockcontainer.DockerManager
+	hostOutputDir    string
+	hostDataDir      string
 }
 func (e *ToolExecutor) SetPipelineName(name string) {
 	//e.pipelineName = strings.
@@ -195,6 +200,8 @@ func (e *ToolExecutor) CreateOutputFile(name string,ext string) (string,error) {
 func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 	e.ContainerManager = nil
 	e.flowConfig = flowConfig
+	e.hostDataDir = fmt.Sprintf("%v",e.flowConfig[config.WF_INSTANCE_DATADIR])
+	e.hostOutputDir = fmt.Sprintf("%v",e.flowConfig[config.WF_INSTANCE_OUTDIR])
 	e.exprManager = &expr.ExprManager{}
 	// initialize the tool logger
 	logFileName , err := e.CreateOutputFile("logs","logs")
@@ -209,10 +216,27 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 		return err
 	}
 	e.toolLogger.SetOutput(file)
+	//initialize Docker
+	hostConfig := &container.HostConfig{}
+	hostConfig.Binds = append(hostConfig.Binds,fmt.Sprintf("%s:%s",e.hostOutputDir,
+		e.hostOutputDir),
+		fmt.Sprintf("%s:%s",e.hostDataDir,e.hostDataDir))
+	e.dockerManager = &dockcontainer.DockerManager{
+		DockerConfig:     nil,
+		HostConfig:       hostConfig,
+		NetworkingConfig: nil,
+	}
+
+
+
 	return nil
 }
 func (e *ToolExecutor) Log(logs ...interface{}) {
 	e.toolLogger.Println(logs...)
+}
+func (e *ToolExecutor) isDockerized() bool {
+	result := e.ToolInstance.ImageId != "" && len(e.ToolInstance.ImageId) > 1
+	return result
 }
 func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	//prepare parameters
@@ -225,9 +249,48 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	toolConfigKey, _ , _ := e.GetToolOutputDir()
-	executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}
-	executor.Init()
-	exitCode , toolErr  := executor.Run()
+	var exitCode int
+	var toolErr error
+	var outputBytes []byte
+	var errorBytes []byte
+	if e.isDockerized() {
+		var imageURL string
+		if e.ToolInstance.ContainerConfig == nil {
+			imageURL = fmt.Sprintf("%s/%s",dockcontainer.DOCKER_REPOSITORY,e.ToolInstance.ImageId)
+		}else{
+			imageURL = fmt.Sprintf("%s/%s",e.ToolInstance.ContainerConfig.URL,e.ToolInstance.ImageId)
+		}
+		//first try to pull the image
+		output , err := e.dockerManager.PullImage(imageURL,e.ToolInstance.ContainerConfig)
+		if err != nil {
+			return nil , err
+		}
+		//Log the output
+		e.Log(output)
+		out,outErr,toolErr := e.dockerManager.RunContainer(toolConfigKey,e.ToolInstance.ImageId,[]string{
+			"bash",
+			"-c",
+			toolCommand,
+		})
+		if toolErr != nil {
+			errorBytes = []byte(toolErr.Error())
+			exitCode = 1
+		}else{
+			exitCode = 0
+		}
+		if out != nil {
+			outputBytes = out.Bytes()
+		}
+		if outErr != nil {
+			errorBytes = outErr.Bytes()
+		}
+	}else{
+		executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}
+		executor.Init()
+		exitCode , toolErr  = executor.Run()
+		outputBytes = executor.GetOutput().Bytes()
+		errorBytes = executor.GetError().Bytes()
+	}
 	toolConfig , err = e.executeAfterScripts(toolConfig)
 	if e.ToolInstance.Shadow{
 		return toolConfig,toolErr
@@ -237,7 +300,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	if err != nil {
 		return toolConfig,err
 	}
-	err = ioutil.WriteFile(toolOutputFile,executor.GetOutput().Bytes(),config.FILE_MODE_WRITABLE_PERM)
+	err = ioutil.WriteFile(toolOutputFile,outputBytes,config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
 		return toolConfig,err
 	}
@@ -246,7 +309,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	if err != nil {
 		return toolConfig,err
 	}
-	err = ioutil.WriteFile(toolErrFile,executor.GetError().Bytes(),config.FILE_MODE_WRITABLE_PERM)
+	err = ioutil.WriteFile(toolErrFile,errorBytes,config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
 		return toolConfig,err
 	}

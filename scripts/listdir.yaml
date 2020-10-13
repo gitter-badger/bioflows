@@ -1,5 +1,6 @@
 id: listDir
 type: tool
+imageId: alpine
 name: list_directories
 description: "this tool will list directories on a linux server"
 discussions:
@@ -20,6 +21,6 @@ inputs:
     name: input_dir
     displayname: Input directory
     description: "Input directory to list its contents"
-    value: /your/directory/location
+    value: /etc/
 
 command: "ls -ll {{input_dir}} > {{output_file}}"

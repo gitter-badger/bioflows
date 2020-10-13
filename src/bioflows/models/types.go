@@ -1,7 +1,10 @@
 package models
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"github.com/docker/docker/api/types"
 )
 
 type FlowConfig map[string]interface{}
@@ -80,5 +83,23 @@ type Notification struct {
 type Capabilities struct {
 	CPU int `json:"cpu,omitempty" yaml:"cpu,omitempty"`
 	Memory int `json:"memory,omitempty" yaml:"memory,omitempty"`
+}
+
+type ContainerConfig struct {
+	Username string `json:"username,omitempty" yaml:"username,omitempty"`
+	Password string `json:"password,omitempty" yaml:"password,omitempty"`
+	URL string `json:"url,omitempty" yaml:"url,omitempty"`
+}
+
+func (c *ContainerConfig) GetAuth() (string,error) {
+	auth := types.AuthConfig{
+		Username:      c.Username,
+		Password:      c.Password,
+	}
+	encodedJson , err := json.Marshal(auth)
+	if err != nil {
+		return "" , err
+	}
+	return base64.URLEncoding.EncodeToString(encodedJson) , nil
 }
 
