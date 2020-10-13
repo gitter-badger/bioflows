@@ -1,6 +1,6 @@
 id: listDir
 type: tool
-imageId: alpine
+imageId: ubuntu
 name: list_directories
 description: "this tool will list directories on a linux server"
 discussions:
