@@ -27,7 +27,11 @@ type PipelineExecutor struct {
 	parentPipeline *pipelines.BioPipeline
 	ticker *time.Ticker
 	logger *log.Logger
+	containerConfig *models.ContainerConfig
+}
 
+func (p *PipelineExecutor) SetContainerConfig(containerConfig *models.ContainerConfig) {
+	p.containerConfig = containerConfig
 }
 
 //This function returns the final result of the current pipeline
@@ -79,6 +83,10 @@ func (p PipelineExecutor) SetPipelineGeneralConfig(b *pipelines.BioPipeline,orig
 			internalConfig[param.Name] = param.Value
 		}
 		(*originalConfig)[config2.BIOFLOWS_INTERNAL_CONFIG] = internalConfig
+	}
+	//Attach the general container configuration if exists.
+	if b.ContainerConfig != nil {
+		p.containerConfig = b.ContainerConfig
 	}
 }
 func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) error {
@@ -170,6 +178,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			// It is a single tool
 			executor := ToolExecutor{}
 			executor.SetPipelineName(p.parentPipeline.Name)
+			executor.SetContainerConfiguration(p.containerConfig)
 			toolInstance := &models.ToolInstance{
 				WorkflowID: b.ID,
 				WorkflowName: b.Name,
@@ -191,6 +200,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 		}else{
 			//it is a nested pipeline
 			nestedPipelineExecutor := PipelineExecutor{}
+			nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
 			nestedPipelineConfig := models.FlowConfig{}
 			pipelineConfig := p.prepareConfig(&currentFlow,config)
 			nestedPipelineConfig.Fill(config)
@@ -234,7 +244,6 @@ func (p *PipelineExecutor) runLocally(b *pipelines.BioPipeline, config models.Fl
 		return nil
 	}
 	parents := graph.SourceVertices()
-	//p.waitGroup.Add(graph.Order())
 	for _ , parent := range parents{
 		//Run each parent individually.
 		p.waitGroup.Add(1)

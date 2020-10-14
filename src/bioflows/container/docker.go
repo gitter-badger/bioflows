@@ -42,7 +42,6 @@ func (d *DockerManager) PullImage(imageURL string,containerConfig *models.Contai
 	if containerConfig != nil {
 		options.RegistryAuth , _ = containerConfig.GetAuth()
 	}
-
 	reader,err := d.client.ImagePull(context.Background(),imageURL,options)
 	if err != nil {
 		return "" , err

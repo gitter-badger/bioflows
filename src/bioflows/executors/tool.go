@@ -28,6 +28,10 @@ type ToolExecutor struct {
 	dockerManager    *dockcontainer.DockerManager
 	hostOutputDir    string
 	hostDataDir      string
+	pipelineContainerConfig *models.ContainerConfig
+}
+func (e *ToolExecutor) SetContainerConfiguration(containerConfig *models.ContainerConfig){
+	e.pipelineContainerConfig = containerConfig
 }
 func (e *ToolExecutor) SetPipelineName(name string) {
 	//e.pipelineName = strings.
@@ -253,15 +257,21 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	var toolErr error
 	var outputBytes []byte
 	var errorBytes []byte
+	var tempContainerConfig *models.ContainerConfig = nil
+	if e.ToolInstance.ContainerConfig != nil {
+		tempContainerConfig = e.ToolInstance.ContainerConfig
+	}else{
+		tempContainerConfig = e.pipelineContainerConfig
+	}
 	if e.isDockerized() {
 		var imageURL string
-		if e.ToolInstance.ContainerConfig == nil {
+		if tempContainerConfig == nil {
 			imageURL = fmt.Sprintf("%s/%s",dockcontainer.DOCKER_REPOSITORY,e.ToolInstance.ImageId)
 		}else{
-			imageURL = fmt.Sprintf("%s/%s",e.ToolInstance.ContainerConfig.URL,e.ToolInstance.ImageId)
+			imageURL = fmt.Sprintf("%s/%s",tempContainerConfig.URL,e.ToolInstance.ImageId)
 		}
 		//first try to pull the image
-		output , err := e.dockerManager.PullImage(imageURL,e.ToolInstance.ContainerConfig)
+		output , err := e.dockerManager.PullImage(imageURL,tempContainerConfig)
 		if err != nil {
 			return nil , err
 		}

@@ -218,6 +218,77 @@ which is a bit verbose and error prone especially in more complex pipeline defin
     If your current step depends on multiple previous steps, you can mention them as comma separated list of IDs.
 
 
+Containerizing your Tool
+************************
+
+In this section, we are going to explain how to execute your tools of a pipeline in containers. If you don't know what is a container, we encourage you
+to visit The following site `What are containers <https://www.docker.com/resources/what-container>`_.
+
+*Bioflows gives you a seamless execution environment for your pipelines. All you have to do is to specify which "ImageId" you want to use for your tool
+and BioFlows will take care of the rest for you..*
+
+
+- In order to allow your tool to be executed in a docker container, all you have to do is to specify an `imageId` in the tool definition file.
+
+i.e. We specified `ubuntu` as the container image we would like to use to execute the current tool.
+
+.. code-block:: yaml
+
+    id: listDir
+    type: tool
+    imageId: ubuntu
+    name: list_directories
+    description: "this tool will list directories on a linux server"
+    discussions:
+      - this tool will list directories
+      - this tool will list all linux directories for a given input directory parameter
+    website: http://john.university.com
+    version: 1.0.0
+    maintainer:
+      -fullname: mohamed ibrahim
+      email: mfawzy.sami@gmail.com
+      username: mfawzy
+    outputs:
+      - type: file
+        name: output_file
+        value: "{{self_dir}}/ls_output.txt"
+    inputs:
+      - type: dir
+        name: input_dir
+        displayname: Input directory
+        description: "Input directory to list its contents"
+        value: /etc/
+    command: "ls -ll {{input_dir}} > {{output_file}}"
+
+.. note:: the `imageId` could be represented with tags, like `ubuntu:latest`, anything after the colon ':' is considered an image tag.
+
+- If your image exists freely on docker hub (docker.io), you don't need to specify anything extra.
+- if your image exists in other compliant image repositories like for instance google cloud platform (GCP) or if you have a private repository,
+you will have to mention this in either the specific tool definition or only once at the level of a pipeline.
+
+for instance, if we want to specify, the container image repository settings in this particular tool, we are going to do the following
+
+
+.. code-block:: yaml
+
+    container:
+        url: http://www.gcp.io
+        username: <Your username>
+        password: <your password>
+
+if all your images in your pipeline steps are hosted at the same repository, you could specify this directive once at the level of the pipeline,
+and all other tools in that pipeline will inherit this information.
+
+.. note:: Please note that container directive in a tool has higher precedence than a similar directive at the level of a pipeline.
+
+.. warning:: You have to have Docker installed on your host or the server for this to work properly.
+
+
+
+
+
+
+
 
 
 
