@@ -266,7 +266,7 @@ i.e. We specified `ubuntu` as the container image we would like to use to execut
 - if your image exists in other compliant image repositories like for instance google cloud platform (GCP) or if you have a private repository,
 you will have to mention this in either the specific tool definition or only once at the level of a pipeline.
 
-for instance, if we want to specify, the container image repository settings in this particular tool, we are going to do the following
+for instance, if we want to specify, the container image repository settings in this particular tool, we are going to add the following
 
 
 .. code-block:: yaml
