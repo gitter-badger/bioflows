@@ -53,6 +53,19 @@ of the current pipeline through invoking `io.ReadFile` which is a helper functio
 of that appended with a custom string to `self.output_str` which is an output parameter used in the command of the current tool.
 
 
+In the script definition, we have stated that this script should be run before the execution of the current tool command by declaring `before: true` directive (as a pre-command execution script).
+On the other hand, you can declare a script to run after the execution of the current tool by declaring `after: true` (as a post-command execution script).
+
+Moreover, you can have multiple pre-command execution scripts and post-command execution scripts. There is no limit to the number
+of scripts to include in your tool. You can define the order of pre-command execution scripts or post-command execution scripts through `order:<number>` directive
+
+For instance, you can have two pre-command execution JS scripts, but you need one to be executed before the other in that specific order. you can control
+their execution order by declaring `order:1` in the first script and `order: 2` in the second script.....
+
+
+
+
+
 Helper Functions
 ^^^^^^^^^^^^^^^^
 
