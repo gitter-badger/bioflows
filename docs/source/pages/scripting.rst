@@ -50,7 +50,7 @@ The following is a simple example of the power of using JS scripting to control 
 
 As you can see in the above example, we have read the contents of `count.txt` output file from `remoteTwo` step in `nestedone` task
 of the current pipeline through invoking `io.ReadFile` which is a helper function available to Javascript and then we inserted the contents
-of that appended with a custom string to `self.output_str` which is an output parameter used in the command of the current tool.
+of that file appended with a custom string to `self.output_str` which is an output parameter used in the command of the current tool.
 
 
 In the script definition, we have stated that this script should be run before the execution of the current tool command by declaring `before: true` directive (as a pre-command execution script).
