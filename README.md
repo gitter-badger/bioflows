@@ -1,3 +1,5 @@
+![](src/gopher.png)
+
 BioFlows Distributed Pipeline Engine
 ====================================
 Distributed Containerized Bioinformatics and Computational Workflows/Pipeline Engine built in Golang
