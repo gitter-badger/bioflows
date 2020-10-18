@@ -20,7 +20,7 @@ steps:
       - type: file
         name: output_file
         value: myfile.txt
-    command: ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}
+    command: "ls -ll {{input_dir}} > {{self_dir}}/{{output_file}}"
   - id: 2
     bioflowId: mytool2
     name: Move
@@ -36,8 +36,8 @@ steps:
         name: dest_dir
         description: Destination Directory
         value: "{{self_dir}}/movedFile.txt"
-    command: mv {{input_file}} {{dest_dir}}
+    command: "mv {{input_file}} {{dest_dir}}"
   - id: 3
     name: count
     depends: 1,2
-    command: wc -l {{2.dest_dir}} > {{self_dir}}/count.txt
+    command: "wc -l {{2.dest_dir}} > {{self_dir}}/count.txt"

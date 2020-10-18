@@ -8,6 +8,10 @@ discussions:
   - this tool will list all linux directories for a given input directory parameter
 website: http://john.university.com
 version: 1.0.0
+notification:
+      to: aalhossary@pmail.ntu.edu.sg
+      title: "List Dir has finished"
+      body: "List Dir has finished"
 maintainer:
   -fullname: mohamed ibrahim
   email: mfawzy.sami@gmail.com
