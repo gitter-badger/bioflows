@@ -1,0 +1,59 @@
+id: blast_prions
+type: pipeline
+name: Blast_Prion
+description:
+  -"We’ll be running a BLAST (Basic Local Alignment Search Tool) example with a container from BioContainers. BLAST is a tool bioinformaticians use to compare a sample genetic sequence to a database of known seqeuences; it’s one of the most widely used bioinformatics tools."
+website: https://pawseysc.github.io/container-workflows/08-bio-example/index.html
+version: 0.0.1
+steps:
+  - id: DownloadFasta
+    name: DownloadFasta
+    inputs:
+      - type: string
+        displayname: URL for fasta file
+        name: fasta_url
+        value: http://www.uniprot.org/uniprot/P04156.fasta
+    outputs:
+      - type: file
+        name: fasta_file
+        value: "{{self_dir}}/P04156.fasta"
+    command: "wget {{fasta_url}}"
+  - id: DownloadGenome
+    name: DownloadGenome
+    inputs:
+      - type: string
+        name: gfasta_url
+        value : "ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz"
+    outputs:
+      - type: file
+        name: hs_gfasta
+        value: "{{self_dir}}/zebrafish.1.protein.faa.gz"
+    command: "curl -O {{gfasta_url}}"
+  - id: UnzipGenome
+    name: UnzipGenome
+    depends: DownloadGenome
+    command: "gunzip {{DownloadGenome.hs_gfasta}}"
+    outputs:
+      - type: file
+        name: hs_fasta
+        value: "{{DownloadGenome.location}}/zebrafish.1.protein.faa"
+
+  - id: MakeBlastdb
+    name: MakeBlastdb
+    depends: DownloadFasta,DownloadGenome,UnzipGenome
+    imageId: biocontainers/blast:v2.2.31_cv2
+    command: "makeblastdb -in {{UnzipGenome.hs_fasta}} -dbtype prot"
+  - id: FastaAlignment
+    name: FastaAlignment
+    depends: MakeBlastdb
+    imageId: biocontainers/blast:v2.2.31_cv2
+    outputs:
+      - type: file
+        name: results_file
+        value: "{{self_dir}}/results.txt"
+    command: "blastp -query {{DownloadFasta.fasta_file}} -db {{UnzipGenome.hs_fasta}} -out {{results_file}}"
+
+
+
+
+

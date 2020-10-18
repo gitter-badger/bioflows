@@ -65,6 +65,7 @@ func (e *ToolExecutor) notify(tool *models.ToolInstance) {
 }
 
 func (e *ToolExecutor) prepareParameters() models.FlowConfig {
+
 	flowConfig := make(models.FlowConfig)
 	toolConfigKey , toolDir , _ := e.GetToolOutputDir()
 	flowConfig[toolConfigKey] = toolDir
@@ -76,30 +77,31 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 			flowConfig[k] = v
 		}
 	}
-	if len(e.ToolInstance.Inputs) <= 0 {
-		return flowConfig
+	if len(e.ToolInstance.Inputs) > 0 {
+		inputs := make(map[string]string)
+		for _ , param := range e.ToolInstance.Inputs{
+			paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
+			inputs[param.Name] = paramValue
+		}
+		//Append the processed input parameters into the current flowConfig
+		for k , v := range inputs {
+			flowConfig[k] = v
+		}
 	}
-	inputs := make(map[string]string)
-	for _ , param := range e.ToolInstance.Inputs{
-		paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
-		inputs[param.Name] = paramValue
+
+	if len(e.ToolInstance.Outputs) > 0{
+
+		//Prepare outputs
+		outputs := make(map[string]string)
+		for _ , param := range e.ToolInstance.Outputs {
+			paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
+			outputs[param.Name] = paramValue
+		}
+		for k,v  := range outputs{
+			flowConfig[k] = v
+		}
 	}
-	//Append the processed input parameters into the current flowConfig
-	for k , v := range inputs {
-		flowConfig[k] = v
-	}
-	if len(e.ToolInstance.Outputs) <= 0{
-		return flowConfig
-	}
-	//Prepare outputs
-	outputs := make(map[string]string)
-	for _ , param := range e.ToolInstance.Outputs {
-		paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
-		outputs[param.Name] = paramValue
-	}
-	for k,v  := range outputs{
-		flowConfig[k] = v
-	}
+
 	//Copy all flow configs at the workflow level into the current tool flowconfig , in order to override any initials given
 	if len(e.flowConfig) > 0 {
 		for k,v := range e.flowConfig{
@@ -263,6 +265,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	}else{
 		tempContainerConfig = e.pipelineContainerConfig
 	}
+	e.Log(fmt.Sprintf("Run Command : %s",toolCommand))
 	if e.isDockerized() {
 		var imageURL string
 		if tempContainerConfig == nil {
@@ -295,6 +298,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 			errorBytes = outErr.Bytes()
 		}
 	}else{
+
 		executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}
 		executor.Init()
 		exitCode , toolErr  = executor.Run()

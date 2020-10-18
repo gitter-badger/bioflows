@@ -189,14 +189,15 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 			if err != nil {
 				executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
-
-			}else{
+			}
+			if toolInstanceFlowConfig != nil {
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
 				if err != nil {
 					fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
 					return
 				}
 			}
+
 		}else{
 			//it is a nested pipeline
 			nestedPipelineExecutor := PipelineExecutor{}
