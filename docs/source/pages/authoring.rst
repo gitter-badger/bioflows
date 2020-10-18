@@ -185,8 +185,8 @@ Let's do just this....
 
 .. code-block:: yaml
 
-    id: countwords
-    name: countwords
+    id: countlines
+    name: countlines
     type: pipeline
     description: this pipeline will list the contents of a specific directory and save that to a file and count the lines in this file.
     steps:
