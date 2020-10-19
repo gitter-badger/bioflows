@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-func RunPipeline(configFile,toolPath,outputDir,dataDir,paramsConfig string) error{
+func RunPipeline(configFile,toolPath,outputDir,dataDir,paramsConfig string,clean bool) error{
 	fmt.Println(fmt.Sprintf("Using Configuration File: %s",configFile))
 	pipeline := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
@@ -62,5 +62,8 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir,paramsConfig string) erro
 		return err
 	}
 	err =  executor.Run(pipeline,workflowConfig)
+	if clean {
+		executor.Clean()
+	}
 	return err
 }

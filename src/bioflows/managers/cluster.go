@@ -21,6 +21,13 @@ var (
 type ClusterStateManager struct {
 	client *api.Client
 }
+func (c *ClusterStateManager) RemoveConfigByID(key string) bool {
+	_ , err := c.client.KV().DeleteTree(key,nil)
+	if err != nil {
+		return false
+	}
+	return true
+}
 func (c *ClusterStateManager) GetPipelineState(pipelineKey string) (models.FlowConfig, error) {
 
 	if c.client != nil {

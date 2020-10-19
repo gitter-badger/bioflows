@@ -2,10 +2,30 @@ package context
 
 import (
 	"fmt"
+	"strings"
 )
 
 type BioContext struct {
 	vars map[string]interface{}
+}
+
+func (c *BioContext) DeleteByKey(key string) bool {
+	keys := c.FilterKeys(key)
+	if len(keys) > 0 {
+		for _ , k := range keys {
+			delete(c.vars,k)
+		}
+	}
+	return true
+}
+func (c *BioContext) FilterKeys(key string) []string{
+	tempKeys := make([]string,0)
+	for k , _ := range c.vars {
+		if strings.HasPrefix(k,key) {
+			tempKeys = append(tempKeys,k)
+		}
+	}
+	return tempKeys
 }
 
 func (c *BioContext) init(){

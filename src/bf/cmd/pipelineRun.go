@@ -6,6 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	clean bool
+)
+
 var workflowRunCmd = &cobra.Command{
 	Use:"run [pipeline file .bp]",
 	Short: "",
@@ -21,11 +25,12 @@ var workflowRunCmd = &cobra.Command{
 			return errors.New("Output Directory Flag is required.")
 		}
 		toolPath := args[0]
-		return cli.RunPipeline(cfgFile,toolPath,OutputDir,DataDir,ParamsConfig)
+		return cli.RunPipeline(cfgFile,toolPath,OutputDir,DataDir,ParamsConfig,clean)
 	},
 }
 
 func init(){
+	workflowRunCmd.PersistentFlags().BoolVar(&clean,"clean",false,"Clean Pipeline history")
 	workflowRunCmd.MarkFlagRequired(OutputDir)
 	workflowRunCmd.MarkFlagRequired(DataDir)
 	WorkflowCmd.AddCommand(workflowRunCmd)

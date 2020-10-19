@@ -13,7 +13,15 @@ type LocalStateManager struct {
 	context *context.BioContext
 
 }
-
+func (c *LocalStateManager) RemoveConfigByID(key string) bool {
+	keys := c.filterKeys(key)
+	if len(keys) > 0 {
+		for _ , key := range keys {
+			c.context.DeleteByKey(key)
+		}
+	}
+	return false
+}
 func (c *LocalStateManager) filterKeys(query string) []string {
 	filteredKeys := make([]string,0)
 	keys := c.context.GetKeys()

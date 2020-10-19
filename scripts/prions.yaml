@@ -8,6 +8,7 @@ version: 0.0.1
 steps:
   - id: DownloadFasta
     name: DownloadFasta
+    imageId: biocontainers/blast:v2.2.31_cv2
     inputs:
       - type: string
         displayname: URL for fasta file
@@ -17,7 +18,7 @@ steps:
       - type: file
         name: fasta_file
         value: "{{self_dir}}/P04156.fasta"
-    command: "wget {{fasta_url}}"
+    command: "wget -O {{fasta_file}} {{fasta_url}}"
   - id: DownloadGenome
     name: DownloadGenome
     inputs:

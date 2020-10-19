@@ -11,6 +11,7 @@ import (
 	"github.com/goombaio/dag"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -22,7 +23,7 @@ type PipelineExecutor struct {
 	transformations []TransformCall
 	waitGroup sync.WaitGroup
 	mutex *sync.Mutex
-	waitQueue chan *dag.Vertex
+	memory *ExecutorMemory
 	stopChan chan interface{}
 	parentPipeline *pipelines.BioPipeline
 	ticker *time.Ticker
@@ -58,7 +59,7 @@ func (p *PipelineExecutor) handleWaitQueue(config models.FlowConfig) {
 		for{
 			select{
 			case <- p.ticker.C:
-				if task , ok := <- p.waitQueue; ok {
+				if task , ok := p.memory.PopFromMemory(); ok {
 					p.executeSingleVertex(p.parentPipeline,config,task)
 
 				}
@@ -88,6 +89,9 @@ func (p PipelineExecutor) SetPipelineGeneralConfig(b *pipelines.BioPipeline,orig
 	if b.ContainerConfig != nil {
 		p.containerConfig = b.ContainerConfig
 	}
+}
+func (p *PipelineExecutor) Clean() bool {
+	return p.contextManager.GetStateManager().RemoveConfigByID(resolver.BIOFLOWS_NAME)
 }
 func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) error {
 	//Set default pipeline general configuration if exists..
@@ -132,7 +136,6 @@ func (p *PipelineExecutor) canRun(pipelineId string , step pipelines.BioPipeline
 		toolName := resolver.ResolveToolKey(v,pipelineId)
 		_ , err := p.GetContext().GetStateManager().GetStateByID(toolName)
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Error: %s",err.Error()))
 			result = false
 			return result
 		}
@@ -164,6 +167,7 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 }
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer p.waitGroup.Done()
+	var execStatus bool = true
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
 	PreprocessPipeline(&currentFlow,config,p.transformations...)
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
@@ -188,9 +192,19 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			generalConfig := p.prepareConfig(p.parentPipeline,config)
 			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 			if err != nil {
+				execStatus = false
 				executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
 			}
 			if toolInstanceFlowConfig != nil {
+				exitCode := fmt.Sprintf("%v",toolInstanceFlowConfig["exitCode"])
+				code , err := strconv.Atoi(exitCode)
+				if err != nil {
+					execStatus = false
+				}else{
+					if code > 0 {
+						execStatus = false
+					}
+				}
 				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
 				if err != nil {
 					fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
@@ -209,6 +223,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			nestedPipelineExecutor.Setup(nestedPipelineConfig)
 			err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
 			if err != nil {
+				execStatus = false
 				nestedPipelineExecutor.Log(err.Error())
 			}
 			pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
@@ -216,22 +231,25 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 		}
 		RunChildren:
 		// Check children
-		if vertex.Children.Size() > 0 {
-			// Run those children
-			for _ , child := range vertex.Children.Values() {
-				childFlow := child.(*dag.Vertex)
-				p.waitGroup.Add(1)
-				p.executeSingleVertex(b,config,childFlow)
-			}
+		if execStatus {
+			if vertex.Children.Size() > 0 {
+				// Run those children
+				for _ , child := range vertex.Children.Values() {
+					childFlow := child.(*dag.Vertex)
+					p.waitGroup.Add(1)
+					p.executeSingleVertex(b,config,childFlow)
+				}
 
+			}
 		}
 
-
 	}else{
-		//Spawn the current step until all other dependencies are run successfully
-		fmt.Println(fmt.Sprintf("Spawning Tool (%s) until dependencies finish execution....",currentFlow.Name))
-		p.waitGroup.Add(1)
-		p.waitQueue <- vertex
+		if p.memory.AddToMemory(vertex){
+			//Spawn the current step until all other dependencies are run successfully
+			fmt.Println(fmt.Sprintf("Spawning Tool (%s) until dependencies finish execution....",currentFlow.Name))
+			p.waitGroup.Add(1)
+		}
+
 	}
 
 
@@ -284,9 +302,10 @@ func (p *PipelineExecutor) ClearTransformations() bool {
 
 func (p *PipelineExecutor) Setup(config models.FlowConfig) error {
 	p.waitGroup = sync.WaitGroup{}
+	p.memory = &ExecutorMemory{}
+	p.memory.SetUp()
 	p.mutex = &sync.Mutex{}
 	p.ticker = time.NewTicker(5 * time.Second)
-	p.waitQueue = make(chan *dag.Vertex,5)
 	p.stopChan = make(chan interface{},1)
 	p.transformations = make([]TransformCall,0)
 	p.contextManager = &managers.ContextManager{}
@@ -316,6 +335,7 @@ func (p *PipelineExecutor) createLogFile(config models.FlowConfig) error {
 
 func (p *PipelineExecutor) Log(logs ...interface{}) {
 	p.logger.Println(logs...)
+	//fmt.Println(logs...)
 }
 
 
