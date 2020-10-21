@@ -21,6 +21,35 @@ Please follow the three simple steps below to have `bf` executable available in 
 
 After the above three steps complete successfully, you are ready to practice the following real bioinformatics tutorials.
 
+
+System Configuration File
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Bioflows require a system-wide YAML configuration file to be located at your home directory `~/` with name `.bf.yaml`.
+
+The contents of this file are:
+
+.. code-block:: yaml
+
+    remote: false
+    email:
+      type: smtp
+      host: smtp.gmail.com
+      port: 587
+      username: "yourusername@gmail.com"
+      password: <Your Password>
+      ssl: false
+      tls: true
+
+
+    cluster:
+      address: 127.0.0.1
+      port: 8500
+      scheme: http
+
+
+Please copy these contents into a file named `.bf.yaml` and place the file into your home directory `~/`.
+
 BioFlows Tutorials
 ^^^^^^^^^^^^^^^^^^
 
