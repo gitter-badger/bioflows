@@ -162,6 +162,17 @@ It will look something like..
 .. image:: ../../_static/images/prions.svg
 
 
+Running your Pipeline
+^^^^^^^^^^^^^^^^^^^^^
+
+You can now easily run your pipeline giving only the output directory where the engine will save the folders of each step including all the results files.
+
+.. code-block:: yaml
+
+    $ bf Workflow run --output_dir=/your/output/directory --data_dir=/any/other/data/directory /your/script/location/prions.yaml
+
+
+
 
 
 
