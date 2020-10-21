@@ -8,7 +8,6 @@ version: 0.0.1
 steps:
   - id: DownloadFasta
     name: DownloadFasta
-    imageId: biocontainers/blast:v2.2.31_cv2
     inputs:
       - type: string
         displayname: URL for fasta file
@@ -41,7 +40,7 @@ steps:
 
   - id: MakeBlastdb
     name: MakeBlastdb
-    depends: DownloadFasta,DownloadGenome,UnzipGenome
+    depends: DownloadFasta,UnzipGenome
     imageId: biocontainers/blast:v2.2.31_cv2
     command: "makeblastdb -in {{UnzipGenome.hs_fasta}} -dbtype prot"
   - id: FastaAlignment

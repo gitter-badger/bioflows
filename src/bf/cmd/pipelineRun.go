@@ -30,7 +30,8 @@ var workflowRunCmd = &cobra.Command{
 }
 
 func init(){
-	workflowRunCmd.PersistentFlags().BoolVar(&clean,"clean",false,"Clean Pipeline history")
+	workflowRunCmd.PersistentFlags().BoolVar(&clean,"clean",false,"This command cleans all metadata associated with this pipeline from the distributed in-memory Key/Value Store, " +
+		"in case you are running in a distributed mode. this command has no effect if you are running in a local mode.")
 	workflowRunCmd.MarkFlagRequired(OutputDir)
 	workflowRunCmd.MarkFlagRequired(DataDir)
 	WorkflowCmd.AddCommand(workflowRunCmd)
