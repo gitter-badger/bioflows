@@ -17,23 +17,23 @@ steps:
       - type: file
         name: fasta_file
         value: "{{self_dir}}/P04156.fasta"
-        command: "curl -OL {{fasta_url}} > {{fasta_file}}"
-      - id: DownloadGenome
-        name: DownloadGenome
-        inputs:
-          - type: string
-            name: gfasta_url
-            value: "ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz"
-        outputs:
-          - type: file
-            name: hs_gfasta
-            value: "{{self_dir}}/zebrafish.1.protein.faa.gz"
-            command: "curl -O {{gfasta_url}}"
-      - id: UnzipGenome
-        name: UnzipGenome
-        depends: DownloadGenome
-        command: "gunzip {{DownloadGenome.hs_gfasta}}"
-        outputs:
-          - type: file
-            name: hs_fasta
-            value: "{{DownloadGenome.location}}/zebrafish.1.protein.faa"
+    command: "curl -OL {{fasta_url}} > {{fasta_file}}"
+  - id: DownloadGenome
+    name: DownloadGenome
+    inputs:
+      - type: string
+        name: gfasta_url
+        value: "ftp://ftp.ncbi.nih.gov/refseq/D_rerio/mRNA_Prot/zebrafish.1.protein.faa.gz"
+    outputs:
+      - type: file
+        name: hs_gfasta
+        value: "{{self_dir}}/zebrafish.1.protein.faa.gz"
+        command: "curl -O {{gfasta_url}}"
+  - id: UnzipGenome
+    name: UnzipGenome
+    depends: DownloadGenome
+    command: "gunzip {{DownloadGenome.hs_gfasta}}"
+    outputs:
+      - type: file
+        name: hs_fasta
+        value: "{{DownloadGenome.location}}/zebrafish.1.protein.faa"
