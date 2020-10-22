@@ -94,7 +94,7 @@ Please read the original practice first to understand what the author is doing a
           - type: file
             name: fasta_file
             value: "{{self_dir}}/P04156.fasta"
-        command: "wget -O {{fasta_file}} {{fasta_url}}"
+        command: "curl -OL {{fasta_url}} > {{fasta_file}}"
       - id: DownloadGenome
         name: DownloadGenome
         inputs:
@@ -129,6 +129,10 @@ Please read the original practice first to understand what the author is doing a
             name: results_file
             value: "{{self_dir}}/results.txt"
         command: "blastp -query {{DownloadFasta.fasta_file}} -db {{UnzipGenome.hs_fasta}} -out {{results_file}}"
+
+
+
+
 
 Of course, if you understood the original practice well, these steps are self-explanatory. Please read carefully how the parameters are linked together.
 
