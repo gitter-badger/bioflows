@@ -1,0 +1,25 @@
+id: blast_prions2
+type: pipeline
+name: Blast_Prion2
+description:
+  -"We’ll be running a BLAST (Basic Local Alignment Search Tool) example with a container from BioContainers. BLAST is a tool bioinformaticians use to compare a sample genetic sequence to a database of known seqeuences; it’s one of the most widely used bioinformatics tools."
+website: https://pawseysc.github.io/container-workflows/08-bio-example/index.html
+version: 0.0.1
+steps:
+  - id: GenomeDownload
+    name: GenomeDownload
+    url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/genomedownload.yaml
+  - id: MakeBlastdb
+    name: MakeBlastdb
+    depends: GenomeDownload
+    imageId: biocontainers/blast:v2.2.31_cv2
+    command: "makeblastdb -in {{GenomeDownload.UnzipGenome.hs_fasta}} -dbtype prot"
+  - id: FastaAlignment
+    name: FastaAlignment
+    depends: MakeBlastdb
+    imageId: biocontainers/blast:v2.2.31_cv2
+    outputs:
+      - type: file
+        name: results_file
+        value: "{{self_dir}}/results.txt"
+    command: "blastp -query {{GenomeDownload.DownloadFasta.fasta_file}} -db {{GenomeDownload.UnzipGenome.hs_fasta}} -out {{results_file}}"
