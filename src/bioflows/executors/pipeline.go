@@ -17,6 +17,13 @@ import (
 	"time"
 )
 
+const (
+	SHOULD_RUN = iota
+	DONT_RUN
+	SHOULD_QUEUE
+
+)
+
 type PipelineExecutor struct {
 	contextManager *managers.ContextManager
 	planManager *managers.ExecutionPlanManager
@@ -127,24 +134,25 @@ func (p *PipelineExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig
 
 }
 func (p *PipelineExecutor) canRun(pipelineId string , step pipelines.BioPipeline) bool {
+	result := true
 	if len(step.Depends) <= 0 {
 		return true
 	}
 	depends := strings.Split(step.Depends,",")
-	result := true
+
 	for _ , v := range depends {
 		toolName := resolver.ResolveToolKey(v,pipelineId)
-		_ , err := p.GetContext().GetStateManager().GetStateByID(toolName)
+		data , err := p.GetContext().GetStateManager().GetStateByID(toolName)
 		if err != nil {
 			result = false
 			return result
 		}
-		//toolConfig := data.(map[string]interface{})
-		//if status , ok := toolConfig["status"]; !ok {
-		//	result = false
-		//}else{
-		//	result = result && !(status.(bool))
-		//}
+		toolConfig := data.(map[string]interface{})
+		if status , ok := toolConfig["status"]; !ok {
+			result = false
+		}else{
+			result = result && !(status.(bool))
+		}
 	}
 	return result
 }
@@ -165,6 +173,42 @@ func (p *PipelineExecutor) isAlreadyRun(toolKey string) bool{
 	return result
 
 }
+
+func (p *PipelineExecutor) CheckStatus(pipelineId string , step pipelines.BioPipeline) int {
+	status := SHOULD_RUN
+	toolKey := resolver.ResolveToolKey(step.ID,pipelineId)
+	section , _ := p.contextManager.GetStateManager().GetStateByID(toolKey)
+	if section != nil {
+		data := section.(map[string]interface{})
+		if _, ok := data["status"]; !ok {
+			status = DONT_RUN
+		}
+	}
+	//Check that all dependent steps have run successfully
+	if len(step.Depends) > 0 {
+		depends := strings.Split(step.Depends,",")
+		result := true
+		for _ , v := range depends {
+			toolName := resolver.ResolveToolKey(v,pipelineId)
+			data , _ := p.GetContext().GetStateManager().GetStateByID(toolName)
+			if data != nil {
+				toolConfig := data.(map[string]interface{})
+				if status , ok := toolConfig["status"]; !ok {
+					status = SHOULD_QUEUE
+				}else{
+					result = result && (status.(bool))
+				}
+			}else{
+				status = SHOULD_QUEUE
+			}
+
+		}
+		if !result{
+			status = DONT_RUN
+		}
+	}
+	return status
+}
 func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config models.FlowConfig,vertex *dag.Vertex) {
 	defer p.waitGroup.Done()
 	var execStatus bool = true
@@ -172,14 +216,10 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 	PreprocessPipeline(&currentFlow,config,p.transformations...)
 	toolKey := resolver.ResolveToolKey(currentFlow.ID,b.ID)
 	//pipelineKey := resolver.ResolvePipelineKey(p.parentPipeline.ID)
-
-	if p.canRun(b.ID,currentFlow) {
-		if p.isAlreadyRun(toolKey){
-
-			goto RunChildren
-		}
+	status := p.CheckStatus(b.ID,currentFlow)
+	switch status {
+	case SHOULD_RUN:
 		if currentFlow.IsTool() {
-			// It is a single tool
 			executor := ToolExecutor{}
 			executor.SetPipelineName(p.parentPipeline.Name)
 			executor.SetContainerConfiguration(p.containerConfig)
@@ -213,6 +253,7 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			}
 
 		}else{
+			// It is a nested pipeline step.
 			//it is a nested pipeline
 			nestedPipelineExecutor := PipelineExecutor{}
 			nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
@@ -229,8 +270,6 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 			pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
 			err = p.contextManager.SaveState(toolKey,pipeConfig)
 		}
-		RunChildren:
-		// Check children
 		if execStatus {
 			if vertex.Children.Size() > 0 {
 				// Run those children
@@ -242,17 +281,18 @@ func (p *PipelineExecutor) executeSingleVertex(b *pipelines.BioPipeline , config
 
 			}
 		}
-
-	}else{
+	case SHOULD_QUEUE:
 		if p.memory.AddToMemory(vertex){
 			//Spawn the current step until all other dependencies are run successfully
 			fmt.Println(fmt.Sprintf("Spawning Tool (%s) until dependencies finish execution....",currentFlow.Name))
 			p.waitGroup.Add(1)
 		}
 
+	case DONT_RUN:
+		fallthrough
+	default:
+		return
 	}
-
-
 }
 func (p *PipelineExecutor) runLocally(b *pipelines.BioPipeline, config models.FlowConfig) error {
 	fmt.Println(fmt.Sprintf("Running Pipeline (%s) Locally....",b.Name))
