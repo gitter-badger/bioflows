@@ -28,7 +28,7 @@ steps:
       - type: file
         name: hs_gfasta
         value: "{{self_dir}}/zebrafish.1.protein.faa.gz"
-        command: "curl -O {{gfasta_url}}"
+    command: "curl -O {{gfasta_url}}"
   - id: UnzipGenome
     name: UnzipGenome
     depends: DownloadGenome
