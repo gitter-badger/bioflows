@@ -17,7 +17,7 @@ steps:
       - type: file
         name: fasta_file
         value: "{{self_dir}}/P04156.fasta"
-        command: "wget -O {{fasta_file}} {{fasta_url}}"
+        command: "curl -OL {{fasta_url}} > {{fasta_file}}"
       - id: DownloadGenome
         name: DownloadGenome
         inputs:
