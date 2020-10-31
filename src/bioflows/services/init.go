@@ -5,7 +5,6 @@ import (
 	"bioflows/kv"
 	"github.com/hashicorp/consul/api"
 	"strings"
-	"fmt"
 )
 
 const (
@@ -38,12 +37,12 @@ func GetDefaultOrchestrator() (Orchestrator , error){
 		return nil , err
 	}
 	switch(strings.ToLower(val)){
-	case ORCHESTRATION_TYPE_CONSUL:
-		return &ConsulOrchestrator{} , nil
 	case ORCHESTRATION_TYPE_ZOOKEEPER:
 		return &ZooKeeperOrchestrator{},nil
+	case ORCHESTRATION_TYPE_CONSUL:
+		fallthrough
 	default:
-		return nil , fmt.Errorf("Unknown Orchestrator Used")
+		return &ConsulOrchestrator{} , nil
 	}
 
 }

@@ -23,6 +23,24 @@ func (f *FlowConfig) GetAsMap() map[string]interface{}{
 	}
 	return newMap
 }
+func (f *FlowConfig) ToBytes() ([]byte,error){
+	data := f.GetAsMap()
+	bytes , err := json.Marshal(data)
+	if err != nil {
+		return nil , err
+	}
+	return bytes, nil
+}
+func (f *FlowConfig) ToJson() (string,error) {
+	data , err := f.ToBytes()
+	if err != nil {
+		return "" , err
+	}
+	return string(data) , nil
+}
+func (f *FlowConfig) FromJson(jsonData []byte) error {
+	return json.Unmarshal(jsonData,f)
+}
 
 type Parameter struct {
 	DisplayName string      `json:"displayname,omitempty" yaml:"displayname,omitempty"`
