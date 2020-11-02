@@ -239,6 +239,7 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 }
 func (e *ToolExecutor) Log(logs ...interface{}) {
 	e.toolLogger.Println(logs...)
+	fmt.Println(logs...)
 }
 func (e *ToolExecutor) isDockerized() bool {
 	result := e.ToolInstance.ImageId != "" && len(e.ToolInstance.ImageId) > 1

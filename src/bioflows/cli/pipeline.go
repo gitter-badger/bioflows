@@ -55,7 +55,7 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir,paramsConfig string,clean
 		workflowConfig.Fill(initialParams)
 	}
 	fmt.Println(fmt.Sprintf("Executing Workflow: %s",pipeline.Name))
-	executor := executors.PipelineExecutor{}
+	executor := executors.DagExecutor{}
 	err = executor.Setup(workflowConfig)
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Error: %s",err.Error()))

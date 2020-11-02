@@ -375,7 +375,7 @@ func (p *PipelineExecutor) createLogFile(config models.FlowConfig) error {
 
 func (p *PipelineExecutor) Log(logs ...interface{}) {
 	p.logger.Println(logs...)
-	//fmt.Println(logs...)
+	fmt.Println(logs...)
 }
 
 
