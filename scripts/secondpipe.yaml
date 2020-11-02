@@ -40,4 +40,10 @@ steps:
   - id: 3
     name: count
     depends: 1,2
+    scripts:
+      - type: js
+        before: true
+        code: >
+          self.impede = false
+
     command: "wc -l {{2.dest_dir}} > {{self_dir}}/count.txt"

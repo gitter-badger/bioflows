@@ -234,8 +234,6 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				}
 			}
 		}else{
-			// It is a pipeline
-			// It is a nested pipeline step.
 			//it is a nested pipeline
 			nestedPipelineExecutor := DagExecutor{}
 			nestedPipelineExecutor.SetContainerConfig(p.containerConfig)

@@ -13,7 +13,7 @@ import (
 
 func main(){
 	pipeline := &pipelines.BioPipeline{}
-	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/prions.yaml")
+	tool_in, err := os.Open("/home/snouto/projects/bioflows/scripts/secondpipe.yaml")
 
 	if err != nil {
 		fmt.Printf("There was an error opening the tool file, %v\n",err)
@@ -49,6 +49,7 @@ func main(){
 	}
 	finalConfig := executor.Run(pipeline,workflowConfig)
 	fmt.Println(finalConfig)
+	executor.Clean()
 	//b , err := pipelines.PreparePipeline(pipeline)
 	//if err != nil {
 	//	fmt.Println(err.Error())

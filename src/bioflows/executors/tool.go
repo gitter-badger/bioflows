@@ -108,7 +108,13 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 			flowConfig[k] = v
 		}
 	}
+	e.addImplicitVariables(&flowConfig)
 	return flowConfig
+}
+func (e *ToolExecutor) addImplicitVariables(config *models.FlowConfig){
+	//This variable might be used by embedded scripts to impede the firing of the current tool
+	//Defaults to false
+	(*config)["impede"] = false
 }
 func (e *ToolExecutor) executeBeforeScripts() (map[string]interface{},error) {
 	configuration := e.prepareParameters()
@@ -252,6 +258,12 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 		return toolConfig,err
 	}
 	//Defer the notification till the end of the execute method
+	if toolConfig["impede"] == true{
+		e.Log(fmt.Sprintf("Tool (%s) has been impeded.",e.ToolInstance.Name))
+		toolConfig["exitCode"] = 0
+		toolConfig["status"] = true
+		return toolConfig,nil
+	}
 	defer e.notify(e.ToolInstance)
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
