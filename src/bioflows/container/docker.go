@@ -86,14 +86,13 @@ func (d *DockerManager) RunContainer(containerName string , ImageId string, comm
 			if stopErr != nil {
 				d.Log(fmt.Sprintf("ContainerError: %s",stopErr.Error()))
 			}
-		}()
-		defer func(){
 			d.Log(fmt.Sprintf("Deleting Container: %s",resp.ID))
 			delErr := d.DeleteContainer(resp.ID)
 			if delErr != nil{
 				d.Log(fmt.Sprintf("ContainerError: %s",delErr.Error()))
 			}
 		}()
+
 	}else{
 		defer d.Log(fmt.Sprintf("Keeping Container: %s",resp.ID))
 	}

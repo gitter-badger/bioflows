@@ -72,7 +72,7 @@ func (p *DagExecutor) CheckStatus(pipelineId string , step pipelines.BioPipeline
 	section , _ := p.contextManager.GetStateManager().GetStateByID(toolKey)
 	if section != nil {
 		data := section.(map[string]interface{})
-		if _, ok := data["status"]; !ok {
+		if _, found := data["status"]; found {
 			status = DONT_RUN
 		}
 	}
@@ -85,10 +85,10 @@ func (p *DagExecutor) CheckStatus(pipelineId string , step pipelines.BioPipeline
 			data , _ := p.GetContext().GetStateManager().GetStateByID(toolName)
 			if data != nil {
 				toolConfig := data.(map[string]interface{})
-				if status , ok := toolConfig["status"]; !ok {
+				if statusVar , found := toolConfig["status"]; !found {
 					status = SHOULD_QUEUE
 				}else{
-					result = result && (status.(bool))
+					result = result && (statusVar.(bool))
 				}
 			}else{
 				status = SHOULD_QUEUE
@@ -255,6 +255,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 	case DONT_RUN:
 		fallthrough
 	default:
+		p.Log(fmt.Sprintf("Flow: %s has already run before, deferring....",currentFlow.Name))
 		return
 	}
 }

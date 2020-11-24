@@ -1,0 +1,14 @@
+id: testkeep
+type: pipeline
+name: testkeep
+description:
+  -"Testing keeping a container or removing a container once the step finishes"
+steps:
+  - id: ContainerStep
+    name: ContainerStep
+    imageId: ubuntu
+    inputs:
+      - type: string
+        name: myvar
+        value: "Mohamed Fawzy"
+    command: echo {{myvar}}
