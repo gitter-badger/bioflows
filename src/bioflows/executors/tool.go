@@ -238,6 +238,7 @@ func (e *ToolExecutor) init(flowConfig models.FlowConfig) error {
 		HostConfig:       hostConfig,
 		NetworkingConfig: nil,
 	}
+	e.dockerManager.SetLogger(e.toolLogger)
 
 
 
@@ -297,7 +298,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 			"bash",
 			"-c",
 			toolCommand,
-		})
+		},false)
 		if toolErr != nil {
 			errorBytes = []byte(toolErr.Error())
 			exitCode = 1

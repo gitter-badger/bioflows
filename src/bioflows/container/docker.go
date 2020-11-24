@@ -10,6 +10,7 @@ import (
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"io"
+	"log"
 )
 
 const (
@@ -18,10 +19,20 @@ const (
 
 type DockerManager struct {
 	client *client.Client
+	logger *log.Logger
 	DockerConfig *container.Config
 	HostConfig *container.HostConfig
 	NetworkingConfig *network.NetworkingConfig
 }
+
+func (d *DockerManager) SetLogger(logger *log.Logger) {
+	d.logger = logger
+}
+func (d *DockerManager) Log(logs ...interface{}) {
+	d.logger.Println(logs...)
+	fmt.Println(logs...)
+}
+
 
 func (d *DockerManager) init() error{
 	if d.client != nil {
@@ -50,7 +61,7 @@ func (d *DockerManager) PullImage(imageURL string,containerConfig *models.Contai
 	return buffer.String() , nil
 }
 
-func (d *DockerManager) RunContainer(containerName string , ImageId string, commands []string) (Out *bytes.Buffer, Err *bytes.Buffer,err error) {
+func (d *DockerManager) RunContainer(containerName string , ImageId string, commands []string,keep bool) (Out *bytes.Buffer, Err *bytes.Buffer,err error) {
 	d.init()
 	Out = &bytes.Buffer{}
 	Err = &bytes.Buffer{}
@@ -64,9 +75,27 @@ func (d *DockerManager) RunContainer(containerName string , ImageId string, comm
 	d.HostConfig,
 	d.NetworkingConfig,
 	nil,"")
-
 	if err != nil {
+		d.Log(fmt.Sprintf("Error Creating Container : %s",err.Error()))
 		return nil , nil , err
+	}
+	if !keep{
+		defer func(){
+			d.Log(fmt.Sprintf("Stopping Container : %s",resp.ID))
+			stopErr := d.StopContainer(resp.ID)
+			if stopErr != nil {
+				d.Log(fmt.Sprintf("ContainerError: %s",stopErr.Error()))
+			}
+		}()
+		defer func(){
+			d.Log(fmt.Sprintf("Deleting Container: %s",resp.ID))
+			delErr := d.DeleteContainer(resp.ID)
+			if delErr != nil{
+				d.Log(fmt.Sprintf("ContainerError: %s",delErr.Error()))
+			}
+		}()
+	}else{
+		defer d.Log(fmt.Sprintf("Keeping Container: %s",resp.ID))
 	}
 	err = d.client.ContainerStart(context.Background(),resp.ID,types.ContainerStartOptions{})
 	if err != nil {
@@ -95,6 +124,11 @@ func (d *DockerManager) RunContainer(containerName string , ImageId string, comm
 func (d *DockerManager) StopContainer(containerId string) error {
 	d.init()
 	return d.client.ContainerStop(context.Background(),containerId,nil)
+}
+
+func (d *DockerManager) DeleteContainer(containerId string) error {
+	d.init()
+	return d.client.ContainerRemove(context.Background(),containerId,types.ContainerRemoveOptions{Force: true})
 }
 
 
