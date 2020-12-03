@@ -5,9 +5,14 @@ inputs:
   - id: parent_input
     name: parent_input
     description: "A single input directory"
+scripts:
+  - type: js
+    before: true
+    code: >
+      self.parent_input = "/home/snouto/Documents";
 steps:
-  - id: pipcopy
-    name: pipcopy
+  - id: parentstep
+    name: parentstep
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2a/scripts/pipcopy.yaml
     inputs:
       - id: input_dir

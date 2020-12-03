@@ -2,15 +2,18 @@ package executors
 
 import (
 	config2 "bioflows/config"
+	"bioflows/expr"
 	"bioflows/managers"
 	"bioflows/models"
 	"bioflows/models/pipelines"
 	"bioflows/resolver"
+	"bioflows/scripts"
 	"errors"
 	"fmt"
 	"github.com/goombaio/dag"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -23,6 +26,7 @@ type DagExecutor struct {
 	logger *log.Logger
 	containerConfig *models.ContainerConfig
 	scheduler *DagScheduler
+	exprManager *expr.ExprManager
 	rankedList [][]*dag.Vertex
 }
 func (p *DagExecutor) SetContainerConfig(containerConfig *models.ContainerConfig) {
@@ -116,7 +120,7 @@ func (p *DagExecutor) CheckStatus(pipelineId string , step pipelines.BioPipeline
 func (p *DagExecutor) Setup(config models.FlowConfig) error {
 
 	p.scheduler = &DagScheduler{}
-
+	p.exprManager = &expr.ExprManager{}
 	p.transformations = make([]TransformCall,0)
 	p.contextManager = &managers.ContextManager{}
 	p.planManager = &managers.ExecutionPlanManager{}
@@ -183,6 +187,20 @@ func (p *DagExecutor) runLocal(b *pipelines.BioPipeline, config models.FlowConfi
 	if p.rankedList == nil {
 		return errors.New("Failed to rank the current pipeline. Aborting....")
 	}
+	// evaluate current pipeline parameters
+	p.evaluateParameters(b,config)
+	// try to execute any before scripts
+	err = p.executeBeforeScripts(b,config)
+	if err != nil {
+		p.Log(fmt.Sprintf("Executing Script (%s) Error : %s",b.Name,err.Error()))
+		return err
+	}
+	defer func(){
+		err = p.executeAfterScripts(b,config)
+		if err != nil {
+			p.Log(fmt.Sprintf("Executing Script (%s) Error : %s",b.Name,err.Error()))
+		}
+	}()
 	for _ , sublist := range p.rankedList {
 		wg := sync.WaitGroup{}
 		for _ , node := range sublist {
@@ -210,6 +228,89 @@ func (p *DagExecutor) prepareConfig(b *pipelines.BioPipeline,config models.FlowC
 	tempConfig.Fill(pipelineConfig)
 	return tempConfig
 }
+func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config models.FlowConfig) {
+	//Evaluate current Step inputs
+	if step.Inputs != nil && len(step.Inputs) > 0 {
+		for _ , param := range step.Inputs {
+			if param.Value == nil {
+				continue
+			}
+			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
+		}
+	}
+	//Evaluate current Step outputs
+	if step.Outputs != nil && len(step.Outputs) > 0 {
+		for _ , param := range step.Outputs {
+			if param.Value == nil {
+				continue
+			}
+			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
+		}
+	}
+}
+func (p *DagExecutor) executeBeforeScripts(step *pipelines.BioPipeline , config models.FlowConfig) error{
+
+	beforeScripts := make([]models.Script,0)
+	for idx , script := range step.Scripts {
+		if script.IsBefore() {
+			if script.Order <= 0 {
+				script.Order = idx + 1
+			}
+			beforeScripts = append(beforeScripts,script)
+		}
+	}
+	//sort the scripts according to the assigned orders
+	sort.Slice(beforeScripts, func(i, j int) bool {
+
+		return beforeScripts[i].Order < beforeScripts[j].Order
+
+	})
+	for _ , beforeScript := range beforeScripts {
+		var scriptManager scripts.ScriptManager
+		switch strings.ToLower(beforeScript.Type) {
+		case "js":
+			fallthrough
+		default:
+			scriptManager = &scripts.JSScriptManager{}
+		}
+		err := scriptManager.RunBefore(beforeScript,config)
+
+		if err != nil {
+			return err
+		}
+	}
+	//finally
+	return nil
+}
+func (p *DagExecutor) executeAfterScripts (step *pipelines.BioPipeline,config models.FlowConfig) error {
+	afterScripts := make([]models.Script,0)
+	for idx, script := range step.Scripts {
+		if script.IsAfter() {
+			if script.Order <= 0 {
+				script.Order = idx + 1
+			}
+			afterScripts = append(afterScripts,script)
+		}
+	}
+	sort.Slice(afterScripts,func(i,j int) bool {
+		return afterScripts[i].Order < afterScripts[j].Order
+	})
+	for _ , afterScript := range afterScripts {
+		var scriptManager scripts.ScriptManager
+		switch strings.ToLower(afterScript.Type) {
+		case "js":
+			fallthrough
+		default:
+			scriptManager = &scripts.JSScriptManager{}
+		}
+		err := scriptManager.RunAfter(afterScript,config)
+		if err != nil {
+			return err
+		}
+	}
+	//finally
+	return nil
+}
 func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sync.WaitGroup) {
 	defer wg.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
@@ -220,6 +321,20 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 	switch status {
 	case SHOULD_RUN:
 		p.copyParentParamsInto(&currentFlow)
+		// Step 1: Evaluate input parameters and output parameters for the current step before executing it
+		p.evaluateParameters(&currentFlow,config)
+		//Step 2: Try to execute before scripts first
+		err := p.executeBeforeScripts(&currentFlow,config)
+		if err != nil {
+			p.Log(fmt.Sprintf("Executing Scripts (%s) Error : %s",currentFlow.Name,err.Error()))
+			return
+		}
+		defer func(){
+			err := p.executeAfterScripts(&currentFlow,config)
+			if err != nil {
+				p.Log(fmt.Sprintf("Executing Scripts (%s) Error : %s",currentFlow.Name,err.Error()))
+			}
+		}()
 		if currentFlow.IsTool() {
 			// It is a tool
 			executor := ToolExecutor{}
@@ -246,6 +361,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				}
 			}
 		}else{
+			//Step 3: Try to run the current nested pipeline
 			//it is a nested pipeline
 			nestedPipelineExecutor := DagExecutor{}
 			nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
@@ -261,6 +377,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 			}
 			pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
 			err = p.contextManager.SaveState(toolKey,pipeConfig)
+
 		}
 	case SHOULD_QUEUE:
 		fallthrough

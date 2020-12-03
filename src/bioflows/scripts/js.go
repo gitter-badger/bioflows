@@ -23,7 +23,11 @@ func (manager *JSScriptManager) Prepare(toolInstance *models.ToolInstance) {
 }
 func (manager *JSScriptManager) RunBefore(script models.Script,config map[string]interface{}) error {
 	vm := goja.New()
-	config["command"] = manager.toolInstance.Command.ToString()
+	if manager.toolInstance != nil {
+		config["command"] = manager.toolInstance.Command.ToString()
+	}else{
+		config["command"] = ""
+	}
 	vm.Set("self",config)
 	vm.Set("io",&io.IO{})
 	_ , err := vm.RunString(script.Code.ToString())

@@ -80,6 +80,9 @@ func (e *ToolExecutor) prepareParameters() models.FlowConfig {
 	if len(e.ToolInstance.Inputs) > 0 {
 		inputs := make(map[string]string)
 		for _ , param := range e.ToolInstance.Inputs{
+			if param.Value == nil {
+				continue
+			}
 			paramValue := e.exprManager.Render(param.GetParamValue(),flowConfig)
 			inputs[param.Name] = paramValue
 		}

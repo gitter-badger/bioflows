@@ -1,6 +1,7 @@
 package pipelines
 
 import (
+	"bioflows/expr"
 	"bioflows/models"
 	"strings"
 )
@@ -15,8 +16,17 @@ func getInputIndexWithName(l []models.Parameter,name string) int {
 	}
 	return foundIndex
 }
+func evalTargetInputs(t *BioPipeline,config models.FlowConfig) {
+	exprManager := &expr.ExprManager{}
+	if t.Inputs != nil || len(t.Inputs) > 0 {
+		for _ , param := range t.Inputs {
+			paramValue := param.GetParamValue()
+			param.Value = exprManager.Render(paramValue,config)
+		}
+	}
+}
 
-func Clone(o *BioPipeline, t *BioPipeline) error {
+func Clone(o *BioPipeline, t *BioPipeline, config models.FlowConfig) error {
 	// TODO: Perform the clone process
 	// It overrides what is inside t into o
 	o.URL = t.URL
@@ -24,7 +34,9 @@ func Clone(o *BioPipeline, t *BioPipeline) error {
 	o.Caps = t.Caps
 	o.Type = t.Type
 	o.BioflowId = t.BioflowId
-	o.Name = t.Name
+	if len(o.Name) <= 0{
+		o.Name = t.Name
+	}
 	o.Description = t.Description
 	if o.Discussions == nil {
 		o.Discussions = make([]string,0)
@@ -46,7 +58,8 @@ func Clone(o *BioPipeline, t *BioPipeline) error {
 		o.References = make([]models.Reference,0)
 	}
 	o.References = append(o.References,t.References...)
-
+	// Evaluate target inputs before copying
+	evalTargetInputs(t,config)
 	// Copy the inputs section
 	//Taking into account any new additional configuration
 	if o.Inputs == nil {

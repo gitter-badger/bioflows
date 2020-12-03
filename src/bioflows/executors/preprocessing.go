@@ -22,7 +22,7 @@ var UseUrl TransformCall = func (b *pipelines.BioPipeline,config models.FlowConf
 			if err != nil {
 				return err
 			}
-			err = pipelines.Clone(b,t)
+			err = pipelines.Clone(b,t,config)
 			return err
 		}
 	}
@@ -32,7 +32,7 @@ var UseUrl TransformCall = func (b *pipelines.BioPipeline,config models.FlowConf
 var UseBioFlowId TransformCall = func (b *pipelines.BioPipeline,config models.FlowConfig) error {
 	t := &pipelines.BioPipeline{}
 	helpers.DownloadFromBioFlowsHub(t,b.BioflowId,b.Version)
-	return pipelines.Clone(b,t)
+	return pipelines.Clone(b,t,config)
 }
 
 
