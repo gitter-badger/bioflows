@@ -116,5 +116,8 @@ func Clone(o *BioPipeline, t *BioPipeline) error {
 
 	o.Steps = make([]BioPipeline,len(t.Steps))
 	copy(o.Steps,t.Steps)
+	if len(t.Steps) > 0 {
+		o.Type = "pipeline"
+	}
 	return nil
 }

@@ -1,5 +1,6 @@
 id: pipcopy
 name: pipcopy
+type: pipeline
 description: "this pipeline will test copying the general pipeline configuration of the pipeline and make these available to children steps"
 inputs:
   - id: input_dir
