@@ -11,7 +11,8 @@ steps:
     name: list_dir
     description: "This is a computational step in which it will list all contained directory within an input directory"
     inputs:
-      - id: input_dir
-        name: input_dir
+      - id: current_dir
+        name: current_dir
         description: "The input directory to use"
-    command: "ls -ll {{input_dir}}"
+        value: "{{input_dir}}"
+    command: "ls -ll {{current_dir}}"
