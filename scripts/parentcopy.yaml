@@ -1,0 +1,16 @@
+id: parentcopy
+name: parentcopy
+description: "This is a parent pipeline which calls pipecopy.yaml"
+inputs:
+  - id: parent_input
+    name: parent_input
+    description: "A single input directory"
+steps:
+  - id: pipcopy
+    name: pipcopy
+    url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2a/scripts/pipcopy.yaml
+    inputs:
+      - id: input_dir
+        name: input_dir
+        description: "The input directory for pipcopy step"
+        value: "{{parent_input}}"

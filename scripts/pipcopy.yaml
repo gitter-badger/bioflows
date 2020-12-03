@@ -1,0 +1,16 @@
+id: pipcopy
+name: pipcopy
+description: "this pipeline will test copying the general pipeline configuration of the pipeline and make these available to children steps"
+inputs:
+  - id: input_dir
+    name: input_dir
+    description: "The workflow general input directory to list files within"
+steps:
+  - id: list_dir
+    name: list_dir
+    description: "This is a computational step in which it will list all contained directory within an input directory"
+    inputs:
+      - id: input_dir
+        name: input_dir
+        description: "The input directory to use"
+    command: "ls -ll {{input_dir}}"

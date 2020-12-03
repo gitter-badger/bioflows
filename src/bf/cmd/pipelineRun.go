@@ -25,7 +25,7 @@ var workflowRunCmd = &cobra.Command{
 			return errors.New("Output Directory Flag is required.")
 		}
 		toolPath := args[0]
-		return cli.RunPipeline(cfgFile,toolPath,OutputDir,DataDir,ParamsConfig,clean)
+		return cli.RunPipeline(cfgFile,toolPath,OutputDir,DataDir, initialsConfig,clean)
 	},
 }
 

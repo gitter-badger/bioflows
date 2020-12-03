@@ -31,6 +31,17 @@ func (p *DagExecutor) SetContainerConfig(containerConfig *models.ContainerConfig
 func (p *DagExecutor) SetContext(c *managers.ContextManager) {
 	p.contextManager = c
 }
+
+func (p *DagExecutor) copyParentParams(step *pipelines.BioPipeline) {
+	if len(p.parentPipeline.Inputs) > 0 {
+		if step.Inputs == nil || len(step.Inputs) == 0{
+			step.Inputs = make([]models.Parameter,len(p.parentPipeline.Inputs))
+			copy(step.Inputs,p.parentPipeline.Inputs)
+		}else{
+			step.Inputs = append(step.Inputs,p.parentPipeline.Inputs...)
+		}
+	}
+}
 func (p *DagExecutor) GetContext() *managers.ContextManager {
 	return p.contextManager
 }
@@ -208,6 +219,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 	status := p.CheckStatus(p.parentPipeline.ID,currentFlow)
 	switch status {
 	case SHOULD_RUN:
+		p.copyParentParams(&currentFlow)
 		if currentFlow.IsTool() {
 			// It is a tool
 			executor := ToolExecutor{}
