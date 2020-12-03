@@ -169,6 +169,66 @@ of this tool and a website where other people could visit who are interested to 
 
     command: "ls -ll {{input_dir}} > {{output_file}}"
 
+Pipeline can contain Inputs and Outputs
+***************************************
+
+Generally, When you write a pipeline, you want to make your pipeline a self-contained entity. Meaning that, you need to aggregate all input parameters required
+to run your pipeline by others. you can do that simply by defining a general **inputs** directive as a top-level section in your pipeline. This will make it easy
+for others to know all inputs required by your pipeline to run.
+Afterwards, you can safely reference these input parameters in the downstream steps of your pipeline. Moreover, you can add embedded scripts in your pipeline the same way you do
+for other steps. the following is an example that demonstrates this functionality, the following is a dummy pipeline that just illustrates these concepts.
+
+.. code-block:: yaml
+
+    id: parentcopy
+    name: parentcopy
+    description: "This is a parent pipeline which calls pipecopy.yaml"
+    inputs:
+      - id: parent_input
+        name: parent_input
+        description: "A single input directory"
+    scripts:
+      - type: js
+        before: true
+        code: >
+          self.parent_input = "/complete/new/file/path";
+    steps:
+      - id: parentstep
+        name: parentstep
+        url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2a/scripts/pipcopy.yaml
+        inputs:
+          - id: input_dir
+            name: input_dir
+            description: "The input directory for pipcopy step"
+            value: "{{parent_input}}"
+
+
+Setting Initial Parameters
+**************************
+
+When you or others would like to run the above **parentcopy** pipeline, the **bf** command line tool should be given a **YAML** file containing all required
+input parameters required for this pipeline to run. the following is an example YAML file which contains all the initial parameters for running the above mentioned
+pipeline.
+
+.. code-block:: yaml
+
+    # the file name is initials.yaml
+    parent_input: /complete/file/path
+
+Now, if you want to run the above pipeline using **bf** command line, you should reference this file
+
+.. code-block:: bash
+
+    $ bf Workflow run --initials=/location/to/initials.yaml --output_dir=/location/to/output/dir --data_dir=/location/to/data/dir  parentcopy.yaml
+
+.. note::
+    Please note that the value for parent_input will be replaced by the embedded JS script contained within the pipeline definition file itself.
+    Basically, parent_input value will be replaced from **/complete/file/path** from the initials.yaml file
+    to **/complete/new/file/path** when the embedded script executes and because that embedded script is instructed to run before any other steps. it will
+    modify that input parameter value before any downstream steps contained within this pipeline.
+
+
+
 
 Share Your Tool
 ***************
@@ -181,7 +241,46 @@ Reuse Your Tool
 
 Now assume that you or other researchers want to use your previously published tool and incorporate it into their pipeline.
 
-Let's do just this....
+Let's do this....
+
+First, we have a published tool somewhere , Remote Tool that exists at: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/old/listdir.yaml
+
+.. code-block:: yaml
+
+    id: listDir
+    type: tool
+    imageId: ubuntu
+    name: list_directories
+    description: "this tool will list directories on a linux server"
+    discussions:
+      - this tool will list directories
+      - this tool will list all linux directories for a given input directory parameter
+    website: http://john.university.com
+    version: 1.0.0
+    notification:
+          to: aalhossary@pmail.ntu.edu.sg
+          title: "List Dir has finished"
+          body: "List Dir has finished"
+    maintainer:
+      -fullname: mohamed ibrahim
+      email: mfawzy.sami@gmail.com
+      username: mfawzy
+    outputs:
+      - type: file
+        name: output_file
+        value: "{{self_dir}}/ls_output.txt"
+    inputs:
+      - type: dir
+        name: input_dir
+        displayname: Input directory
+        description: "Input directory to list its contents"
+        value: /etc/
+
+    command: "ls -ll {{input_dir}} > {{output_file}}"
+
+
+And let's reference it down below....
+
 
 .. code-block:: yaml
 
@@ -191,7 +290,7 @@ Let's do just this....
     description: this pipeline will list the contents of a specific directory and save that to a file and count the lines in this file.
     steps:
         - id: listDir
-          url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/listdir.yaml
+          url: https://raw.githubusercontent.com/mfawzysami/bioflows/master/scripts/old/listdir.yaml
 
         - id: countstep
           name: countstep

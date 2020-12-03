@@ -9,7 +9,7 @@ scripts:
   - type: js
     before: true
     code: >
-      self.parent_input = "/home/snouto/Documents";
+      self.parent_input = "/absolute/location/for/the/parent/input";
 steps:
   - id: parentstep
     name: parentstep
