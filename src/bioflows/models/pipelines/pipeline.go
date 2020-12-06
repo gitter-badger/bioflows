@@ -36,6 +36,8 @@ type BioPipeline struct {
 	Notification *models.Notification `json:"notification,omitempty" yaml:"notification,omitempty"`
 	Caps         *models.Capabilities `json:"caps,omitempty" yaml:"caps,omitempty"`
 	ContainerConfig *models.ContainerConfig `json:"container,omitempty" yaml:"container,omitempty"`
+	JobTemplate *models.JobTemplate `json:"jobTemplate,omitempty" yaml:"jobTemplate,omitempty"`
+	ClusterType string `json:"clusterType,omitempty" yaml:"clusterType,omitempty"`
 }
 
 func (instance *BioPipeline) GetIdentifier() string {
@@ -67,6 +69,9 @@ func (p BioPipeline) ToTool() *models.Tool {
 	t.BioflowId = p.BioflowId
 	t.Name = p.BioflowId
 	t.Description = p.Description
+	// clone the job template
+	t.JobTemplate = p.JobTemplate
+	t.ClusterType = p.ClusterType
 	t.Discussions = make([]string, len(p.Discussions))
 	copy(t.Discussions, p.Discussions)
 	t.Website = p.Website

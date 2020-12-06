@@ -5,15 +5,19 @@ inputs:
   - id: parent_input
     name: parent_input
     description: "A single input directory"
-scripts:
-  - type: js
-    before: true
-    code: >
-      self.parent_input = "/absolute/location/for/the/parent/input";
+#scripts:
+#  - type: js
+#    before: true
+#    code: >
+#      self.parent_input = "/absolute/location/for/the/parent/input";
 steps:
+  - id: firstStep
+    name: firstStep
+    command: "echo 'Hello Mohamed' > {{self_dir}}/output.txt"
   - id: parentstep
     name: parentstep
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2a/scripts/pipcopy.yaml
+    depends: firstStep
     inputs:
       - id: input_dir
         name: input_dir

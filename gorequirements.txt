@@ -16,3 +16,6 @@ github.com/gorilla/handlers
 github.com/gorilla/rpc
 github.com/alexeyco/simpletable
 github.com/ttacon/chalk
+github.com/dgruber/drmaa
+github.com/dgruber/drmaa2os
+

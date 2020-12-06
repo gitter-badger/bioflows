@@ -1,6 +1,8 @@
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Tool struct {
 	Type         string        `json:"type,omitempty" yaml:"type,omitempty"`
@@ -30,6 +32,8 @@ type Tool struct {
 	Notification *Notification `json:"notification,omitempty" yaml:"notification,omitempty"`
 	Caps         *Capabilities `json:"caps,omitempty" yaml:"caps,omitempty"`
 	ContainerConfig *ContainerConfig `json:"container,omitempty" yaml:"container,omitempty"`
+	JobTemplate *JobTemplate `json:"jobTemplate,omitempty" yaml:"jobTemplate,omitempty"`
+	ClusterType string `json:"clusterType,omitempty" yaml:"clusterType,omitempty"`
 }
 
 func (t *Tool) ToJson() string {

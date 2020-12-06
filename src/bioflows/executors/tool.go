@@ -9,6 +9,7 @@ import (
 	"bioflows/scripts"
 	"bioflows/virtualization"
 	"fmt"
+	"github.com/dgruber/drmaa"
 	"github.com/docker/docker/api/types/container"
 	"io/ioutil"
 	"log"
@@ -28,7 +29,11 @@ type ToolExecutor struct {
 	dockerManager    *dockcontainer.DockerManager
 	hostOutputDir    string
 	hostDataDir      string
+	notificationEnabled bool
 	pipelineContainerConfig *models.ContainerConfig
+}
+func (e *ToolExecutor) SetNotificationEnabled(val bool) {
+	e.notificationEnabled = val
 }
 func (e *ToolExecutor) SetContainerConfiguration(containerConfig *models.ContainerConfig){
 	e.pipelineContainerConfig = containerConfig
@@ -268,7 +273,9 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 		toolConfig["status"] = true
 		return toolConfig,nil
 	}
-	defer e.notify(e.ToolInstance)
+	if e.notificationEnabled {
+		defer e.notify(e.ToolInstance)
+	}
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)
 	toolConfigKey, _ , _ := e.GetToolOutputDir()
@@ -314,6 +321,36 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 		if outErr != nil {
 			errorBytes = outErr.Bytes()
 		}
+	}else if e.ToolInstance.JobTemplate != nil {
+		//TODO: Submit the current step to the suitable HPC Cluster
+		e.Log(fmt.Sprintf("Submitting Tool to HPC Cluster : %s",e.ToolInstance.Name))
+		data , err := SubmitToolAsJob(e.ToolInstance,toolCommand)
+		if err != nil {
+			return toolConfig , err
+		}
+		jobInfo := data.(drmaa.JobInfo)
+
+		toolConfig["jobInfo"] = struct {
+			ExitStatus int64
+			Aborted bool
+			CoreDump bool
+			Exited bool
+			Signaled bool
+			JobID string
+			ResourceUsage map[string]string
+			TerminationSignal string
+		}{
+			ExitStatus:        jobInfo.ExitStatus(),
+			Aborted:           jobInfo.HasAborted(),
+			CoreDump:          jobInfo.HasCoreDump(),
+			Exited:            jobInfo.HasExited(),
+			Signaled:          jobInfo.HasSignaled(),
+			JobID:             jobInfo.JobID(),
+			ResourceUsage:     jobInfo.ResourceUsage(),
+			TerminationSignal: jobInfo.TerminationSignal(),
+		}
+		e.Log(fmt.Sprintf("Tool(%s) has finished running on the HPC Cluster...",e.ToolInstance.Name))
+
 	}else{
 
 		executor := &process.CommandExecutor{Command: toolCommand,CommandDir: fmt.Sprintf("%v",toolConfig[toolConfigKey])}

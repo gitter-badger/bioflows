@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/goombaio/dag"
 	"log"
+	"net/smtp"
 	"os"
 	"sort"
 	"strings"
@@ -311,6 +312,30 @@ func (p *DagExecutor) executeAfterScripts (step *pipelines.BioPipeline,config mo
 	//finally
 	return nil
 }
+func (p *DagExecutor) notify(step *pipelines.BioPipeline , config models.FlowConfig) {
+
+	if step.Notification != nil {
+		if EmailSection , ok := config["email"]; !ok {
+			err := fmt.Errorf("Tool (%s) requires Email notification but BioFlows Configuration is missing The Email Section...",step.Name)
+			p.Log(err)
+		}else{
+			email := EmailSection.(map[string]interface{})
+			username := fmt.Sprintf("%v",email["username"])
+			password := fmt.Sprintf("%v",email["password"])
+			SMTPHost := fmt.Sprintf("%v",email["host"])
+			SMTPPort := email["port"].(int)
+			message := []byte(step.Notification.Body)
+			auth := smtp.PlainAuth("",username,password,SMTPHost)
+			To := strings.Split(step.Notification.To,",")
+			p.Log("Start Sending Email Notifications....")
+			err := smtp.SendMail(fmt.Sprintf("%s:%d",SMTPHost,SMTPPort),auth,username,To,message)
+			if err != nil {
+				p.Log(err.Error())
+			}
+			p.Log(fmt.Sprintf("Tool (%s): The Email was sent Successfully....",step.Name))
+		}
+	}
+}
 func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sync.WaitGroup) {
 	defer wg.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
@@ -335,6 +360,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				p.Log(fmt.Sprintf("Executing Scripts (%s) Error : %s",currentFlow.Name,err.Error()))
 			}
 		}()
+		defer p.notify(&currentFlow,config)
 		if currentFlow.IsTool() {
 			// It is a tool
 			executor := ToolExecutor{}
@@ -347,6 +373,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 			}
 			toolInstance.Prepare()
 			generalConfig := p.prepareConfig(p.parentPipeline,config)
+			executor.SetNotificationEnabled(false)
 			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 			if err != nil {
 

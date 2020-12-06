@@ -63,6 +63,7 @@ func RunTool(configFile string, toolPath string,workflowId string , workflowName
 	fmt.Println("Executing the current tool.")
 	executor := executors.ToolExecutor{}
 	executor.SetPipelineName(workflowName)
+	executor.SetNotificationEnabled(true)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	workflowConfig[config.WF_INSTANCE_DATADIR] = dataDir
 	if len(initialsConfig) > 0 {

@@ -49,6 +49,15 @@ func Clone(o *BioPipeline, t *BioPipeline, config models.FlowConfig) error {
 	o.Website = t.Website
 	o.Icon = t.Icon
 	o.Maintainer = t.Maintainer
+
+	//clone the job template
+	if o.JobTemplate == nil {
+		o.JobTemplate = t.JobTemplate
+	}
+	if o.ClusterType == "" || len(o.ClusterType) == 0 {
+		o.ClusterType = t.ClusterType
+	}
+
 	if o.Scripts == nil {
 		o.Scripts = make([]models.Script,0)
 

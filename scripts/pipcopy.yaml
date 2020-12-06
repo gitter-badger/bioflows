@@ -2,6 +2,12 @@ id: pipcopy
 name: pipcopy
 type: pipeline
 description: "this pipeline will test copying the general pipeline configuration of the pipeline and make these available to children steps"
+jobTemplate:
+  jobName: "MohamedJob"
+  email: ["csharpizer@gmail.com"]
+  emailOnStarted: true
+  emailOnTerminated: true
+
 inputs:
   - id: input_dir
     name: input_dir
