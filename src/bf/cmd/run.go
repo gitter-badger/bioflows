@@ -49,7 +49,6 @@ func init() {
 	runCmd.Flags().StringVarP(&WorkflowName,"workflowName","n","myworkflow","Assign a human readable identifier for the current workflow.")
 	runCmd.MarkFlagRequired("workflowId")
 	runCmd.MarkFlagRequired("workflowName")
-
 	ToolCmd.AddCommand(runCmd)
 
 	// Here you will define your flags and configuration settings.
