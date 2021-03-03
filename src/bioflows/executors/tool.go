@@ -261,13 +261,13 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	if err != nil {
 		return toolConfig,err
 	}
-	//Defer the notification till the end of the execute method
 	if toolConfig["impede"] == true{
 		e.Log(fmt.Sprintf("Tool (%s) has been impeded.",e.ToolInstance.Name))
 		toolConfig["exitCode"] = 0
 		toolConfig["status"] = true
 		return toolConfig,nil
 	}
+	//Defer the notification till the end of the execute method
 	defer e.notify(e.ToolInstance)
 	toolCommandStr := fmt.Sprintf("%v",toolConfig["command"])
 	toolCommand := e.exprManager.Render(toolCommandStr,toolConfig)

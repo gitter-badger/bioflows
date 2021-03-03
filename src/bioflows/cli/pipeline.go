@@ -47,6 +47,7 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir, initialsConfig string,cl
 	workflowConfig.Fill(BfConfig)
 	workflowConfig[config.WF_INSTANCE_OUTDIR] = outputDir
 	workflowConfig[config.WF_INSTANCE_DATADIR] = dataDir
+	//This line will fill any command line positional arguments passed as parameters to the current tool/pipeline
 	workflowConfig.Fill(pconfig)
 	if len(initialsConfig) > 0 {
 		initialParams, err := ReadParamsConfig(initialsConfig)

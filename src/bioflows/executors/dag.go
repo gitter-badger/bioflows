@@ -175,6 +175,7 @@ func (p *DagExecutor) Run(b *pipelines.BioPipeline,config models.FlowConfig) err
 	p.Log(fmt.Sprintf("Workflow: (%s) has finished....",b.Name))
 	return finalError
 }
+// This function will run the given pipeline
 func (p *DagExecutor) runLocal(b *pipelines.BioPipeline, config models.FlowConfig) error {
 	graph , err := pipelines.CreateGraph(b)
 	if err != nil {
@@ -189,7 +190,7 @@ func (p *DagExecutor) runLocal(b *pipelines.BioPipeline, config models.FlowConfi
 	}
 	// evaluate current pipeline parameters
 	p.evaluateParameters(b,config)
-	// try to execute any before scripts
+	// try to execute any before scripts of the pipeline
 	err = p.executeBeforeScripts(b,config)
 	if err != nil {
 		p.Log(fmt.Sprintf("Executing Script (%s) Error : %s",b.Name,err.Error()))
@@ -329,6 +330,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 			p.Log(fmt.Sprintf("Executing Scripts (%s) Error : %s",currentFlow.Name,err.Error()))
 			return
 		}
+		// Step 3: Defer the execution of `After` scripts at the end of this function call
 		defer func(){
 			err := p.executeAfterScripts(&currentFlow,config)
 			if err != nil {
@@ -345,11 +347,11 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				WorkflowName: p.parentPipeline.Name,
 				Tool:currentFlow.ToTool(),
 			}
+			// Prepare the tool or pipeline name, and create new random names if they don't exist
 			toolInstance.Prepare()
 			generalConfig := p.prepareConfig(p.parentPipeline,config)
 			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 			if err != nil {
-
 				executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
 			}
 			if toolInstanceFlowConfig != nil {

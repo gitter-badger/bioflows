@@ -1,0 +1,20 @@
+id: loop
+name: testloop
+type: pipeline
+description: "nothing to say"
+inputs:
+  - id: myarray
+    name: myarray
+    type: array
+scripts:
+  - type: "js"
+    before: true
+    code: >
+      self.myarray = [1,2,3,4,5];
+steps:
+  - id: compute
+    name: compute
+    type: "tool"
+    loop: true
+    loop_var: "{{self.myarray}}"
+    command: "echo {{myarray_item}}"
