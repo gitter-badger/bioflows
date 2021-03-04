@@ -16,4 +16,4 @@ steps:
         before: true
         code: >
           self.myarray = [1,2,3,4,5];
-    command: "mkdir {{self_dir}}/{{myarray_item}}"
+    command: "mkdir {{self_dir}}/{{myarray_item}} && echo {{myarray_item}}"

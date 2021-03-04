@@ -360,7 +360,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				// Get Loop Variable name
 				if loop_elements , ok := config[currentFlow.LoopVar] ; ok {
 					if elements , islist := loop_elements.([]interface{}); islist {
-
+						stepTruth := true
 						for idx , el := range elements {
 							executor := ToolExecutor{}
 							executor.SetPipelineName(p.parentPipeline.Name)
@@ -381,6 +381,13 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 								executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
 							}
 							if toolInstanceFlowConfig != nil {
+								stepTruth = stepTruth && toolInstanceFlowConfig["status"].(bool)
+
+								if idx < len(elements) - 1{
+									toolInstanceFlowConfig["status"] = false
+								}else{
+									toolInstanceFlowConfig["status"] = stepTruth
+								}
 								err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
 								if err != nil {
 									fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))

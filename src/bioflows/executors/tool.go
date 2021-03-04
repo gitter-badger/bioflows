@@ -4,13 +4,13 @@ import (
 	"bioflows/config"
 	dockcontainer "bioflows/container"
 	"bioflows/expr"
+	"bioflows/helpers"
 	"bioflows/models"
 	"bioflows/process"
 	"bioflows/scripts"
 	"bioflows/virtualization"
 	"fmt"
 	"github.com/docker/docker/api/types/container"
-	"io/ioutil"
 	"log"
 	"net/smtp"
 	"os"
@@ -331,7 +331,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	if err != nil {
 		return toolConfig,err
 	}
-	err = ioutil.WriteFile(toolOutputFile,outputBytes,config.FILE_MODE_WRITABLE_PERM)
+	err = helpers.WriteOrAppend(toolOutputFile,outputBytes,config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
 		return toolConfig,err
 	}
@@ -340,7 +340,7 @@ func (e *ToolExecutor) execute() (models.FlowConfig,error) {
 	if err != nil {
 		return toolConfig,err
 	}
-	err = ioutil.WriteFile(toolErrFile,errorBytes,config.FILE_MODE_WRITABLE_PERM)
+	err = helpers.WriteOrAppend(toolErrFile,errorBytes,config.FILE_MODE_WRITABLE_PERM)
 	if err != nil {
 		return toolConfig,err
 	}
