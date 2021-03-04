@@ -235,7 +235,9 @@ func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config mode
 	if step.Inputs != nil && len(step.Inputs) > 0 {
 		for _ , param := range step.Inputs {
 			if param.Value == nil {
-				config[param.Name] = ""
+				if _ , ok := config[param.Name] ; !ok {
+					config[param.Name] = ""
+				}
 				continue
 			}
 			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
@@ -245,7 +247,9 @@ func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config mode
 	if step.Outputs != nil && len(step.Outputs) > 0 {
 		for _ , param := range step.Outputs {
 			if param.Value == nil {
-				config[param.Name] = ""
+				if _ , ok := config[param.Name]; !ok {
+					config[param.Name] = ""
+				}
 				continue
 			}
 			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
@@ -435,20 +439,54 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 		}else{
 			//Step 3: Try to run the current nested pipeline
 			//it is a nested pipeline
-			nestedPipelineExecutor := DagExecutor{}
-			nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
-			nestedPipelineConfig := models.FlowConfig{}
-			pipelineConfig := p.prepareConfig(&currentFlow,config)
-			nestedPipelineConfig.Fill(config)
-			nestedPipelineConfig.Fill(pipelineConfig)
-			nestedPipelineExecutor.Setup(nestedPipelineConfig)
-			err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
-			if err != nil {
+			if !currentFlow.IsLoop() {
+				// It is a nested pipeline but not a loop
+				nestedPipelineExecutor := DagExecutor{}
+				nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
+				nestedPipelineConfig := models.FlowConfig{}
+				pipelineConfig := p.prepareConfig(&currentFlow,config)
+				nestedPipelineConfig.Fill(config)
+				nestedPipelineConfig.Fill(pipelineConfig)
+				nestedPipelineExecutor.Setup(nestedPipelineConfig)
+				err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
+				if err != nil {
 
-				nestedPipelineExecutor.Log(err.Error())
+					nestedPipelineExecutor.Log(err.Error())
+				}
+				pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
+				err = p.contextManager.SaveState(toolKey,pipeConfig)
+			}else{
+				// It is a nested pipeline and a loop
+				if len(currentFlow.LoopVar) == 0 {
+					p.Log(fmt.Sprintf("%s is defined as loop but no loop variable has been defined.",
+					currentFlow.Name))
+					p.reportFailure(toolKey,config)
+					return
+				}
+				if loop_elements , ok := config[currentFlow.LoopVar]; ok {
+					if elements, islist := loop_elements.([]interface{}); islist{
+						for idx , el := range elements{
+							nestedPipelineExecutor := DagExecutor{}
+							nestedPipelineExecutor.SetContainerConfig(p.containerConfig)
+							nestedPipelineConfig := models.FlowConfig{}
+							pipelineConfig := p.prepareConfig(&currentFlow,config)
+							nestedPipelineConfig.Fill(config)
+							nestedPipelineConfig.Fill(pipelineConfig)
+							nestedPipelineExecutor.Setup(nestedPipelineConfig)
+							nestedPipelineConfig[fmt.Sprintf("%s_item",currentFlow.LoopVar)] = el
+							nestedPipelineConfig[fmt.Sprintf("loop_index")] = idx
+							err := nestedPipelineExecutor.Run(&currentFlow,nestedPipelineConfig)
+							if err != nil {
+								nestedPipelineExecutor.Log(err.Error())
+							}
+							pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
+							err = p.contextManager.SaveState(toolKey,pipeConfig)
+
+						}
+					}
+				}
+
 			}
-			pipeConfig := nestedPipelineExecutor.GetPipelineOutput()
-			err = p.contextManager.SaveState(toolKey,pipeConfig)
 
 		}
 	case SHOULD_QUEUE:

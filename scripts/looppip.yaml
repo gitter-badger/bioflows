@@ -15,10 +15,10 @@ steps:
     name: s1
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2b/scripts/loop.yaml
     loop: true
-    loop_var: "external_var"
+    loop_var: "pipeline_input"
     inputs:
       - id: external_var
         name: external_var
-        value: "{{pipeline_input}}"
+        value: "{{pipeline_input_item}}"
 
 

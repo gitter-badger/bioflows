@@ -34,8 +34,6 @@ func Clone(o *BioPipeline, t *BioPipeline, config models.FlowConfig) error {
 	o.Caps = t.Caps
 	o.Type = t.Type
 	o.BioflowId = t.BioflowId
-	o.Loop = t.Loop
-	o.LoopVar = t.LoopVar
 	if len(o.Name) <= 0{
 		o.Name = t.Name
 	}

@@ -1,0 +1,19 @@
+id: loopwf
+name: loopwf
+type: pipeline
+steps:
+  - id: loop
+    name: loop
+    type: tool
+    loop: true
+    loop_var: "step_input"
+    inputs:
+      - id: step_input
+        name: step_input
+        type: array
+    scripts:
+      - type: js
+        before: true
+        code: >
+          self.step_input = [1,2,3];
+    command: "mkdir {{self_dir}}/{{step_input_item}} && echo {{step_input_item}}"
