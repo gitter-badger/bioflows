@@ -11,9 +11,4 @@ steps:
       - id: myarray
         name: myarray
         type: array
-    scripts:
-      - type: js
-        before: true
-        code: >
-          self.myarray = [1,2,3,4,5];
     command: "mkdir {{self_dir}}/{{myarray_item}} && echo {{myarray_item}}"

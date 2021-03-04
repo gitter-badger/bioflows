@@ -1,0 +1,13 @@
+id: looppip
+name: looppip
+type: pipeline
+scripts:
+  - type: js
+    before: true
+    code: >
+      self.nestedStep.myarray = [1,2,3,4,5];
+steps:
+  - id: nestedStep
+    url: <place url>
+
+
