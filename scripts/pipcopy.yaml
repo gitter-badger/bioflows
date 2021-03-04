@@ -9,7 +9,7 @@ inputs:
 steps:
   - id: list_dir
     name: list_dir
-    description: "This is a computational step in which it will list all contained directory within an input directory"
+    description: "This is a computational step in which it will list all contained directories within an input directory"
     inputs:
       - id: current_dir
         name: current_dir

@@ -38,8 +38,11 @@ var runCmd = &cobra.Command{
 			return errors.New("Output Directory Flag is required.")
 		}
 		toolPath := args[0]
-
-		return cli.RunTool(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir,DataDir, initialsConfig)
+		return cli.RunTool(cfgFile,toolPath,WorkflowId,WorkflowName,OutputDir,DataDir, initialsConfig,positionalArgs)
+	},
+	Args: func(cmd *cobra.Command, args []string) error {
+		positionalArgs, _ = parseArgs(args[1:])
+		return nil
 	},
 }
 
