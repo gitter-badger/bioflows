@@ -22,6 +22,8 @@ type BioPipeline struct {
 	Version      string               `json:"version,omitempty" yaml:"version,omitempty"`
 	Icon         string               `json:"icon,omitempty" yaml:"icon,omitempty"`
 	Shadow       bool                 `json:"shadow,omitempty" yaml:"shadow,omitempty"`
+	Loop bool 	`json:"loop,omitempty" yaml:"loop,omitempty"`
+	LoopVar string `json:"loop_var,omitempty" yaml:"loop_var,omitempty"`
 	Maintainer   *models.Maintainer   `json:"maintainer,omitempty" yaml:"maintainer,omitempty"`
 	References   []models.Reference   `json:"references,omitempty" yaml:"references,omitempty"`
 	Inputs       []models.Parameter   `json:"inputs,omitempty" yaml:"inputs,omitempty"`
@@ -74,6 +76,8 @@ func (p BioPipeline) ToTool() *models.Tool {
 	t.Icon = p.Icon
 	t.Shadow = p.Shadow
 	t.Maintainer = p.Maintainer
+	t.Loop = p.Loop
+	t.LoopVar = p.LoopVar
 	t.Scripts = make([]models.Script,len(p.Scripts))
 	copy(t.Scripts,p.Scripts)
 	t.References = make([]models.Reference, len(p.References))
@@ -106,6 +110,9 @@ func (p BioPipeline) IsTool() bool {
 
 func (p BioPipeline) IsPipeline() bool {
 	return !p.IsTool()
+}
+func (p BioPipeline) IsLoop() bool {
+	return p.Loop
 }
 
 func (p *BioPipeline) ToJson() string {

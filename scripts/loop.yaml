@@ -1,0 +1,16 @@
+id: loop
+name: loop
+type: tool
+loop: true
+loop_var: "myarray"
+inputs:
+  - id: myarray
+    name: myarray
+    type: array
+scripts:
+  - type: js
+    before: true
+    code: >
+      self.myarray = [1,2,3,4,5];
+
+command: "echo {{myarray_item}}"

@@ -8,7 +8,7 @@ import (
 
 type ScriptManager interface {
 	Prepare(toolInstance *models.ToolInstance)
-	RunBefore(script models.Script,config map[string]interface{}) error
+	RunBefore(script models.Script,config map[string]interface{}) (error)
 	RunAfter(script models.Script,config map[string]interface{}) error
 }
 

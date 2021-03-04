@@ -23,6 +23,8 @@ type Tool struct {
 	Config       []Parameter   `json:"config,omitempty" yaml:"config,omitempty"`
 	Outputs      []Parameter   `json:"outputs,omitempty" yaml:"outputs,omitempty"`
 	Command      Scriptable    `json:"command" yaml:"command"`
+	Loop bool 	`json:"loop,omitempty" yaml:"loop,omitempty"`
+	LoopVar string `json:"loop_var,omitempty" yaml:"loop_var,omitempty"`
 	Dependencies []string      `json:"dependencies,omitempty" yaml:"dependencies,omitempty"`
 	Deprecated   bool          `json:"deprecated,omitempty" yaml:"deprecated,omitempty"`
 	Conditions   []Scriptable  `json:"conditions,omitempty" yaml:"conditions,omitempty"`

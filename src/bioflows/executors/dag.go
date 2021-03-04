@@ -219,6 +219,7 @@ func (p *DagExecutor) prepareConfig(b *pipelines.BioPipeline,config models.FlowC
 	for k , v := range config{
 		tempConfig[k] = v
 	}
+	// Get Parent Pipeline Configuration from KV Store
 	pipelineKey := resolver.ResolvePipelineKey(b.ID)
 	pipelineConfig , err := p.GetContext().GetStateManager().GetPipelineState(pipelineKey)
 	if err != nil {
@@ -226,6 +227,7 @@ func (p *DagExecutor) prepareConfig(b *pipelines.BioPipeline,config models.FlowC
 		return tempConfig
 	}
 	tempConfig.Fill(pipelineConfig)
+	// ***** End: Get Parent Pipeline Configuration from KV Store ********
 	return tempConfig
 }
 func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config models.FlowConfig) {
@@ -337,27 +339,46 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 		}()
 		if currentFlow.IsTool() {
 			// It is a tool
-			executor := ToolExecutor{}
-			executor.SetPipelineName(p.parentPipeline.Name)
-			executor.SetContainerConfiguration(p.containerConfig)
-			toolInstance := &models.ToolInstance{
-				WorkflowID: p.parentPipeline.ID,
-				WorkflowName: p.parentPipeline.Name,
-				Tool:currentFlow.ToTool(),
-			}
-			toolInstance.Prepare()
-			generalConfig := p.prepareConfig(p.parentPipeline,config)
-			toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
-			if err != nil {
-
-				executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
-			}
-			if toolInstanceFlowConfig != nil {
-
-				err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
-				if err != nil {
-					fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
+			if currentFlow.IsLoop() {
+				// Get the loop variable
+				if len(currentFlow.LoopVar) == 0 {
+					p.Log(fmt.Sprintf("Tool is loop but no loop variable has been defined.. aborting..."))
 					return
+				}
+				// Get Loop Variable name
+				if loop_elements , ok := config[currentFlow.LoopVar] ; ok {
+					if elements , islist := loop_elements.([]interface{}); islist {
+
+						for idx , el := range elements {
+							executor := ToolExecutor{}
+							executor.SetPipelineName(p.parentPipeline.Name)
+							executor.SetContainerConfiguration(p.containerConfig)
+							toolInstance := &models.ToolInstance{
+								WorkflowID: p.parentPipeline.ID,
+								WorkflowName: p.parentPipeline.Name,
+								Tool:currentFlow.ToTool(),
+							}
+							toolInstance.Prepare()
+							generalConfig := p.prepareConfig(p.parentPipeline,config)
+							generalConfig[fmt.Sprintf("%s_item",currentFlow.LoopVar)] = el
+							generalConfig[fmt.Sprintf("loop_index")] = idx
+
+							// Run the given tool
+							toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
+							if err != nil {
+
+								executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
+							}
+							if toolInstanceFlowConfig != nil {
+
+								err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
+								if err != nil {
+									fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
+									return
+								}
+							}
+						}
+					}
 				}
 			}
 		}else{
