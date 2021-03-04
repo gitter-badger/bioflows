@@ -313,6 +313,17 @@ func (p *DagExecutor) executeAfterScripts (step *pipelines.BioPipeline,config mo
 	//finally
 	return nil
 }
+func (p *DagExecutor) reportFailure(toolKey string , flowConfig models.FlowConfig) error{
+	flowConfig["status"] = false
+	flowConfig["exitCode"] = 1
+	err := p.contextManager.SaveState(toolKey,flowConfig.GetAsMap())
+	if err != nil {
+		fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
+		return err
+	}
+	return nil
+
+}
 func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sync.WaitGroup) {
 	defer wg.Done()
 	currentFlow := vertex.Value.(pipelines.BioPipeline)
@@ -343,6 +354,7 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 				// Get the loop variable
 				if len(currentFlow.LoopVar) == 0 {
 					p.Log(fmt.Sprintf("Tool is loop but no loop variable has been defined.. aborting..."))
+					p.reportFailure(toolKey,config)
 					return
 				}
 				// Get Loop Variable name
@@ -362,7 +374,6 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 							generalConfig := p.prepareConfig(p.parentPipeline,config)
 							generalConfig[fmt.Sprintf("%s_item",currentFlow.LoopVar)] = el
 							generalConfig[fmt.Sprintf("loop_index")] = idx
-
 							// Run the given tool
 							toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
 							if err != nil {
@@ -370,7 +381,6 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 								executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
 							}
 							if toolInstanceFlowConfig != nil {
-
 								err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
 								if err != nil {
 									fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
@@ -378,9 +388,39 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 								}
 							}
 						}
+					}else{
+						// The Loop variable contains non-array type data , i.e. it is not an array
+						p.reportFailure(toolKey,config)
+						return
+					}
+				}
+			}else {
+				// The current tool is not loop
+				executor := ToolExecutor{}
+				executor.SetPipelineName(p.parentPipeline.Name)
+				executor.SetContainerConfiguration(p.containerConfig)
+				toolInstance := &models.ToolInstance{
+					WorkflowID: p.parentPipeline.ID,
+					WorkflowName: p.parentPipeline.Name,
+					Tool:currentFlow.ToTool(),
+				}
+				toolInstance.Prepare()
+				generalConfig := p.prepareConfig(p.parentPipeline,config)
+				toolInstanceFlowConfig , err := executor.Run(toolInstance,generalConfig)
+				if err != nil {
+
+					executor.Log(fmt.Sprintf("Received Error : %s",err.Error()))
+				}
+				if toolInstanceFlowConfig != nil {
+
+					err = p.contextManager.SaveState(toolKey,toolInstanceFlowConfig.GetAsMap())
+					if err != nil {
+						fmt.Println(fmt.Sprintf("Received Error: %s",err.Error()))
+						return
 					}
 				}
 			}
+
 		}else{
 			//Step 3: Try to run the current nested pipeline
 			//it is a nested pipeline
