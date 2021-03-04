@@ -4,16 +4,12 @@ type: pipeline
 inputs:
   - id: external_var
     name: external_var
-    type: array
 steps:
   - id: loop
     name: loop
     type: tool
-    loop: true
-    loop_var: "myarray"
     inputs:
-      - id: myarray
-        name: myarray
-        type: array
+      - id: step_input
+        name: step_input
         value: "{{external_var}}"
-    command: "mkdir {{self_dir}}/{{myarray_item}} && echo {{myarray_item}}"
+    command: "mkdir {{self_dir}}/{{step_input}} && echo {{step_input}}"

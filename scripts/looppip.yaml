@@ -5,16 +5,17 @@ inputs:
   - id: pipeline_input
     name: pipeline_input
     type: array
-
 scripts:
   - type: js
     before: true
     code: >
       self.pipeline_input = [1,2,3,4,5];
 steps:
-  - id: nestedStep
-    name: nestedStep
+  - id: s1
+    name: s1
     url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2b/scripts/loop.yaml
+    loop: true
+    loop_var: "external_var"
     inputs:
       - id: external_var
         name: external_var
