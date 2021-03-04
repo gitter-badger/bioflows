@@ -5,3 +5,4 @@
 
 # 0.0.2b Change Sets
 - The ability of adding arbitrary parameters to the command line of tool or pipeline
+- The ability to define steps as loops within a pipeline only.
