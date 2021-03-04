@@ -208,7 +208,7 @@ func (p *DagExecutor) runLocal(b *pipelines.BioPipeline, config models.FlowConfi
 				continue
 			}
 			wg.Add(1)
-			go p.execute(config,node,&wg)
+			p.execute(config,node,&wg)
 		}
 		wg.Wait()
 	}
@@ -235,6 +235,7 @@ func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config mode
 	if step.Inputs != nil && len(step.Inputs) > 0 {
 		for _ , param := range step.Inputs {
 			if param.Value == nil {
+				config[param.Name] = ""
 				continue
 			}
 			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
@@ -244,6 +245,7 @@ func (p *DagExecutor) evaluateParameters(step *pipelines.BioPipeline,config mode
 	if step.Outputs != nil && len(step.Outputs) > 0 {
 		for _ , param := range step.Outputs {
 			if param.Value == nil {
+				config[param.Name] = ""
 				continue
 			}
 			config[param.Name] = p.exprManager.Render(param.GetParamValue(),config)
@@ -398,6 +400,8 @@ func (p *DagExecutor) execute(config models.FlowConfig,vertex *dag.Vertex,wg *sy
 					}else{
 						// The Loop variable contains non-array type data , i.e. it is not an array
 						p.reportFailure(toolKey,config)
+						p.Log(fmt.Sprintf("Failing Tool : %s, The tool has no associated data in the loop variable.",
+							currentFlow.Name))
 						return
 					}
 				}

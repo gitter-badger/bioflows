@@ -1,6 +1,10 @@
 id: loopwf
 name: loopwf
 type: pipeline
+inputs:
+  - id: external_var
+    name: external_var
+    type: array
 steps:
   - id: loop
     name: loop
@@ -11,4 +15,5 @@ steps:
       - id: myarray
         name: myarray
         type: array
+        value: "{{external_var}}"
     command: "mkdir {{self_dir}}/{{myarray_item}} && echo {{myarray_item}}"

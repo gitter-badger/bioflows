@@ -1,13 +1,23 @@
 id: looppip
 name: looppip
 type: pipeline
+inputs:
+  - id: pipeline_input
+    name: pipeline_input
+    type: array
+
 scripts:
   - type: js
     before: true
     code: >
-      self.nestedStep.myarray = [1,2,3,4,5];
+      self.pipeline_input = [1,2,3,4,5];
 steps:
   - id: nestedStep
-    url: <place url>
+    name: nestedStep
+    url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2b/scripts/loop.yaml
+    inputs:
+      - id: external_var
+        name: external_var
+        value: "{{pipeline_input}}"
 
 
