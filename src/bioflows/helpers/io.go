@@ -1,6 +1,9 @@
 package helpers
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 
 type FileDetails struct {
@@ -8,6 +11,10 @@ type FileDetails struct {
 	FileName string
 	Scheme string
 	Local bool
+}
+func (f FileDetails) String() string {
+	return fmt.Sprintf("Base : %s\nFileName: %s\nScheme: %s\nLocal: %v",f.Base,
+		f.FileName,f.Scheme,f.Local)
 }
 
 func WriteOrAppend(filename string , data []byte , perm os.FileMode) error {

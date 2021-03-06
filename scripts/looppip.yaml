@@ -8,8 +8,8 @@ inputs:
 scripts:
   - type: js
     before: true
-    code: >
-      self.pipeline_input = [1,2,3,4,5];
+    file: file:///loopjs.js
+
 steps:
   - id: s1
     name: s1

@@ -8,4 +8,7 @@ const (
 	BIOFLOWS_INTERNAL_CONFIG = "internal_pipeline_cfg"
 	DOCKER_INTERNAL_OUTPUT_DIR = "/home/output"
 	DOCKER_INTERNAL_DATA_DIR = "/home/data"
+	WF_BF_TOOL_PATH = "bf_tool_path"
+	WF_BF_TOOL_LOCAL = "bf_tool_local_local"
+	WF_BF_TOOL_BASEPATH = "bf_tool_basepath"
 )

@@ -73,6 +73,13 @@ func DownloadBioFlowFile(b interface{}, path string) error {
 	data , err := ioutil.ReadAll(resp.Body)
 	return yaml.Unmarshal(data,b)
 }
+func DownloadRemoteFile(path string) ([]byte,error) {
+	resp , err := http.Get(path)
+	if err != nil {
+		return nil , err
+	}
+	return ioutil.ReadAll(resp.Body)
+}
 func ReadLocalBioFlowFile(b interface{}, path string) error {
 	tool_in , err := os.Open(path)
 	if err != nil {

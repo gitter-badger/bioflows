@@ -50,9 +50,9 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir, initialsConfig string,cl
 			return err
 		}
 	}
-	workflowConfig["bf_tool_path"] = toolPath
-	workflowConfig["bf_tool_basepath"] = fileDetails.Base
-	workflowConfig["bf_tool_local"] = fileDetails.Local
+	workflowConfig[config.WF_BF_TOOL_PATH] = toolPath
+	workflowConfig[config.WF_BF_TOOL_BASEPATH] = fileDetails.Base
+	workflowConfig[config.WF_BF_TOOL_LOCAL] = fileDetails.Local
 	BfConfig, err := ReadConfig(configFile)
 	if err != nil {
 		fmt.Printf("Error Reading Config: %s",err.Error())
