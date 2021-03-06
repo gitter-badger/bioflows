@@ -80,7 +80,9 @@ In order to define input(s) for a tool or a pipeline, the following is an exampl
 
 The type of the input parameter could be a ``string``, a ``file`` , a ``dir`` or it could be anything else.
 It really does not matter the value of this type directive as long as the author of the tool knows how to use it
-in either the scripts directive or the command directive.
+in either the scripts directive or the command directive. The input `type` directive was added for two reasons; the first
+reason would be to act as a fallback directive in case it might be needed in future releases; the second reason would be to help
+other readers to better understand the actual type of data that this variable might hold.
 
 Output(s) Directive
 ^^^^^^^^^^^^^^^^^^^
@@ -125,7 +127,7 @@ Capabilities Directive
 
 Some Bioinformatics analysis steps require specific computing requirements in terms of how many CPU cores and memory size needed.
 For instance, RNA-seq Junction aware aligner ``Hisat2`` requires at least ``160 GB`` of available memory if you need to create
-HGFM index with transcripts from a whole reference genome of an organism taking into account that particular organism SNP recorded
+FM index with transcripts from a whole reference genome of an organism taking into account that particular organism SNP recorded
 variants. To declare a task with specific computing capabilities, you have to define a capabilities directive within the definition
 of the task specifying how many computing cores and memory in Mega Bytes (``MB``) required for the job as follows:
 
