@@ -1,13 +1,45 @@
 package helpers
 
 import (
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
+	"strings"
 )
+
+
+func GetFileDetails(details *FileDetails, uri string) error{
+	u , err := url.Parse(uri)
+	if err != nil {
+		return err
+	}
+	details.Scheme = u.Scheme
+	if strings.EqualFold(u.Scheme,"file") {
+		details.Base = u.Path[1:]
+		details.Local = true
+		details.FileName = filepath.Base(uri)
+	}else if strings.EqualFold(u.Scheme,"http") || strings.EqualFold(u.Scheme,"https") {
+		details.Base = strings.Replace(uri,filepath.Base(uri),"",1)
+		details.Local = false
+		details.FileName = filepath.Base(uri)
+	} else if u.Scheme == "" {
+		details.Local = true
+		details.Base = strings.Replace(uri,filepath.Base(uri),"",1)
+		details.FileName = filepath.Base(uri)
+	} else{
+		return errors.New("unsupported file scheme used")
+	}
+	return nil
+
+}
+
+
+
 
 func IsValidUrl(toTest string) bool {
 	_, err := url.ParseRequestURI(toTest)
@@ -16,11 +48,21 @@ func IsValidUrl(toTest string) bool {
 	}
 
 	u, err := url.Parse(toTest)
-	if err != nil || u.Scheme == "" || u.Host == "" {
+	if err != nil || u.Scheme == ""  {
 		return false
 	}
-
 	return true
+}
+
+func GetProtocolScheme(toTest string) (scheme string, err error) {
+	u ,err := url.Parse(toTest)
+	if err != nil {
+		scheme = ""
+		err = nil
+	}
+	scheme = u.Scheme
+	err = nil
+	return
 }
 
 func DownloadBioFlowFile(b interface{}, path string) error {
@@ -30,6 +72,17 @@ func DownloadBioFlowFile(b interface{}, path string) error {
 	}
 	data , err := ioutil.ReadAll(resp.Body)
 	return yaml.Unmarshal(data,b)
+}
+func ReadLocalBioFlowFile(b interface{}, path string) error {
+	tool_in , err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	tool_data , err := ioutil.ReadAll(tool_in)
+	if err != nil {
+		return err
+	}
+	return yaml.Unmarshal(tool_data,b)
 }
 
 func ReadPipelineFile(pipeline interface{} , pipelineFile string) error{

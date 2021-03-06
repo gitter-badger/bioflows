@@ -13,7 +13,8 @@ scripts:
 steps:
   - id: s1
     name: s1
-    url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2b/scripts/loop.yaml
+    #url: https://raw.githubusercontent.com/mfawzysami/bioflows/0.0.2b/scripts/loop.yaml
+    url: file:///loop.yaml
     loop: true
     loop_var: "pipeline_input"
     inputs:

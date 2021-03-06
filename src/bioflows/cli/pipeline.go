@@ -16,12 +16,20 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir, initialsConfig string,cl
 	fmt.Println(fmt.Sprintf("Using Configuration File: %s",configFile))
 	pipeline := &pipelines.BioPipeline{}
 	workflowConfig := models.FlowConfig{}
-	if !helpers.IsValidUrl(toolPath) {
+	fileDetails := &helpers.FileDetails{}
+	err := helpers.GetFileDetails(fileDetails,toolPath)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	if fileDetails.Local {
 		pipeline_in,err := os.Open(toolPath)
 		if err != nil {
 			fmt.Printf("There was an error opening the tool File: %s",err.Error())
 			return err
 		}
+		//The tool is being run from a local directory
+
 		mypipeline_contents , err := ioutil.ReadAll(pipeline_in)
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Error: %s",err.Error()))
@@ -32,13 +40,19 @@ func RunPipeline(configFile,toolPath,outputDir,dataDir, initialsConfig string,cl
 			fmt.Printf("Error: %s",err.Error())
 			return err
 		}
+
 	}else{
-		err := helpers.DownloadBioFlowFile(pipeline,toolPath)
+		//The mentioned tool is remote
+
+		err = helpers.DownloadBioFlowFile(pipeline,toolPath)
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Error Downloading the file: %s",err.Error()))
 			return err
 		}
 	}
+	workflowConfig["bf_tool_path"] = toolPath
+	workflowConfig["bf_tool_basepath"] = fileDetails.Base
+	workflowConfig["bf_tool_local"] = fileDetails.Local
 	BfConfig, err := ReadConfig(configFile)
 	if err != nil {
 		fmt.Printf("Error Reading Config: %s",err.Error())
