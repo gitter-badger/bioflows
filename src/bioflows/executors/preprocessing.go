@@ -4,7 +4,7 @@ import (
 	"bioflows/helpers"
 	"bioflows/models"
 	"bioflows/models/pipelines"
-	"path/filepath"
+	"strings"
 )
 
 /*
@@ -24,13 +24,17 @@ var UseUrl TransformCall = func (b *pipelines.BioPipeline,config models.FlowConf
 			if err != nil {
 				return err
 			}
-			currPath := filepath.Join(config["bf_tool_basepath"].(string),fileDetails.FileName)
+			currPath := strings.Join([]string{config["bf_tool_basepath"].(string),fileDetails.FileName},"")
+			err = helpers.GetFileDetails(fileDetails,currPath)
+			if err != nil {
+				return err
+			}
+			//tool_is_local := config[config2.WF_BF_TOOL_LOCAL].(bool)
 			if fileDetails.Local {
 				// that means it is a local file , so read it
 				err = helpers.ReadLocalBioFlowFile(t,currPath)
 			}else{
 				// It could be a remote http/https command, so download the file
-
 				err = helpers.DownloadBioFlowFile(t,currPath)
 			}
 			if err != nil {

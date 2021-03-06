@@ -180,6 +180,27 @@ named ``output_str`` which will be echoed back to the standard output of that pa
     and injected these libraries within the embedded JS virtual machine to make it available for script writers.
     These custom code libraries are developed to perform some lower level OS tasks that Javascript doesn't handle by default.
 
+
+
+Furthermore, You can externalize the javascript code into an external `.js` file and refer to this file.
+
+For instance, the above script could be written as follows...
+
+.. code-block:: yaml
+
+    scripts:
+          - type: js
+            before: true
+            file: "file:///concat.js"
+
+
+Please note that now the javascript code exists in a file named "concat.js", this file exists in the current working directory as
+the current main pipeline YAML file.
+
+.. note::
+    **file:///** should be followed by a relative file path.
+
+
 For more information about all the available code libraries, please take a look at Embedded Scripting section of this documentation.
 
 
