@@ -208,7 +208,7 @@ func (p *DagExecutor) runLocal(b *pipelines.BioPipeline, config models.FlowConfi
 				continue
 			}
 			wg.Add(1)
-			p.execute(config,node,&wg)
+			go p.execute(config,node,&wg)
 		}
 		wg.Wait()
 	}
